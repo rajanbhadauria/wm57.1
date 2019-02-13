@@ -1,0 +1,102 @@
+.tag_complete{
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	cursor: text;
+	display: block;
+	background:transparent;
+	padding:5px;
+}
+
+.tag_complete .tags_container{
+	display:inline;
+	margin:auto 0;
+}
+
+.tag_complete .tag_input{
+	all:unset;
+	min-height:38px !important;
+	background:none;
+	display:inline;
+	margin:unset;
+	padding: unset;
+	border:0 !important;
+	width:unset;
+	box-shadow: none !important;
+	margin-bottom:0!important;
+}
+
+.tag_complete .tags_container .tag{
+  -webkit-border-radius: 4;
+  -moz-border-radius: 4;
+  border-radius: 4px;
+  color: ##263136;
+  font-size: 15px;
+  background: #eee;
+  padding: 6px 6px 6px 8px;
+  text-decoration: none;
+  margin:2px;
+  display:inline-block;
+  -moz-user-select:none;
+  -webkit-user-select:none;
+  -ms-user-select:none;
+   user-select:none;
+}
+
+.tag_complete .tags_container .tag .close:after{
+	font-size: 18px;
+    padding: 0;
+    background: #4553d4;
+    border: 0;
+    border-radius: 50%;
+    margin-left: 5px;
+    cursor: pointer;
+    content: '\d7';
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    float: right;
+    text-align: center;
+    margin-top: 2px;
+    line-height: 16px;
+}
+
+
+.tag_complete_main .hide{
+	display:none !important;
+}
+
+.tag_complete_main .autocomplete:not(.hide){
+	list-style: none;
+	padding: 8px;
+	background:#fcfdff;
+	display:block;
+	position:relative;
+	border:1px solid #b0bec5;
+	border-top:0;
+	z-index:1000000 !important;
+	margin:0px;
+	list-style: none;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius:3px;
+	max-height:150px;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+.tag_complete_main .autocomplete li{
+	display:block;
+	padding:5px 13px 5px 13px;
+	cursor:pointer;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+	font-size:13px;
+	opacity: 0.6;
+}
+
+.tag_complete_main .has_autocomplete{
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius:0px;
+	border-bottom: 0px;
+}

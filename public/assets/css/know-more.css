@@ -1,0 +1,563 @@
+*{
+	box-sizing:border-box;
+}
+body, ul, li, p, h1, h2, h3, h4, h5, h6{
+	margin:0px;
+	padding:0px;
+}
+body{
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	color:#263136;
+	font-size:16px;
+}
+h1, h2, h3, h4, h5, h6{
+	font-family: 'Nunito', sans-serif;
+	font-weight:700;
+}
+p{
+	line-height:26px;
+	margin-bottom:10px;
+}
+a{
+	color:#263136;
+	text-decoration:none;
+	transition: all .3s ease-in-out;
+}
+.km-btn{
+	background:#37e89a;
+	color:#fff;
+	font-weight:800;
+	text-transform:uppercase;
+	font-size:16px;
+	font-family: 'Nunito', sans-serif;
+	padding:12px 25px;
+	border-radius:3px;
+	letter-spacing:2px;
+}
+.km-btn:hover{
+	background:#3af5a3;
+}
+.km-header{
+	min-height:50px;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	display: inline-block;
+	padding:30px 40px 15px 40px;
+	z-index:2001;
+	transition: all .5s ease-in-out;
+}
+.km-header-dark{
+	background: #fff;
+	box-shadow:0px 1px 6px rgba(0, 0, 0, 0.2);
+	padding:15px 40px;
+}
+.km-logo{
+	float:left;
+	font-size:32px;	
+}
+.km-logo a b{
+	color:#818189;
+}
+.km-navi{
+	float:right;
+	font-size:14px;
+	margin-top:11px;
+}
+.km-navi-login{
+	margin-right:40px;
+}
+.km-navi-login:hover{
+	color:#37e89a;
+}
+.km-navi-signup{
+	background:#4553d4;
+	color:#fff;
+	text-transform:uppercase;
+	font-family: 'Nunito', sans-serif;
+	padding:7px 20px;
+	border-radius:3px;
+}
+.km-navi-signup:hover{
+	background:#4c5ceb;
+}
+.km-hero-section{
+	width:100%;
+	min-height:200px;
+	display:block;
+	text-align:center;
+	padding:0px 0 0px 0;
+	background:#eff2f2;
+	position:relative;
+	overflow:hidden;
+}
+.km-hero-section .km-imgBg{
+	margin-top:-70px;
+	margin-bottom:-70px;
+}
+.km-hero-section .km-container{
+	position:absolute;
+	top:150px;
+	max-width:100%;
+}
+.km-container{
+	width:100%;
+	max-width:1140px;
+	padding:0 15px;
+	margin:0 auto;
+	display:block;
+}
+.km-hero-section h2{
+	font-size:44px;
+	max-width:600px;
+	margin:0 auto 25px auto;
+}
+.km-hero-section h4{
+	font-size:18px;
+	font-weight:600;
+	color:#4553d4;
+	text-transform:uppercase;
+	font-family: 'Open Sans', sans-serif;
+	margin:0 auto 30px auto;
+}
+.km-hero-section p{
+	margin:0 auto 40px auto;
+}
+.km-wmusers{
+	width:100%;
+	display:inline-block;
+	margin-bottom:45px;
+}
+.km-wmusers .km-wmuser{
+	width:70px;
+	height:70px;
+	float:none;
+	display:inline-block;
+	border:2px solid #fff;
+	background:#000;
+	border-radius:50%;
+	overflow:hidden;
+	margin:0 -10px;
+}
+.km-common-section{
+	width:100%;
+	display:block;
+	padding:100px 0;
+	background:#fff;
+}
+.km-gray-bg{
+	background:#f8f8f8;
+}
+.km-skew-bg {
+    -webkit-transform: skewy(-3deg);
+    -moz-transform: skewy(-3deg);
+    -ms-transform: skewy(-3deg);
+    transform: skewy(-3deg);
+}
+.km-skew-bg .km-container{
+	-webkit-transform: skewy(3deg);
+    -moz-transform: skewy(3deg);
+    -ms-transform: skewy(3deg);
+    transform: skewy(3deg);
+}
+.km-skew-minus{
+	margin-top: -50px;
+    z-index: 136;
+    position: relative;
+}
+.km-twoColumn{
+	display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap:30px;
+}
+.km-disFlex{
+	display: flex;
+    justify-content: center;
+    align-items:flex-start;
+    flex-direction: column;
+}
+.km-colOrderOne{
+	order:1;
+}
+.km-colOrderTwo{
+	order:2;
+}
+.bottom-space{
+	padding-bottom:20px;
+}
+.bottom-spaceSec{
+	padding-bottom:8px;
+}
+.km-imgMaxW{
+	max-width:100%;
+}
+.km-common-section .km-main-title{
+	font-size:32px;
+	text-align:center;
+	margin-bottom:15px;
+}
+.km-seekingjob{
+	max-width: 380px;
+    margin: 0 auto;
+    text-align: left;
+}
+.km-seekingjob .km-main-title{
+	text-align:left;
+	max-width: 340px;
+}
+.km-growth{
+	display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap:30px;
+}
+.km-growth li{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+	max-width:300px;
+	background:#37e89a;
+	color:#fff;
+	border-radius:5px;
+	margin:20px 0 0 0;
+	padding:20px 10px 30px 10px;
+	text-align:center;
+}
+.km-growth li:nth-child(even){
+	background:#e8bd3a;
+}
+.km-growth .km-growth-num{
+	width:100%;
+	display:inline-block;
+	font-family: 'Nunito', sans-serif;
+	font-weight:700;
+	font-size:50px;
+}
+.km-growth .km-growth-icon{
+	width:100%;
+	display:inline-block;
+	padding:15px 0 20px 0;
+}
+.km-growth .km-growth-title{
+	width:100%;
+	display:inline-block;
+	font-weight:500;
+	font-size:18px;
+	text-transform:uppercase;
+	letter-spacing:2px;
+}
+.km-screens{
+	display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap:40px;
+}	
+.km-screens li{	
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+	background:#a5cdff;
+	border-radius:10px;
+	box-shadow:0 0 10px rgba(0, 0, 0, 0.2);
+	margin-top:80px;
+}
+.km-screens li:nth-child(2){
+	margin-top:20px;
+}	
+.km-screens li img{
+	-webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    box-shadow: 0 0 13px 0px rgba(0, 0, 0, 0.08);
+}
+.km-screens li img:hover{
+	-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+}
+.km-howitwork{
+	width:100%;
+	display:block;
+	background:#263631;
+	border-radius:10px;
+	box-shadow:0 0 10px rgba(0, 0, 0, 0.2);
+	min-height:400px;
+	max-width:740px;
+	margin:0 auto;
+	color:#fff;
+	text-align:center;
+}
+.km-team-para{
+	font-weight:600;
+	text-transform:uppercase;
+	text-align:center;
+	margin-top:20px;
+	margin-bottom:15px;
+}
+.km-teams{
+	display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap:20px;
+}	
+.km-teams li{	
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+	background:#263631;
+	border-radius:10px;
+	box-shadow:0 0 10px rgba(0, 0, 0, 0.2);
+	margin-top:20px;
+}
+.km-teams li img{
+	max-width:100%;
+	border-radius:10px;
+}
+.km-teams li.becomMember{
+	height:calc(100% - 20px);
+	background:#fff;
+	padding:20px;
+	text-align:center;
+}
+.km-teams li.becomMember .kmQues{
+	font-size: 72px;
+    font-weight: 600;
+    line-height: 72px;
+    margin-bottom: 25px;
+    margin-top: -20px;
+}
+.km-teams li.becomMember p{
+	font-size:14px;
+	line-height:24px;
+}
+.km-teams li.becomMember .km-btn{
+	font-size:14px;
+	margin-top:10px;
+}
+.km-gray-skyblu{
+	background:url(img/contact-bgleft.png) no-repeat left bottom #41b6d3;
+	color:#fff;
+	text-align:center;
+	position:relative;
+}
+.km-gray-skyblu:after{
+	width:71px;
+	height:109px;
+	content:'';
+	position:absolute;
+	bottom:0;
+	right:0;
+	background:url(img/contact-bgright.png) no-repeat;
+}
+.km-gray-skyblu .km-main-title{
+	font-size:24px;
+}
+.km-gray-skyblu .skyblu-para {
+	font-weight:600;
+	text-align:center;
+	margin-top:20px;
+	margin-bottom:40px;
+}
+.km-gray-skyblu .skyblu-para a{
+	color:#fff;
+	text-decoration:underline;
+}
+.km-gray-skyblu .skyblu-para a:hover{
+	text-decoration:none;
+}
+.km-gray-skyblu .km-btn{	
+	background:#4843d2;
+	margin-bottom:20px;
+}
+.km-gray-skyblu .km-btn:hover{
+	background:#4c5ceb;
+}
+.km-teamcontact{
+	font-size:13px;
+	width:100%;
+	display:block;
+	margin-top:40px;	
+}
+.km-footer{
+	width:100%;
+	display:block;
+	padding:50px 0;
+	text-align:center;
+}
+.km-footer-row{
+	width:100%;
+	display:block;
+}
+.km-footer .km-main-title{
+	font-size:24px;
+	text-transform:uppercase;
+	margin-bottom:30px;
+}
+.km-footer .km-footer-social{
+	margin-bottom:30px;
+}
+.km-footer .km-footer-social a{
+	margin:0 20px;
+	font-size:30px;
+	color:#888;
+}
+.km-footer .km-footer-social a.km-foot-fb:hover{
+	color:#365899;
+}
+.km-footer .km-footer-social a.km-foot-tw:hover{
+	color:#0084b4;
+}
+.km-footer .km-footer-social a.km-foot-yt:hover{
+	color:#ff0000;
+}
+.km-footer .km-footer-social a.km-foot-li:hover{
+	color:#0077b5;
+}
+.km-footer .km-footer-social a img{
+	height:32px;
+}
+.km-footer .km-footer-social a img:hover{
+	opacity:0.8;
+}
+.km-footer .km-footer-copRight{
+	font-size:13px;
+}
+.km-footer .km-footer-copRight a:hover{
+	color:#4c5ceb;
+	text-decoration:underline;
+}
+.km-applScre{
+	text-align:center;
+}
+.km-applScre .km-btn{
+	margin-top: 50px;
+    display: inline-block;
+}
+
+/* Responsive */
+@media (max-width:980px){
+
+.km-container{
+	padding:0 20px;
+}	
+.km-growth{
+	-ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+}
+.km-growth li{
+	max-width:100%;
+}
+.km-teams {
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+}		
+	
+}
+@media (max-width:767px){
+
+.km-twoColumn{
+	-ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+}
+.km-colOrderOne{
+	order:2;
+}
+.km-colOrderTwo{
+	order:1;
+}
+.km-growth{
+	-ms-grid-columns: 1fr;
+    grid-template-columns:1fr;
+    grid-gap:0px;
+}
+.km-teams {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr ;
+    grid-gap: 0px;
+}	
+.km-header{
+	padding:20px 20px 15px 20px;
+    background:#fff;
+	box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+}
+.km-logo {
+    font-size:20px;
+}
+.km-navi {
+    margin-top:3px;
+}
+.km-navi-signup{
+	padding: 7px 10px;
+}
+.km-navi-login {
+    margin-right: 20px;
+}
+.km-gray-skyblu:after{
+	display:none;
+}	
+.km-hero-section h2{
+	font-size:28px;
+}
+.km-common-section .km-main-title {
+    font-size:22px;
+}
+.km-common-section {
+    padding: 50px 0;
+}
+.km-hero-section .km-container {
+    top:100px;
+}
+.km-wmusers {
+    margin-bottom:20px;
+}
+.km-screens {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    grid-gap:0px;
+}
+.km-seekingjob .km-main-title,
+.km-seekingjob{
+    text-align: center;
+	width:100%;
+}
+.km-skew-minus{
+	margin-top:-10px;
+}
+.bottom-space {
+    padding-bottom: 0px;
+}
+.km-screens li{
+	margin-top:20px;
+}
+.km-howitwork{
+	margin-top: 35px;
+}
+.km-teams li.becomMember .kmQues {
+    margin-top: -10px;
+}
+.km-footer .km-main-title {
+    font-size: 22px;
+}
+.km-footer .km-footer-social a img {
+    height: 24px;
+}
+.km-footer .km-footer-social a i {
+    color:#777777;
+}
+.km-applScre .km-btn{
+	margin-top: 40px;
+}
+
+}
