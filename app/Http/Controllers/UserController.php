@@ -31,7 +31,7 @@ class UserController extends Controller
         $public_path = public_path();
 
         $data = base64_decode($data);
-        $image_name= Auth::user()->id.rand(10).time().'.png';
+        $image_name= Auth::user()->id.rand(1,10).time().'.png';
         if(!is_dir($path = public_path() . "/uploads/images/user")) {
             mkdir( $public_path. "/uploads/images/user", "0777");
         }
