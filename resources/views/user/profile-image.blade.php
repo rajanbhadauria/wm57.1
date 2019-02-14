@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ url('assets/croppie/croppie.css') }}" />
-<script src="{{ url('assets/croppie/croppie.min.js') }}"></script>
+<link rel="stylesheet" href="{{ my_asset('croppie/croppie.css') }}" />
+<script src="{{ my_asset('croppie/croppie.min.js') }}"></script>
 
 <script>
 

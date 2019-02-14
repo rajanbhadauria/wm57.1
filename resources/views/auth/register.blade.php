@@ -17,7 +17,7 @@
                 <div class="ak-custom-center-box">
                     <div class="login-form" id="loginDiv">
                     <div class="logo-wrapper">
-						  <img src="{{ URL::asset('assets/images/demo-logo.svg') }}" alt="">
+						  <img src="{{ my_asset('images/demo-logo.svg') }}" alt="">
 						</div>
                         <form class="form-horizontal no-card" autocomplete="off" role="form" method="POST" action="{{ url('/register') }}" name="signUpForm" id="signUpForm">
                             {{ csrf_field() }}

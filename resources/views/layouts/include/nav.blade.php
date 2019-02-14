@@ -96,12 +96,12 @@
                     @if(strpos(Auth::user()->avatar,"ttp"))
                     <img alt="" src="{{Auth::user()->avatar}}">
                     @elseif(file_exists(public_path("/uploads/images/user/".Auth::user()->avatar)))
-                    <img alt="" src="{{url('uploads/images/user/')}}/{{Auth::user()->avatar}}">
+                    <img alt="" src="{{uploads_url('images/user/')}}/{{Auth::user()->avatar}}">
                     @else
-                    <img alt="" src="/uploads/images/user/user-img-white.jpg">
+                    <img alt="" src="{{ uploads_url('images/user/user-img-white.jpg') }}">
                     @endif
                     @else
-                    <img alt="" src="/uploads/images/user/user-img-white.jpg">
+                    <img alt="" src="{{ uploads_url('uploads/images/user/user-img-white.jpg') }}">
                     @endif
                 </div>
                 @if(!count($resumeDetails))
@@ -112,12 +112,12 @@
                             @if(strpos(Auth::user()->avatar,"ttp"))
                             <img alt="" src="{{Auth::user()->avatar}}">
                             @elseif(file_exists(public_path("/uploads/images/user/".Auth::user()->avatar)))
-                            <img alt="" src="{{url('uploads/images/user/')}}/{{Auth::user()->avatar}}">
+                            <img alt="" src="{{uploads_url('images/user/')}}/{{Auth::user()->avatar}}">
                             @else
-                            <img alt="" src="/uploads/images/user/user-img-white.jpg">
+                            <img alt="" src="{{uploads_url('images/user/user-img-white.jpg')}}">
                             @endif
                             @else
-                            <img alt="" src="/uploads/images/user/user-img-white.jpg">
+                            <img alt="" src="{{uploads_url('images/user/user-img-white.jpg')}}">
                             @endif
                           </span>
                         {{Auth::user()->name}}

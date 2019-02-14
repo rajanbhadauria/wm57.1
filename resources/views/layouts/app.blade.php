@@ -15,25 +15,25 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
 <!-- CSS  -->
-  <link href="{{ URL::asset('assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
-  <link href="{{ URL::asset('assets/css/materialize.min.css') }}" rel="stylesheet">
+  <link href="{{ my_asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ my_asset('css/materialize.min.css') }}" rel="stylesheet">
 
-  <link href="{{ URL::asset('assets/css/user-menu.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/user-menu.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!--  <link href="css/chosen.css" rel="stylesheet" type="text/css"/>-->
-  <link href="{{ URL::asset('assets/css/select3.css') }}" rel="stylesheet" type="text/css"/>
-  <link href="{{ URL::asset('assets/css/custom.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="{{ URL::asset('assets/css/main.css') }}" type="text/css" rel="stylesheet"/>
-  <link href="{{ URL::asset('assets/css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/select3.css') }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ my_asset('css/custom.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/main.css') }}" type="text/css" rel="stylesheet"/>
+  <link href="{{ my_asset('css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900|Open+Sans:400,600,700,800" rel="stylesheet">
 
   <!-- File Upload -->
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script type="text/javascript" src="{{ URL::asset('assets/js/jquery.mask.js') }}" type="text/javascript"></script>
-  <script type="text/javascript" src="{{ URL::asset('assets/js/jquery.validate.min.js') }}" type="text/javascript"></script>
-  <script type="text/javascript" src="{{ URL::asset('assets/js/select3-full.js') }}" type="text/javascript"></script>
-  <script type="text/javascript" src="{{ URL::asset('assets/js/tgn.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ my_asset('js/jquery.mask.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ my_asset('js/jquery.validate.min.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ my_asset('js/select3-full.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ my_asset('js/tgn.js') }}" type="text/javascript"></script>
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
@@ -77,15 +77,14 @@
             <div class="alert mt-5 alert-success">
                 {{session('success')}}
             </div>
-
     @endif
 
     @yield('content')
 
-      <script type="text/javascript" src="{{ URL::asset('assets/js/materialize.min.js') }}"></script>
-      <script type="text/javascript" src="{{ URL::asset('assets/js/menu-backdrop.js') }}"></script>
-      <script type="text/javascript" src="{{ URL::asset('assets/js/init.js') }}"></script>
-      <script type="text/javascript" src="{{ URL::asset('assets/js/main.js') }}"></script>
+      <script type="text/javascript" src="{{ my_asset('js/materialize.min.js') }}"></script>
+      <script type="text/javascript" src="{{ my_asset('js/menu-backdrop.js') }}"></script>
+      <script type="text/javascript" src="{{ my_asset('js/init.js') }}"></script>
+      <script type="text/javascript" src="{{ my_asset('js/main.js') }}"></script>
       <?php $resize = true; ?>
 
 </body>

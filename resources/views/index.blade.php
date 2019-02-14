@@ -9,9 +9,9 @@
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="{{ URL::asset('assets/css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="{{ URL::asset('assets/css/custom.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="{{ URL::asset('assets/css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/custom.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900|Open+Sans:400,600,700,800" rel="stylesheet">
 </head>
   <body class="main-container">
@@ -22,7 +22,7 @@
             <div class="center-box">
               <div class="login-form center-align" id="loginDiv"  >
                 <div class="logo-wrapper">
-                  <img src="assets/images/demo-logo.svg" alt="">
+                  <img src="{{ my_asset('images/demo-logo.svg') }}" alt="">
                 </div>
                 <h1 class="home-logo-text ak-logoTxt">Work<b>Median</b></h1>
                 <p class="common-para ak-logoslognTxt">Check and keep floating your Resume</p>

@@ -19,7 +19,7 @@
             <div class="ak-custom-center-box">
                 <div class="login-form center-align" id="loginDiv">
                 <div class="logo-wrapper">
-						  <img src="{{ URL::asset('assets/images/demo-logo.svg') }}" alt="">
+						  <img src="{{ my_asset('images/demo-logo.svg') }}" alt="">
 						</div>
                     <form class="form-horizontal mb15 no-card" role="form" method="POST" action="{{ url('/login') }}" ng-app="loginFormApp" ng-controller="validateCtrl" name="loginForm" id="loginForm">
                         {{ csrf_field() }}
@@ -73,17 +73,17 @@
                     <div class="socialmedia-logins">
                         <div class="link-container">
                             <a class="waves-effect waves-light display-block" href="{{ url('/login/google') }}">
-                                <img src="assets/images/google.png">
+                                <img src="{{my_asset('images/google.png')}}">
                             </a>
                         </div>
                         <div class="link-container">
                             <a class="waves-effect waves-light display-block" href="{{ url('/login/linkedin') }}">
-                                <img src="assets/images/linkedin.png">
+                                <img src="{{my_asset('images/linkedin.png')}}">
                             </a>
                         </div>
                         <div class="link-container">
                             <a class="waves-effect waves-light display-block" href="{{ url('/login/facebook') }}">
-                                <img src="assets/images/facebook.png">
+                                <img src="{{my_asset('images/facebook.png')}}">
                             </a>
                         </div>
                     </div>

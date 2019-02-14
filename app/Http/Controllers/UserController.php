@@ -17,9 +17,9 @@ class UserController extends Controller
         if(strpos(Auth::user()->avatar, 'ttp')) {
             $data['profileImage'] = Auth::user()->avatar;
         } elseif(Auth::user()->avatar != "") {
-            $data['profileImage'] = asset('uploads/images/user/'.Auth::user()->avatar);
+            $data['profileImage'] = uploads_url('images/user/'.Auth::user()->avatar);
         } else {
-            $data['profileImage'] = asset('uploads/images/user/user-img-white.jpg');
+            $data['profileImage'] = uploads_url('images/user/user-img-white.jpg');
         }
         return view('user.profile-image',$data);
     }
