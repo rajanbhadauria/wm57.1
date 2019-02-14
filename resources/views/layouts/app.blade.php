@@ -73,7 +73,6 @@
 <body id="app-layout">
     @include("layouts.include.header")
     @include("layouts.include.nav")
-    <div class="container">
     @if(session('success'))
             <div class="alert mt-5 alert-success">
                 {{session('success')}}
@@ -82,7 +81,6 @@
     @endif
 
     @yield('content')
-    </div>
 
       <script type="text/javascript" src="{{ URL::asset('assets/js/materialize.min.js') }}"></script>
       <script type="text/javascript" src="{{ URL::asset('assets/js/menu-backdrop.js') }}"></script>

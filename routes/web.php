@@ -28,7 +28,17 @@ Route::get('/logout', 'HomeController@logout')->name('logout');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('/testmail', 'Auth\LoginController@sendEmail');
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/home', 'HomeController@index')->name('home');
+});
+
+Route::group(array('prefix' => 'user'), function(){
+	Route::any('/profile-image', array('as' => 'user.upload-file', 'uses' => 'UserController@profileImage'));
+	Route::any('/upload-file', array('as' => 'user.upload-file', 'uses' => 'UploadController@uploadFile'));
+	Route::any('/save-profile-image', array('as' => 'user.save-profile-image', 'uses' => 'UserController@saveProfileImage'));
+	Route::any('/save-crop-image', array('as' => 'user.save-crop-image', 'uses' => 'UserController@saveCropImage'));
+    Route::any('/remove-image', array('as' => 'user.remove-image', 'uses' => 'UserController@imageRemove'));
+
 });

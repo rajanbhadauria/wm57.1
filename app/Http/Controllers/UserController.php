@@ -13,20 +13,30 @@ class UserController extends Controller
 {
     //
     public function profileImage(){
-        $data['profileImage'] = Auth::user()->avatar;
+        $public_path =  public_path();
+        if(strpos(Auth::user()->avatar, 'ttp')) {
+            $data['profileImage'] = Auth::user()->avatar;
+        } elseif(Auth::user()->avatar != "") {
+            $data['profileImage'] = asset('uploads/images/user/'.Auth::user()->avatar);
+        } else {
+            $data['profileImage'] = asset('uploads/images/user/user-img-white.jpg');
+        }
         return view('user.profile-image',$data);
     }
 
     public function saveCropImage(Request $request){
-
         $data = $request->image;
         list($type, $data) = explode(';', $data);
         list(, $data)      = explode(',', $data);
-
+        $public_path = public_path();
 
         $data = base64_decode($data);
-        $image_name= time().'.png';
-        $path = public_path() . "/uploads/images/user/" . $image_name;
+        $image_name= Auth::user()->id.rand(10).time().'.png';
+        if(!is_dir($path = public_path() . "/uploads/images/user")) {
+            mkdir( $public_path. "/uploads/images/user", "0777");
+        }
+
+        $path = $public_path . "/uploads/images/user/" . $image_name;
         file_put_contents($path, $data);
 
         // Save file done

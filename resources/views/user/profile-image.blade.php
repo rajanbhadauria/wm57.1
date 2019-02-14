@@ -1,16 +1,16 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="/assets/croppie/croppie.css" />
-<script src="/assets/croppie/croppie.min.js"></script>
+<link rel="stylesheet" href="{{ url('assets/croppie/croppie.css') }}" />
+<script src="{{ url('assets/croppie/croppie.min.js') }}"></script>
 
 <script>
-    
+
     $(function() {
 
         $('#upload-demo').hide();
         $('.custom-image-upload-btn').on('click', function(){
             $("#upload").trigger('click');
-            
+
         });
 
         $uploadCrop = $('#upload-demo').croppie({
@@ -28,7 +28,7 @@
         });
 
 
-        $('#upload').on('change', function () { 
+        $('#upload').on('change', function () {
             $(".avatar-profile-img").hide();
             $('#upload-demo').show();
             var reader = new FileReader();
@@ -37,7 +37,6 @@
                     url: e.target.result
                 }).then(function(){
                     $('#savebtn').show();
-                    console.log('jQuery bind complete');
                 });
             }
             reader.readAsDataURL(this.files[0]);
@@ -49,10 +48,10 @@
                 type: 'canvas',
                 size: 'viewport'
             }).then(function (resp) {
-                $.ajax({
-                    url: "/user/save-crop-image",
+                  $.ajax({
+                    url: "save-crop-image",
                     type: "POST",
-                    data: {"image":resp},
+                    data: {"image":resp, "_token": "{{ csrf_token()}}"},
                     success: function (data) {
                         //html = '<img src="' + resp + '" />';
                         //$("#upload-demo-i").html(html);
@@ -80,12 +79,12 @@
                     success: function(response){
                         if(response.error == 0){
                             //window.location.href = "{{URL::to('update?sectionid=profileimage')}}";
-                            $("#profile").attr("src","/uploads/images/user/user-img-white.jpg");
+                            $("#profile").attr("src","{{ url('uploads/images/user/user-img-white.jpg') }}");
                             window.location.reload() ;
                         }
                     }
                 });
-                
+
             }
         });
 
@@ -108,15 +107,12 @@
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
-            <div class="center-box" id="loginDiv"  >
+            <div class="center-box" id="loginDiv">
+
                 <div class="profile-image-wrapper">
                     <div class="profile-iamge-container">
                         <div class="avatar-profile-img">
-                            @if($profileImage == "")
-                                <img alt="" id="profile" src="/uploads/images/user/user-img-white.jpg">
-                            @else
-                                <img alt="" id="profile" src="/uploads/images/user/{{$profileImage}}">
-                            @endif
+                             <img alt="" id="profile" src="{{$profileImage}}">
                         </div>
 
                         <div id="upload-demo">
@@ -149,9 +145,9 @@
                         </div>
                     @endif
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
