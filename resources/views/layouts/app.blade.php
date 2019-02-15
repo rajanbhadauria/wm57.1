@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"/>
   <title>WorkMedian</title>
   <link rel="shortcut icon" href="images/favicon.png?v=1.0">
-
+  <meta name="_token" content="{!! csrf_token() !!}" />
   <!-- Fonts  -->
 
   <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
@@ -74,9 +74,11 @@
     @include("layouts.include.header")
     @include("layouts.include.nav")
     @if(session('success'))
-            <div class="alert mt-5 alert-success">
+    <div class="container">
+            <div class="alert alert-success" style="padding:.5em; margin-top:1em; color:#FFF">
                 {{session('success')}}
             </div>
+    </div>
     @endif
 
     @yield('content')

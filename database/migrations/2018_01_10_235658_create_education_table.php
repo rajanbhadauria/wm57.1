@@ -21,7 +21,7 @@ class CreateEducationTable extends Migration
             $table->string('city',60);
             $table->string('country',60);
             $table->string('educationName',60);
-            $table->string('branch',60);
+            $table->string('branch',60)->nullable();
 
             $table->string('dd',3);
             $table->string('mm',3);
@@ -29,8 +29,8 @@ class CreateEducationTable extends Migration
 
             $table->timestamp('educationDate',60);
 
-            $table->string('grade',15);
-            $table->string('gradeValue',20);
+            $table->string('grade',15)->nullable();
+            $table->string('gradeValue',20)->nullable();
 
             $table->enum('private', ['0', '1'])->default('0')->comment('1: No; 0: Yes');
             $table->timestamps();

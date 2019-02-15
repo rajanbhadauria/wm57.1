@@ -40,5 +40,114 @@ Route::group(array('prefix' => 'user'), function(){
 	Route::any('/save-profile-image', array('as' => 'user.save-profile-image', 'uses' => 'UserController@saveProfileImage'));
 	Route::any('/save-crop-image', array('as' => 'user.save-crop-image', 'uses' => 'UserController@saveCropImage'));
     Route::any('/remove-image', array('as' => 'user.remove-image', 'uses' => 'UserController@imageRemove'));
+});
 
+Route::group(array('prefix' => 'update','middleware' => 'auth'), function(){
+	Route::get('/', ['as' => 'update.index', 'uses' => 'Resume\UpdateController@index']);
+	Route::post('/pp-check', ['as' => 'update.pp-check', 'uses' => 'Resume\UpdateController@PPCheck']);
+
+	Route::get('/contact', ['as' => 'update.contact', 'uses' => 'Resume\UpdateController@contact']);
+	Route::post('/get-contact-details', ['as' => 'update.get-contact-details', 'uses' => 'Resume\UpdateController@getContactDetails']);
+	Route::post('/contact-save', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactSave']);
+    Route::post('/contact/remove/{id}', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactRemove']);
+
+
+
+	Route::get('/objective', ['as' => 'update.objective', 'uses' => 'Resume\UpdateController@objective']);
+	Route::post('/get-objective-details', ['as' => 'update.get-objective-details', 'uses' => 'Resume\UpdateController@getObjectiveDetails']);
+	Route::post('/objective-save', ['as' => 'update.objective-save', 'uses' => 'Resume\UpdateController@objectiveSave']);
+	Route::post('/objective/remove/{id}', ['as' => 'update.objective-save', 'uses' => 'Resume\UpdateController@objectiveRemove']);
+
+    Route::get('/current-address', ['as' => 'update.current-address', 'uses' => 'Resume\UpdateController@currentAddress']);
+	Route::post('/get-current-address-details', ['as' => 'update.get-current-address-details', 'uses' => 'Resume\UpdateController@getCurrentAddressDetails']);
+	Route::post('/current-address-save', ['as' => 'update.current-address-save', 'uses' => 'Resume\UpdateController@currentAddressSave']);
+	Route::post('/current-address/remove/{id}', ['as' => 'update.current-address', 'uses' => 'Resume\UpdateController@currentAddressRemove']);
+
+
+	Route::get('/permanent-address', ['as' => 'update.permanent-address', 'uses' => 'Resume\UpdateController@permanentAddress']);
+	Route::post('/get-permanent-address-details', ['as' => 'update.get-permanent-address-details', 'uses' => 'Resume\UpdateController@getpermanentAddressDetails']);
+	Route::post('/permanent-address-save', ['as' => 'update.permanent-address-save', 'uses' => 'Resume\UpdateController@permanentAddressSave']);
+	Route::post('/permanent-address/remove/{id}', ['as' => 'update.permanent-address', 'uses' => 'Resume\UpdateController@permanentAddressRemove']);
+
+    Route::get('/work', ['as' => 'update.work', 'uses' => 'Resume\UpdateController@work']);
+    Route::get('/work/{id}', ['as' => 'update.work', 'uses' => 'Resume\UpdateController@work']);
+    Route::post('/get-work-details', ['as' => 'update.get-work-details', 'uses' => 'Resume\UpdateController@getWorkDetails']);
+    Route::post('/work-save', ['as' => 'update.work-save', 'uses' => 'Resume\UpdateController@workSave']);
+    Route::post('/work/remove/{id}', ['as' => 'update.work.remove', 'uses' => 'Resume\UpdateController@workRemove']);
+
+
+	Route::get('/education', ['as' => 'update.education', 'uses' => 'Resume\UpdateController@education']);
+	Route::get('/education/{id}', ['as' => 'update.education', 'uses' => 'Resume\UpdateController@education']);
+    Route::post('/get-education-details', ['as' => 'update.get-education-details', 'uses' => 'Resume\UpdateController@getEducationDetails']);
+    Route::post('/education-save', ['as' => 'update.education-save', 'uses' => 'Resume\UpdateController@educationSave']);
+    Route::post('/education/remove/{id}', ['as' => 'update.education.remove', 'uses' => 'Resume\UpdateController@educationRemove']);
+
+
+
+    Route::get('/project', ['as' => 'update.project', 'uses' => 'Resume\UpdateController@project']);
+	Route::get('/project/{id}', ['as' => 'update.project', 'uses' => 'Resume\UpdateController@project']);
+    Route::post('/get-project-details', ['as' => 'update.get-project-details', 'uses' => 'Resume\UpdateController@getProjectDetails']);
+    Route::post('/project-save', ['as' => 'update.project-save', 'uses' => 'Resume\UpdateController@projectSave']);
+    Route::post('/project/remove/{id}', ['as' => 'update.project.remove', 'uses' => 'Resume\UpdateController@projectRemove']);
+
+
+    Route::get('/skill', ['as' => 'update.skill', 'uses' => 'Resume\UpdateController@skill']);
+	Route::get('/skill/{id}', ['as' => 'update.skill', 'uses' => 'Resume\UpdateController@skill']);
+    Route::post('/get-skill-details', ['as' => 'update.get-skill-details', 'uses' => 'Resume\UpdateController@getSkillDetails']);
+    Route::post('/skill-save', ['as' => 'update.skill-save', 'uses' => 'Resume\UpdateController@skillSave']);
+    Route::post('/skill/remove/{id}', ['as' => 'update.skill-save', 'uses' => 'Resume\UpdateController@skillRemove']);
+    Route::post('/update-new-skill', ['as' => 'update.update-new-skill', 'uses' => 'Resume\UpdateController@updateNewSkill']);
+
+
+
+	Route::get('/certification', ['as' => 'update.certification', 'uses' => 'Resume\UpdateController@certification']);
+	Route::get('/certification/{id}', ['as' => 'update.certification', 'uses' => 'Resume\UpdateController@certification']);
+    Route::post('/get-certification-details', ['as' => 'update.get-certification-details', 'uses' => 'Resume\UpdateController@getCertificationDetails']);
+    Route::post('/certification-save', ['as' => 'update.certification-save', 'uses' => 'Resume\UpdateController@certificationSave']);
+    Route::post('/certification/remove/{id}', ['as' => 'update.certification-save', 'uses' => 'Resume\UpdateController@certificationRemove']);
+
+    Route::get('/training', ['as' => 'update.training', 'uses' => 'Resume\UpdateController@training']);
+	Route::get('/training/{id}', ['as' => 'update.training', 'uses' => 'Resume\UpdateController@training']);
+    Route::post('/get-training-details', ['as' => 'update.get-training-details', 'uses' => 'Resume\UpdateController@getTrainingDetails']);
+    Route::post('/training-save', ['as' => 'update.training-save', 'uses' => 'Resume\UpdateController@trainingSave']);
+    Route::post('/training/remove/{id}', ['as' => 'update.training-remove', 'uses' => 'Resume\UpdateController@trainingRemove']);
+
+    Route::get('/course', ['as' => 'update.course', 'uses' => 'Resume\UpdateController@course']);
+    Route::get('/course/{id}', ['as' => 'update.course', 'uses' => 'Resume\UpdateController@course']);
+    Route::post('/get-course-details', ['as' => 'update.get-course-details', 'uses' => 'Resume\UpdateController@getCourseDetails']);
+    Route::post('/course-save', ['as' => 'update.course-save', 'uses' => 'Resume\UpdateController@courseSave']);
+    Route::post('/course/remove/{id}', ['as' => 'update.course-remove', 'uses' => 'Resume\UpdateController@courseRemove']);
+
+    Route::get('/travel', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
+    Route::get('/travel/{id}', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
+    Route::post('/get-travel-details', ['as' => 'update.get-travel-details', 'uses' => 'Resume\UpdateController@getTravelDetails']);
+    Route::post('/travel-save', ['as' => 'update.travel-save', 'uses' => 'Resume\UpdateController@travelSave']);
+    Route::post('/travel/remove/{id}', ['as' => 'update.travel-remove', 'uses' => 'Resume\UpdateController@travelRemove']);
+
+    Route::get('/award', ['as' => 'update.award', 'uses' => 'Resume\UpdateController@award']);
+    Route::get('/award/{id}', ['as' => 'update.award', 'uses' => 'Resume\UpdateController@award']);
+    Route::post('/get-award-details', ['as' => 'update.get-award-details', 'uses' => 'Resume\UpdateController@getAwardDetails']);
+    Route::post('/award-save', ['as' => 'update.award-save', 'uses' => 'Resume\UpdateController@awardSave']);
+    Route::post('/award/remove/{id}', ['as' => 'update.award-remove', 'uses' => 'Resume\UpdateController@awardRemove']);
+
+    Route::get('/patent', ['as' => 'update.patent', 'uses' => 'Resume\UpdateController@patent']);
+    Route::get('/patent/{id}', ['as' => 'update.patent', 'uses' => 'Resume\UpdateController@patent']);
+    Route::post('/get-patent-details', ['as' => 'update.get-patent-details', 'uses' => 'Resume\UpdateController@getPatentDetails']);
+    Route::post('/patent-save', ['as' => 'update.patent-save', 'uses' => 'Resume\UpdateController@patentSave']);
+    Route::post('/patent/remove/{id}', ['as' => 'update.patent-remove', 'uses' => 'Resume\UpdateController@patentRemove']);
+
+    Route::get('/language', ['as' => 'update.language', 'uses' => 'Resume\UpdateController@language']);
+    Route::get('/language/{id}', ['as' => 'update.language', 'uses' => 'Resume\UpdateController@language']);
+    Route::post('/get-language-details', ['as' => 'update.get-language-details', 'uses' => 'Resume\UpdateController@getLanguageDetails']);
+    Route::post('/language-save', ['as' => 'update.language-save', 'uses' => 'Resume\UpdateController@languageSave']);
+    Route::post('/language/remove/{id}', ['as' => 'update.language-remove', 'uses' => 'Resume\UpdateController@languageRemove']);
+
+    Route::get('/reference', ['as' => 'update.reference', 'uses' => 'Resume\UpdateController@reference']);
+    Route::get('/reference/{id}', ['as' => 'update.reference', 'uses' => 'Resume\UpdateController@reference']);
+    Route::post('/get-reference-details', ['as' => 'update.get-reference-details', 'uses' => 'Resume\UpdateController@getReferenceDetails']);
+    Route::post('/reference-save', ['as' => 'update.reference-save', 'uses' => 'Resume\UpdateController@referenceSave']);
+    Route::post('/reference/remove/{id}', ['as' => 'update.reference-remove', 'uses' => 'Resume\UpdateController@referenceRemove']);
+
+    Route::get('/create-date', ['as' => 'update.create-date', 'uses' => 'Resume\UpdateController@createDate']);
+    Route::get('/date-diffrence', ['as' => 'update.date-diffrence', 'uses' => 'Resume\UpdateController@dateDiffrence']);
 });
