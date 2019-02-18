@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => "mail",//env('MAIL_DRIVER', 'mail'),
+    'driver' => "smtp",//env('MAIL_DRIVER', 'mail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => "noreply@rudraweb.in", 'name' => "WorkMedian"],
+    'from' => ['address' => "mynotes@rudraweb.in", 'name' => "WorkMedian"],
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +107,7 @@ return [
     |
     */
 
-    'sendmail' => '/usr/sbin/sendmail -t',
-    'pretend' => false,
+   // 'sendmail' => '/usr/sbin/sendmail -t',
+   // 'pretend' => false,
 
 ];

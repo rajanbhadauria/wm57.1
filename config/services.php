@@ -42,16 +42,16 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => 'http://localhost/wm57/public/login/google/callback',
+        'redirect' => 'http://dev.workmedian.com/login/google/callback',
     ],
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => 'http://localhost/wm57/public/login/facebook/callback',
+        'redirect' => 'http://dev.workmedian.com/login/facebook/callback',
     ],
     'linkedin' => [
         'client_id' => env('LINKEDIN_CLIENT_ID'),
         'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
-        'redirect' => 'http://localhost/wm57/public/login/linkedin/callback?',
+        'redirect' => 'http://dev.workmedian.com/login/linkedin/callback?',
     ],
 ];

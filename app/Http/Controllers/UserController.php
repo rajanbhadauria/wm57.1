@@ -119,8 +119,6 @@ class UserController extends Controller
     }
 
     public function resendActivation(){
-
-        //echo "I am here";
         $user = User::find(Auth::id());
         $this->sendActivationEmail($user->id, $user->email, $user->first_name, $user->activate_token);
     }

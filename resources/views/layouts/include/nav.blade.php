@@ -167,7 +167,7 @@
 @endif
 
 <!-- User Image Upload Modal -->
-<div id="imageUploadModal" class="modal fade" role="dialog" style="z-index:999">
+<div id="imageUploadModal" class="modal fade" role="dialog" style="z-index:999; display:none">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -190,101 +190,7 @@
     </div>
 </div>
 
-<div id="resume-actions" class="resume-actions-modal menu-popup modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4>Resume update required</h4>
-            <a href="javascript:void(0)" class="modal-close waves-effect close-btn"><i class="material-icons">close</i></a>
-        </div>
-        <div class="modal-body">
-            <ul class="popup-menu-list">
-                <li class="text-center"><a href="#">Go for resume update</a></li>
-                <li class="text-center">
-                    <p>
-                        With GDPT we all need to comply understand GDPR act released by UK
-                    </p>
-                </li>
-                <li>
-                    <div class="input-field custom-form popup-emptyp">
-                        <select id="employementType" name="employementType" required data-msg="Employement type required">
-                            <option value="">Select Level</option>
-                            <option value="1">Full time</option>
-                            <option value="2">Time</option>
-                            <option value="3">Full time</option>
-                        </select>
-                    </div>
-                </li>
-                <li>
-                    <div class="row mb0 popup-yr">
-                        <div class="col s4 pl0 pr0">
-                            <div class="input-field">
-                                <select id="ddStart" name="ddStart" ng-model="ddStart">
-                                    <option value="" selected>DD</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col s4 pr0">
-                            <div class="input-field">
-                                <select id="mmStart" name="mmStart" data-msg="Required" required>
-                                    <option value="" selected>MM</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col s4 pr0">
-                            <div class="input-field">
-                                <select id="yyyyStart" name="yyyyStart" data-msg="Required" required>
-                                    <option value="" selected>YYYY</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="">
-                        <input type="text" class="m-0" placeholder="Search">
-                    </div>
-                </li>
-                <li>
-                    <ul class="reset-list-style">
-                        <li class="display-inline">
-                            <input class="with-gap" name="option" type="radio" id="option1" checked>
-                            <label for="option1">Male </label>
-                        </li>
-                        <li class="display-inline">
-                            <input class="with-gap" name="option" type="radio" id="option2">
-                            <label for="option2">Female </label>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <ul class="reset-list-style">
-                        <li class="display-inline">
-                            <input class="with-gap" name="checkbox" type="checkbox" id="checkbox1" value="email-option-content"
-                                checked>
-                            <label for="checkbox1">Select </label>
-                        </li>
-                        <li class="display-inline">
-                            <input class="with-gap" name="checkbox" type="checkbox" id="checkbox2" value="phonenumber-option-content">
-                            <label for="checkbox2">Select</label>
-                        </li>
-                    </ul>
-                </li>
-                <li class="text-center search-modal">
-                    <a href="">Search</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
