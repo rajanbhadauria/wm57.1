@@ -4,7 +4,7 @@
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"/>
-  <title>WorkMedian</title>
+  <title>WorkMedian - Build effective resume to share in professionals and recruiters network</title>
   <link rel="shortcut icon" href="images/favicon.png?v=1.0">
   <meta name="_token" content="{!! csrf_token() !!}" />
   <!-- Fonts  -->
@@ -25,7 +25,7 @@
   <link href="{{ my_asset('css/main.css') }}" type="text/css" rel="stylesheet"/>
   <link href="{{ my_asset('css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900|Open+Sans:400,600,700,800" rel="stylesheet">
-
+  <link href="{{ my_asset('notify/notify.css') }}" rel="stylesheet">
   <!-- File Upload -->
 
 
@@ -34,6 +34,7 @@
   <script type="text/javascript" src="{{ my_asset('js/jquery.validate.min.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ my_asset('js/select3-full.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ my_asset('js/tgn.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ my_asset('notify/jquery.notify.js')}}"></script>
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
@@ -75,9 +76,9 @@
     @include("layouts.include.nav")
     @if(session('success'))
     <div class="container">
-            <div class="alert alert-success" style="padding:.5em; margin-top:1em; color:#FFF">
-                {{session('success')}}
-            </div>
+    <script>
+    $.notify({title :'', content:" {{session('success')}}", timeout:5000});
+    </script>
     </div>
     @endif
 
@@ -87,6 +88,7 @@
       <script type="text/javascript" src="{{ my_asset('js/menu-backdrop.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/init.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/main.js') }}"></script>
+
       <?php $resize = true; ?>
 
 </body>

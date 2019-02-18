@@ -4,12 +4,12 @@
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>WorkMedian</title>
+  <title>WorkMedian - Build effective resume to share in professionals and recruiters network</title>
   <link rel="shortcut icon" href="images/favicon.png?v=1.0">
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="{{ URL::asset('assets/css/know-more.css') }}">
+  <link rel="stylesheet" href="{{ my_asset('css/know-more.css') }}">
 
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900|Open+Sans:400,600,700,800" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -24,13 +24,13 @@
 	</div>
 </header>
 <section class="km-hero-section">
-<img src="{{ URL::asset('assets/images/know-img/hero-bg.png') }}" alt="" class="km-imgBg"/>
+<img src="{{ my_asset('images/know-img/hero-bg.png') }}" alt="" class="km-imgBg"/>
 	<div class="km-container">
 		<h2 data-aos="fade-up" data-aos-duration="1200" data-aos-anchor-placement="top-bottom">LET’S CHANGE THE WAY PROFESSIONALS INTERACT</h2>
 		<h4 data-aos="fade-up" data-aos-duration="1500" data-aos-anchor-placement="top-bottom">User problem mentioning ( Seeker and provider )</h4>
 		<p data-aos="fade-up" data-aos-duration="1800" data-aos-anchor-placement="top-bottom">We end up sharing resume without knowing what happened, <br />we never want to be in that state. Leave the traditional , follow the future </p>
 		<div class="km-wmusers">
-			<img class="km-imgMaxW" src="{{ URL::asset('assets/images/know-img/workmedian-user.png') }}" alt=""/>
+			<img class="km-imgMaxW" src="{{ my_asset('images/know-img/workmedian-user.png') }}" alt=""/>
 		</div>
 		<a href="#" data-aos="fade-up" data-aos-duration="3000" data-aos-anchor-placement="top-bottom" class="km-btn">Get Started</a>
 	</div>
@@ -39,7 +39,7 @@
 	<div class="km-container">
 		<div class="km-twoColumn">
 			<div class="km-disFlex km-colOrderTwo" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-				<img class="km-imgMaxW" src="{{ URL::asset('assets/images/know-img/seeking-job.png') }}" alt="" />
+				<img class="km-imgMaxW" src="{{ my_asset('images/know-img/seeking-job.png') }}" alt="" />
 			</div>
 			<div class="km-disFlex km-colOrderOne km-seekingjob" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<h3 class="km-main-title">Seeking job or bored of current one ?</h3>
@@ -52,7 +52,7 @@
 	<div class="km-container">
 		<div class="km-twoColumn">
 			<div class="km-disFlex" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-				<img class="km-imgMaxW" src="{{ URL::asset('assets/images/know-img/recuting.png') }}" alt="" />
+				<img class="km-imgMaxW" src="{{ my_asset('images/know-img/recuting.png') }}" alt="" />
 			</div>
 			<div class="km-disFlex km-seekingjob" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<h3 class="km-main-title">Recruiting best for your organization?</h3>
@@ -65,7 +65,7 @@
 	<div class="km-container">
 		<div class="km-twoColumn">
 			<div class="km-disFlex km-colOrderTwo" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-				<img class="km-imgMaxW" src="{{ URL::asset('assets/images/know-img/get-happy.png') }}" alt="" />
+				<img class="km-imgMaxW" src="{{ my_asset('images/know-img/get-happy.png') }}" alt="" />
 			</div>
 			<div class="km-disFlex km-colOrderOne km-seekingjob" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<h3 class="km-main-title">Let’s do it better</h3>
@@ -80,22 +80,22 @@
 		<ul class="km-growth">
 			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<span class="km-growth-num">32,023</span>
-				<span class="km-growth-icon"><img src="{{ URL::asset('assets/images/know-img//user-icon.png') }}" alt="" /></span>
+				<span class="km-growth-icon"><img src="{{ my_asset('images/know-img//user-icon.png') }}" alt="" /></span>
 				<span class="km-growth-title">Users</span>
 			</li>
 			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<span class="km-growth-num">34</span>
-				<span class="km-growth-icon"><img src="{{ URL::asset('assets/images/know-img/corporate-icon.png') }}" alt="" /></span>
+				<span class="km-growth-icon"><img src="{{ my_asset('images/know-img/corporate-icon.png') }}" alt="" /></span>
 				<span class="km-growth-title">corporates</span>
 			</li>
 			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<span class="km-growth-num">23</span>
-				<span class="km-growth-icon"><img src="{{ URL::asset('assets/images/know-img/companies-icon.png') }}" alt="" /></span>
+				<span class="km-growth-icon"><img src="{{ my_asset('images/know-img/companies-icon.png') }}" alt="" /></span>
 				<span class="km-growth-title">companies</span>
 			</li>
 			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom">
 				<span class="km-growth-num">4,665</span>
-				<span class="km-growth-icon"><img src="{{ URL::asset('assets/images/know-img/resuem-icon.png') }}" alt="" /></span>
+				<span class="km-growth-icon"><img src="{{ my_asset('images/know-img/resuem-icon.png') }}" alt="" /></span>
 				<span class="km-growth-title">Resume</span>
 			</li>
 		</ul>
@@ -123,9 +123,9 @@
 		<h3 class="km-main-title">Be part of great team</h3>
 		<p class="km-team-para">Problem solving, entrepreneurial , sales acumen</p>
 		<div class="km-teams">
-			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ URL::asset('assets/images/know-img/team-pic1.jpg') }}" alt="" /></li>
-			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ URL::asset('assets/images/know-img/team-pic2.jpg') }}" alt="" /></li>
-			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ URL::asset('assets/images/know-img/team-pic3.jpg') }}" alt="" /></li>
+			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ my_asset('images/know-img/team-pic1.jpg') }}" alt="" /></li>
+			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ my_asset('images/know-img/team-pic2.jpg') }}" alt="" /></li>
+			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom"><img src="{{ my_asset('images/know-img/team-pic3.jpg') }}" alt="" /></li>
 			<li data-aos="fade-up" data-aos-anchor-placement="top-bottom" class="becomMember">
 				<span class="kmQues">?</span>
 				<p>If you love to solve problem, then we should connect and know each other better</p>

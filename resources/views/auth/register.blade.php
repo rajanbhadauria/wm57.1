@@ -26,7 +26,7 @@
                                 <input id="email" type="email" class="form-control emailvalidate" name="email" value="{{ old('email') }}" >
                                 @if ($errors->has('email'))
                                     <span class="help-block validationError">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>Email has already been taken, use your email for account registration</strong>
                                     </span>
                                 @endif
                                 <label for="email" class="col-md-4 control-label active">Enter your email</label>
@@ -173,5 +173,5 @@
     });*/
 
 </script>
-<script src="/assets/js/signupPasswordStrength.js"></script>
+<script src="{{my_asset('assets/js/signupPasswordStrength.js')}}"></script>
 @endsection

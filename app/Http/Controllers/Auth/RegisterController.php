@@ -50,6 +50,13 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    public function messages()
+    {
+        return [
+            'email.unique' => 'Email has already been taken, use your email for account registration',
+        ];
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -58,6 +65,15 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:6'],
         ]);
     }
+
+    public function attributes()
+    {
+        return [
+            'email' => 'email address',
+        ];
+    }
+
+
 
     /**
      * Create a new user instance after a valid registration.

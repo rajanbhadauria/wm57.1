@@ -4,7 +4,7 @@
   <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>WorkMedian</title>
+  <title>WorkMedian - Build effective resume to share in professionals and recruiters network</title>
   <link rel="shortcut icon" href="images/favicon.png?v=1.0">
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">

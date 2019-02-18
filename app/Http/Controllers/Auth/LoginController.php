@@ -85,22 +85,5 @@ class LoginController extends Controller
         }
     }
 
-    public function sendEmail()
-    {
-        $data['url'] = "This is Test Mail Tuts Make";
-
-        Mail::send('auth.emails.activation', $data, function($message) {
-
-            $message->to('rajanbhadauria@gmail.com', 'Receiver Name')
-
-                    ->subject('Test Make Mail');
-        });
-
-        if (Mail::failures()) {
-           return response()->Fail('Sorry! Please try again latter');
-         }else{
-           return 'Great! Successfully send in your mail';
-         }
-    }
 
 }
