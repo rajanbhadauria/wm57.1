@@ -84,7 +84,7 @@ class UserController extends Controller
             $user = User::find(Auth::id());
             $user->password = Hash::make($input['newPassword']);
             $user->save();
-            return redirect('/password/changepassword');
+            return redirect('/change-password')->with("success" , "Password has been updated successfully");
             //return redirect()->back()->with("success" , "Password Updated"); // will return only the errors */
 
         } else {
@@ -96,7 +96,7 @@ class UserController extends Controller
 
     public function activateAccountPage() {
         $user = User::find(Auth::id());
-        if(isset($user->status) && $user->status=='1' ){
+        if(isset($user->status) && $user->status == '1' ){
             return redirect('/home');
         }
         return view('user.activate-account');
@@ -105,8 +105,10 @@ class UserController extends Controller
     public function activate($user_id,$token){
         $user = User::where("id","=",$user_id)->where("activate_token","=",$token)->get()->first();
         if(is_object($user) && $user->id == $user_id){
-            $user->status =1;
+            Auth::login($user);
+            $user->status = "1";
             $user->save();
+            Auth::user()->status = 1;
             $data['title'] = "Account activated";
             $data['greeting'] = "Congratulation";
             $data['message'] = "Your account is now activate !";
@@ -115,7 +117,8 @@ class UserController extends Controller
             $data['greeting'] = "Oops! Somthing went wrong";
             $data['message'] = "User Id and token missmatch, Try again !";
         }
-        return view('user.activate-response', $data);
+        //return view('user.activate-response', $data);
+        return redirect('/home')->with('success', "Congrats ! Your account is activated");
     }
 
     public function resendActivation(){

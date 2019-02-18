@@ -25,10 +25,14 @@ Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'U
 Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'));
 Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'));
 Route::get('/logout', 'HomeController@logout')->name('logout');
+Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
+Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
-Route::get('/testmail', 'Auth\LoginController@sendEmail');
+Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
+
+
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/home', 'HomeController@index')->name('home');

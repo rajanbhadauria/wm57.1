@@ -24,13 +24,17 @@
                     <form class="form-horizontal mb15 no-card" role="form" method="POST" action="{{ url('/login') }}" ng-app="loginFormApp" ng-controller="validateCtrl" name="loginForm" id="loginForm">
                         {{ csrf_field() }}
                         @if ($errors->has('email'))
-                            <div class="alert alert-danger" role="alert">
-                                @if($errors->first('email')  == "These credentials do not match our records.")
-                                    login with correct email / password
+                        @if($errors->first('email')  == "These credentials do not match our records.")
+                                  <script>
+                                  $.notify({title :'', content:"Incorrect user mail or password", timeout:5000});
+                                  </script>
                                 @else
+                            <div class="alert alert-danger" role="alert">
+
                                     {{$errors->first('email')}}
-                                @endif
+
                             </div>
+                            @endif
                             <script>
                                 setTimeout(function(){
                                     $('.alert-danger').slideUp();
@@ -145,7 +149,7 @@
             messages: {
                 email: {
                     required: "Required",
-                    email: "Please enter valid email."
+                    email: "Enter valid email"
                 },
                 password:{
                     required: "Required"

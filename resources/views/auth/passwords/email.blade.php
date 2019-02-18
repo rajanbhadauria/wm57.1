@@ -17,19 +17,15 @@
                 <div class="ak-custom-center-box">
                     <div class="login-form" id="loginDiv">
                         <div class="ak-comn-title">Enter your registered email to receive password reset link</div>
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-						<form method="POST" action="{{ route('password.email') }}">
+
+						<form method="POST" action="{{ route('password.email') }}" id="resetPassword">
                         @csrf
                             <div class="input-field">
                                 <input id="email" type="email" class="form-control {{ $errors->has('email') ? ' ng-invalid' : '' }} ng-pristine ng-empty ng-valid-email ng-invalid-required ng-touched" name="email" value="{{ old('email') }}" required>
 
                                 @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                    <span class="help-block validationError">
+                                        Use valid active email
                                     </span>
                                 @endif
                                 <span class="validationError ng-hide" ng-show="resetEmailForm.email.$dirty &amp;&amp; resetEmailForm.email.$invalid">
@@ -54,6 +50,31 @@
 	<script type="text/javascript">
 		var app = angular.module('resetEmailFormApp', []);
 		app.controller('validateCtrl', function($scope) {});
+            $(document).ready(function(){
+            $( "#resetPassword" ).validate({
+                    rules: {
+                        email: {required: true,email:true },
+                    },
+                    messages: {
+                        email: {
+                            required: "Required",
+                            email: "Enter valid email"
+                        },
+                    },
+                    errorClass: 'validationError',
+                    errorElement : 'span',
+                    //errorLabelContainer: '.validationError',
+                    errorPlacement: function( error, element ) {
+                        error.insertAfter( element);
+                    },
+                    highlight: function (element, errorClass, validClass) {
+                        $(element).parents("span").addClass(errorClass);
+                    },
+                    unhighlight: function (element, errorClass, validClass) {
+                        $(element).parents("span").removeClass(errorClass);
+                    }
+                });
+        });
 	</script>
 
 @endsection
