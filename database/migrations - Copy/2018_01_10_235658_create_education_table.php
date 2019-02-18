@@ -27,7 +27,7 @@ class CreateEducationTable extends Migration
             $table->string('mm',3);
             $table->string('yyyy',5);
 
-            $table->timestamp('educationDate');
+            $table->timestamp('educationDate',60);
 
             $table->string('grade',15)->nullable();
             $table->string('gradeValue',20)->nullable();
