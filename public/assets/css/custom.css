@@ -815,7 +815,7 @@ a.btn-black-round:hover {
         font-weight: bold;
     }
     .btn-red-transparent:hover{
-        background: #ff6384; 
+        background: #ff6384;
              color: #fff;
     }
 }*/
@@ -1896,6 +1896,7 @@ textarea.materialize-textarea.validate+label:not(.label-icon).active {
     width: 280px;
     height: auto;
     position: relative;
+    margin: 0 auto;
 }
 
 .avatar-profile-img {

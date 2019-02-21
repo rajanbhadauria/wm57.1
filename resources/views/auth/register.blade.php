@@ -75,6 +75,16 @@
                                     </div>
                                 </div>
                             </div>
+                           <div class="col s6 r600pr0">
+                           <div class="g-recaptcha" data-sitekey="6LcvvZIUAAAAAJul9-TOC0LD6rbdDfHKJu9rk8Ha"></div>
+
+
+                            </div>
+                            @if ($errors->has('g-recaptcha-response'))
+                                            <div class="alert alert-danger">
+                                                <strong>Captcha is required</strong>
+                                            </div>
+                                        @endif
 
                             <div class="input-field">
                                 <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block alpha" value="Sign up" >
@@ -129,7 +139,7 @@
                 },
                 password:{
                     required: "Required",
-                    minlength: "Minimum length should be 6 char"
+                    minlength: "Minimum password length should be 6 characters"
                 },
                 first_name: {
                     required: "Required"
@@ -150,28 +160,7 @@
         });
 
     });
-
-    /*var app = angular.module('signUpFormApp', []);
-    app.controller('validateCtrl', function($scope) {});
-    app.directive('validateEmail', function() {
-      var EMAIL_REGEXP = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
-
-      return {
-        require: 'ngModel',
-        restrict: '',
-        link: function(scope, elm, attrs, ctrl) {
-          // only apply the validator if ngModel is present and Angular has added the email validator
-          if (ctrl && ctrl.$validators.email) {
-
-            // this will overwrite the default Angular email validator
-            ctrl.$validators.email = function(modelValue) {
-              return ctrl.$isEmpty(modelValue) || EMAIL_REGEXP.test(modelValue);
-            };
-          }
-        }
-      };
-    });*/
-
 </script>
-<script src="{{my_asset('assets/js/signupPasswordStrength.js')}}"></script>
+ <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 @endsection

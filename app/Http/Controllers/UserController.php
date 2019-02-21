@@ -11,6 +11,9 @@ use Mail;
 
 class UserController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
     //
     public function profileImage(){
         $public_path =  public_path();

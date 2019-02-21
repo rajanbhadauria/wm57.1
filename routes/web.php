@@ -21,16 +21,19 @@ Route::get('/know-more', function () {
 
 Auth::routes();
 
-Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'));
-Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'));
-Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'));
-Route::get('/logout', 'HomeController@logout')->name('logout');
-Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
-Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
 
+Route::group(['middleware' => ['auth']], function(){
+    Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'));
+    Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'));
+    Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'));
+    Route::get('/logout', 'HomeController@logout')->name('logout');
+    Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
+    Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
+});
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
 
 
@@ -46,7 +49,7 @@ Route::group(array('prefix' => 'user'), function(){
     Route::any('/remove-image', array('as' => 'user.remove-image', 'uses' => 'UserController@imageRemove'));
 });
 
-Route::group(array('prefix' => 'update','middleware' => 'auth'), function(){
+Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), function(){
 	Route::get('/', ['as' => 'update.index', 'uses' => 'Resume\UpdateController@index']);
 	Route::post('/pp-check', ['as' => 'update.pp-check', 'uses' => 'Resume\UpdateController@PPCheck']);
 

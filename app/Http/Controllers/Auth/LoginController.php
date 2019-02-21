@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Socialite;
 use App\User;
 use Auth;
@@ -50,10 +51,17 @@ class LoginController extends Controller
       return Socialite::driver($provider)->redirect();
     }
 
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback($provider,Request $request)
     {
+        if (! $request->query('error')) {
+            return redirect('login')->with('success '.$request->query('error_code').' - '.$request->query('error_description'));
+        }
+
         try {
-            $user = Socialite::driver($provider)->user();
+              $user = Socialite::driver($provider)->user();
+
+        } catch (InvalidStateException $e) {
+            return redirect('login');//
         } catch (Exception $e) {
             return redirect('auth/'.$provider);
         }

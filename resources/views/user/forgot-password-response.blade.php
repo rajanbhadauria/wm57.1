@@ -5,7 +5,7 @@
 		<div class="row mb0">
 		  <div class="col s12 pr">
 			<div class="top-panel">
-			  <h1>Success</h1>
+			  <h1>Password activation link sent</h1>
 			</div>
 		  </div>
 		</div>

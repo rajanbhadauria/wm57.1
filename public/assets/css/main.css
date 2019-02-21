@@ -164,7 +164,7 @@
 }
 
 .modal {
-	transform: translateY(-51.09%) !important;
+	/*transform: translateY(-51.09%) !important; */
 	border-radius: 4px;
 }
 

@@ -69,7 +69,7 @@
                         </div>
                     </form>
                     <div class="link-container cf p-0">
-                        <a class="blue-link m-0" href="{{ url('/password/reset') }}">Forgot password ?</a>
+                        <a class="blue-link m-0" href="{{ url('/forgot-password') }}">Forgot password ?</a>
                     </div>
                     <div class="socialmedia-login-label">
                         <label for="">Sign in fast by Social Connects below</label>

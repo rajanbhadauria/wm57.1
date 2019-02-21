@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-
+use App\PasswordResets;
+use DB;
 class ResetPasswordController extends Controller
 {
     /*
@@ -36,4 +37,6 @@ class ResetPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+
 }

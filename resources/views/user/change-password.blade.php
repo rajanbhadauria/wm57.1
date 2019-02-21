@@ -65,7 +65,7 @@
   $(document).ready(function(){
     $( "#changePasswordForm" ).validate({
             rules: {
-                oldPassword: {required: true,minlength:6 },
+                oldPassword: {required: true },
                 newPassword: {required: true,minlength:6},
                 confirmPassword: {required: true, equalTo: "#newPassword"}
 
@@ -76,11 +76,11 @@
                 },
                 newPassword:{
                     required: "Required",
-                    minlength: "Minimum length should be 6 char"
+                    minlength: "Minimum password length should be 6 characters"
                 },
                 confirmPassword: {
                     required: "Required",
-                    equalTo: "Confirm password must be same as new password"
+                    equalTo: "New password mismatch"
                 }
             },
             errorClass: 'validationError',

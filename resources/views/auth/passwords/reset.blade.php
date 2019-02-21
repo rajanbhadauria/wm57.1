@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row mb0">
                 <div class="col s12">
-                    <h1>{{ __('Reset Password') }}</h1>
+                    <h1>Reset password</h1>
                 </div>
             </div>
         </div>
@@ -16,18 +16,17 @@
           <div class="center-container">
             <div class="ak-custom-center-box">
               <div class="login-form center-align" id="loginDiv"  >
-                <div class="ak-comn-title">Reset your password</div>
+                <div class="ak-comn-title">Reset your password for {{$email}}</div>
                 <form method="POST" action="{{ route('password.update') }}" id="restPasswordForm">
                         @csrf
                         <input type="hidden" name="token" value="{{ $token }}">
-                  <div class="input-field">
-                  <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
+                  <div class="input-field hide">
+                  <input id="email" type="hidden" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
                   @if ($errors->has('email'))
                                     <span class="help-block validationError">
                                         <strong>Use valid active email</strong>
                                     </span>
-                                @endif
-                  <label class="" for="email">Email</label>
+                   @endif
                   </div>
 
                   <div class="input-field">
@@ -47,7 +46,7 @@
                         <strong>{{ $errors->first('password_confirmation') }}</strong>
                     </span>
                     @endif
-                    <label class="" for="confirmPassword">Confirm Password</label>
+                    <label class="" for="confirmPassword">Confirm password</label>
                   </div>
 
 
@@ -86,11 +85,12 @@ $(document).ready(function(){
                 },
                 password:{
                     required: "Required",
-                    minlength: "Minimum length should be 6 char"
+                    minlength: "Minimum password length should be 6 characters"
                 },
                 password_confirmation: {
                     required: "Required",
-                    equalTo: "Confirm password must be same as new password"
+                    equalTo: "Password mismatch",
+                    minlength: "Minimum password length should be 6 characters"
                 }
             },
             errorClass: 'validationError',

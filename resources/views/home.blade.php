@@ -43,8 +43,8 @@
 							<h5 class="mptext">Resume</h5>
 							<p>last updated 8 months ago</p>
 						  </div>
-						  <a href="#" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
-						  <a href="resumesample.html" class="waves-effect waves-light btn-black ak-btn-half-second">View</a>
+						  <a href="{{URL::to('/update')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
+						  <a href="{{URL::to('/resumeview')}}" class="waves-effect waves-light btn-black ak-btn-half-second">View</a>
 					  </div>
 					</div>
 
