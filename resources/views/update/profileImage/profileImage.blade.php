@@ -32,7 +32,7 @@
                                                 </div>
                                             </li>
                                             <li class="collection-item">
-                                                <a href="{{URL::to('user/profile-image')}}" class="collapsible-body-inner">
+                                                <a href="{{URL::to('user/profile-image?ref_url=update?sectionid=profileimage')}}" class="collapsible-body-inner">
                                                 <div class="update-desc">
                                                     <span class="bold">
                                                         @if($profileImageData['avatar']!="")
@@ -40,14 +40,14 @@
                                                         @else
                                                             Click to update profile image
                                                         @endif
-                                                    </span> 
+                                                    </span>
                                                  </div>
                                                     <span class="secondary-content">
                                                         <i class="material-icons">edit</i>
                                                     </span>
                                                 </a>
                                             </li>
-                                            
-                                        </ul>  
+
+                                        </ul>
                                     </div>
                                 </li>

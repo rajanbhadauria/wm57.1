@@ -22,7 +22,7 @@ if( isset($redirectBack) ) {
             </div>
         </div>
     </section>
-    <div class="section wrappit" ng-app="ContactFromApp" ng-controller="myCtrl">
+    <div class="section wrappit">
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
@@ -179,17 +179,17 @@ if( isset($redirectBack) ) {
             messages: {
                 primaryEmailTxt: {
                     required: "Required",
-                    email: "Please enter valid email."
+                    email: "Enter valid email"
                 },
                 altEmail: {
-                    email: "Please enter valid email."
+                    email: "Enter valid email"
                 },
                 primaryPhoneCode: {
                     required: "Required"
                 },
                 primaryPhone: {
                     required: "Required",
-                    number: "Please enter valid number."
+                    number: "Enter valid number."
                 },
                 altPhoneCode: {
                     required: "Required"
@@ -214,14 +214,13 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                //console.log($(this).attr("action"));
+                var formData = $("#contactForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#contactForm").attr("action"),
-                    data:$("#contactForm").serialize(),
+                    data:formData,
                     success: function(response){
-                        console.log(response);
                         window.location.href = "{{URL::to('update?sectionid=contactInfo')}}";
                     }
                 });
@@ -230,30 +229,18 @@ if( isset($redirectBack) ) {
 
 
 
-        /*$("#contactForm").submit(function( event ) {
-  			event.preventDefault();
-  			$.ajax({
-    		    type:"POST",
-    		    url:$(this).attr("action"),
-    		    data:$(this).serialize(),
-    		    success: function(response){
-    		        console.log(response);
-                    window.location.href = "{{URL::to('update?sectionid=contactInfo')}}";
-    		    }
-    		});
-		});*/
-
         //$("#remove").hide();
         @if(isset($contact['id']) && $contact['id']!='')
         $("#remove").on("click", function(event){
-            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/contact/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{URL::to('update?sectionid=contactInfo')}}";

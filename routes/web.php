@@ -21,6 +21,11 @@ Route::get('/know-more', function () {
 
 Auth::routes();
 
+Route::get('/', 'IndexController@index');
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'));
@@ -29,17 +34,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/logout', 'HomeController@logout')->name('logout');
     Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
     Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
-});
-Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
-Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
-Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
-Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
-
-
-
-Route::group(['middleware' => ['auth']], function(){
     Route::get('/home', 'HomeController@index')->name('home');
 });
+
+
 
 Route::group(array('prefix' => 'user'), function(){
 	Route::any('/profile-image', array('as' => 'user.upload-file', 'uses' => 'UserController@profileImage'));
@@ -105,6 +103,11 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
     Route::post('/skill/remove/{id}', ['as' => 'update.skill-save', 'uses' => 'Resume\UpdateController@skillRemove']);
     Route::post('/update-new-skill', ['as' => 'update.update-new-skill', 'uses' => 'Resume\UpdateController@updateNewSkill']);
 
+    Route::get('/soft-skill', ['as' => 'update.softskill', 'uses' => 'Resume\UpdateController@softskill']);
+    Route::get('/soft-skill/{id}', ['as' => 'update.softskill', 'uses' => 'Resume\UpdateController@softskill']);
+    Route::post('/get-soft-skill-details', ['as' => 'update.get-soft-skill-details', 'uses' => 'Resume\UpdateController@getSoftSkillDetails']);
+    Route::post('/soft-skill-save', ['as' => 'update.softskill-save', 'uses' => 'Resume\UpdateController@softskillSave']);
+    Route::post('/soft-skill/remove/{id}', ['as' => 'update.softskill-save', 'uses' => 'Resume\UpdateController@softskillRemove']);
 
 
 	Route::get('/certification', ['as' => 'update.certification', 'uses' => 'Resume\UpdateController@certification']);

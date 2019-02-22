@@ -6,10 +6,10 @@
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
-        $redirectBack = URL::to('resume/view?sectionid=skillInfo');
+        $redirectBack = URL::to('resume/view?sectionid=softskillInfo');
     }
 } else {
-    $redirectBack = URL::to('update?sectionid=skillInfo');
+    $redirectBack = URL::to('update?sectionid=softskillInfo');
 }
 ?>
 
@@ -17,12 +17,12 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add/Update Functional domain skills</h1>
+                    <h1>Add/Update Soft management skills</h1>
                 </div>
             </div>
         </div>
     </section>
-    <div class="section wrappit" ng-app="SkillFromApp" ng-controller="myCtrl">
+    <div class="section wrappit" ng-app="SoftSkillFromApp" ng-controller="myCtrl">
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
@@ -30,11 +30,11 @@ if( isset($redirectBack) ) {
                 <div class="inner-half-container" id="loginDiv"  >
                     <div class="row mb20">
                         <div class="">
-                            <form action="{{URL::to('update/skill-save')}}" method="POST" id="skillForm" name="skillForm" novalidate>
+                            <form action="{{URL::to('update/soft-skill-save')}}" method="POST" id="skillForm" name="skillForm" novalidate>
 
                                 <div class="input-field custom-form">
                                     <p><span id="multiple-input" class="select3-input" name="skills"></span></p>
-                                    <label class="active">Functional skills <span>*</span></label>
+                                    <label class="active">Soft management skills <span>*</span></label>
                                 </div>
 
                                 <div class="row">
@@ -75,7 +75,7 @@ if( isset($redirectBack) ) {
 
             $.ajax({
                 type:"POST",
-                url:"{{URL::to('update/skill-save')}}",
+                url:"{{URL::to('update/soft-skill-save')}}",
                 data:{
                     "id":$("#id").val(),
                     "skills":$('#multiple-input').select3('data'),
@@ -90,14 +90,15 @@ if( isset($redirectBack) ) {
         $("#remove").hide();
 
         $("#remove").on("click", function(event){
-            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
-                    url:"{{URL::to('update/skill/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    url:"{{URL::to('update/soft-skill/remove')}}/"+$("#id").val(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
@@ -148,19 +149,19 @@ if( isset($redirectBack) ) {
 </script>
 
 <script type="text/javascript">
-var app = angular.module('SkillFromApp', []);
+var app = angular.module('SoftSkillFromApp', []);
 
-function getSkillDetails(){
+function getSoftSkillDetails(){
     app.controller('myCtrl', function($scope, $http) {
-        $http.post("{{URL::to('update/get-skill-details')}}",{'id':'{{$id}}' })
+        $http.post("{{URL::to('update/get-soft-skill-details')}}",{'id':'{{$id}}' })
         .then(function(response) {
             if(response.data.error == false){
-                $('#id').val(response.data.skill.id);
+                $('#id').val(response.data.softSkill.id);
 
                 var SkillObj = $('#multiple-input').select3({
                     multiple: true,
                     placeholder: 'Type to search',
-                    data:JSON.parse(response.data.skill.skill),//[{"id":"Amsterdam","text":"Amsterdam"},{"id":"Barcelona","text":"Barcelona"},{"id":"Bremen","text":"Bremen"}],
+                    data:JSON.parse(response.data.softSkill.soft_skill),
                     query: queryFunction
                 });
 
@@ -179,12 +180,11 @@ function getSkillDetails(){
             }
 
 
-            console.log(response.data)
         });
     });
 }
 
-getSkillDetails();
+getSoftSkillDetails();
 
 
 </script>

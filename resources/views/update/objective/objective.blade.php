@@ -6,7 +6,7 @@
                                                 <label for="objectiveData"></label>
                                             </div>
                                             <div class="fl">
-                                                Objective
+                                                Professional summary
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                         </div>
@@ -41,15 +41,15 @@
                                                                 {{$objectiveInfo['objective']}}
                                                             @endif
                                                         @else
-                                                            Click to add objective
+                                                            Click to add professional summary
                                                         @endif
-                                                    </span> 
+                                                    </span>
                                                     </div>
                                                     <span class="secondary-content">
                                                         <i class="material-icons">edit</i>
                                                     </span>
                                                 </a>
                                             </li>
-                                        </ul>  
+                                        </ul>
                                     </div>
                                 </li>

@@ -17,6 +17,7 @@ use App\Model\Education;
 use App\Model\Project;
 use App\Model\SkillList;
 use App\Model\Skill;
+use App\Model\Softskills;
 use App\Model\Certification;
 use App\Model\Training;
 use App\Model\Course;
@@ -83,6 +84,10 @@ class UpdateController extends Controller
 
         $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get();
         $data['skillCount'] = Skill::where("user_id","=", Auth::id())->count();
+
+        $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->get();
+        $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->count();
+
 
         $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->get();
         $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->count();
@@ -433,7 +438,7 @@ class UpdateController extends Controller
 
     public function skill($id=0){
         $data['id'] = $id;
-        $restult = SkillList::get()->toArray();
+        $restult = SkillList::where('skill_type','functional')->get()->toArray();
 
         $skillList = array();
 
@@ -459,7 +464,6 @@ class UpdateController extends Controller
 
     public function skillSave(Request $request){
         $input = $request->all();
-        print_r($input);
 
         $skills = json_encode($input['skills']);
 
@@ -496,6 +500,73 @@ class UpdateController extends Controller
         $newSkill->name = $input["name"];
         $newSkill->save();
     }
+
+    /* soft skills */
+    public function softskill($id=0){
+        $data['id'] = $id;
+        $restult = SkillList::where('skill_type','soft')->get()->toArray();
+
+        $skillList = array();
+
+        foreach ($restult as $key => $value) {
+            $skillList[$key] = $value['name'];
+        }
+
+        $data['skillList'] = $skillList;
+        return view('update.skill.skill_soft-form',$data);
+    }
+
+    public function getSoftSkillDetails(Request $request){
+        $input = $request->all();
+        $data['softSkill'] = Softskills::where("user_id","=", Auth::id())->get()->first();
+        $data['softSkillCount'] = Softskills::where("user_id","=", Auth::id())->count();
+        if($data['softSkillCount'] <= 0){
+            $data['error'] = true;
+        } else{
+            $data['error'] = false;
+        }
+        return response()->json($data);
+    }
+
+    public function softSkillSave(Request $request){
+        $input = $request->all();
+
+        $skills = json_encode($input['skills']);
+
+        if($input['id'] == 0){
+            $skill = new Softskills();
+        } else{
+           $skill = Softskills::find($input['id']);
+        }
+        $skill->user_id = Auth::id();
+        $skill->soft_skill  = $skills;
+        $skill->save();
+
+    }
+
+    public function softSkillRemove($id){
+        $skill = Softskills::find($id);
+        $data['error'] = "1";
+        if(isset($skill->user_id)){
+            if($skill->user_id == Auth::id()){
+                $data['error'] = "0";
+                $skill->delete();
+            }
+        }
+        return response()->json($data);
+    }
+
+
+   /* public function updateNewSoftSkill(Request $request){
+        $input = $request->all();
+        //echo $input["name"];
+
+        $newSkill = new SkillList();
+        $newSkill->head = $input["name"];
+        $newSkill->name = $input["name"];
+        $newSkill->save();
+    } */
+    /* end soft skills */
 
     public function certification($id=0){
         $data['id'] = $id;
@@ -900,6 +971,7 @@ class UpdateController extends Controller
         $reference->remarks         = $input['remarks'];
         $reference->phone         = $input['phone'];
         $reference->email         = $input['email'];
+        $reference->phoneCode         = $input['phoneCode'];
 
         $reference->save();
     }
@@ -1064,6 +1136,10 @@ class UpdateController extends Controller
                 break;
 
             case 'skill':
+                Skill::where("user_id","=",$user_id)->update(['private' => $value]);
+                break;
+
+            case 'softskill':
                 Skill::where("user_id","=",$user_id)->update(['private' => $value]);
                 break;
 

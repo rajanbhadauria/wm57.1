@@ -1,15 +1,15 @@
                                 <li>
-                                    <div class="collapsible-header" id="skillInfo">
+                                    <div class="collapsible-header" id="softskillInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="skillData" name"skillData" @if($resumeAccess && $resumeAccess->skillData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="softskillData" name"softskillData" @if($resumeAccess && $resumeAccess->softskillData=='1') value="1" checked="checked" @else value="0" @endif />
                                                 <label for="skillData"></label>
                                             </div>
                                             <div class="fl">
-                                                Functional domain skills
+                                                Soft management skills
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
-                                            <a href="{{URL::to('update/skill')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
+                                            <a href="{{URL::to('update/soft-skill')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
                                         </div>
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
@@ -21,7 +21,7 @@
                                                 <div class="button-content top10">
                                                     <div class = "switch">
                                                         <label>
-                                                            @if($skillCount > 0 && $skillInfo[0]['private'])
+                                                            @if($softskillCount > 0 && $softskillInfo[0]['private'])
                                                                 <input type="checkbox" class="PPCheck" data-id="skill" checked>
                                                             @else
                                                                 <input type="checkbox" class="PPCheck" data-id="skill">
@@ -31,16 +31,17 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                             @if($skillCount > 0)
+                                             @if($softskillCount > 0)
 
                                                 <li class="collection-item">
-                                                    <a href="{{URL::to('update/skill')}}" class="collapsible-body-inner">
+                                                    <a href="{{URL::to('update/soft-skill')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
                                                         <span>
                                                             <?php
-                                                                $skills = json_decode($skillInfo[0]->skill);
+
+                                                                $softskills = json_decode($softskillInfo[0]->soft_skill);
                                                             ?>
-                                                            @foreach($skills as $skill)
+                                                            @foreach($softskills as $skill)
                                                             <div class="chip">
                                                                 {{$skill->id}}
                                                             </div>
@@ -54,9 +55,9 @@
                                                 </li>
                                             @else
                                                 <li class="collection-item">
-                                                    <a href="{{URL::to('update/skill')}}" class="collapsible-body-inner">
+                                                    <a href="{{URL::to('update/soft-skill')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add functional domain skills</span>
+                                                        <span class="bold">Click to add soft management skills</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>

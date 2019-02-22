@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add certification</h1>
+                    <h1>Add/Update Professional summary</h1>
                 </div>
             </div>
         </div>
@@ -34,10 +34,10 @@ if( isset($redirectBack) ) {
 
                                 <div class="input-field custom-form">
                                     <input id="certification" name="certification" type="text" class="fourlength validate" value="{{isset($certification['certification'])?$certification['certification']:''}}"
-                                        required 
+                                        required
                                     >
                                     <label for="certification" ng-class="{ active:  certification }" >Name of certification <span>*</span></label>
-                                </div> 
+                                </div>
                                 <div class="input-field custom-form">
                                     <input id="school" name="school" type="text" class="companyname" required value="{{isset($certification['school'])?$certification['school']:''}}" ng-model="school">
 
@@ -57,7 +57,7 @@ if( isset($redirectBack) ) {
                                     </li>
                                     <li class="custom-form dt-drpdwn mr10">
                                         <div class="input-field">
-                                            <select id="mm" name="mm" 
+                                            <select id="mm" name="mm"
                                                 ng-model="mm"
                                             >
                                                 <option value="" selected>MM</option>
@@ -71,7 +71,7 @@ if( isset($redirectBack) ) {
                                     <li class="custom-form dt-drpdwn">
                                         <div class="input-field">
                                             <select id="yyyy" name="yyyy"
-                                                required="" 
+                                                required=""
                                                 data-msg="Required"
                                             >
                                                 <option value="" selected>YYYY</option>
@@ -85,15 +85,15 @@ if( isset($redirectBack) ) {
                                 </ul>
                                 <div class="input-field custom-form">
                                     <input id="city" name="city" type="text" class="alpha fourlength" value="{{isset($certification['city'])?$certification['city']:''}}"
-                                        
+
                                         ng-model="city"
                                     >
                                     <label for="city" ng-class="{ active:  city }">City</label>
                                 </div>
-                                   
+
                                 <div class="input-field custom-form">
                                     <input id="country" name="country" type="text" class="" value="{{isset($certification['country'])?$certification['country']:''}}"
-                                        
+
                                         ng-model="country"
                                     >
                                     <label for="country" ng-class="{ active:  country }">Country </label>
@@ -104,7 +104,7 @@ if( isset($redirectBack) ) {
                                         <label for="best">Highlight above as Key achievement</label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     @if(isset($certification['id']) && $certification['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -119,15 +119,15 @@ if( isset($redirectBack) ) {
                                         <input type="hidden" name="id" id="id" value="{{isset($certification['id'])?$certification['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save"/>
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -135,7 +135,7 @@ if( isset($redirectBack) ) {
 <script>
     $(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -156,7 +156,7 @@ if( isset($redirectBack) ) {
                         return ($("#mm").val()!="" || $("#yyyy").val()!="");
                     }
                 }
-                
+
             },
             messages: {
                 certification: {
@@ -178,19 +178,20 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+               // event.preventDefault();
+               var formData = $('#certificationForm').serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#certificationForm").attr("action"),
-                    data:$("#certificationForm").serialize(),
+                    data:formData,
                     success: function(response){
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -198,37 +199,26 @@ if( isset($redirectBack) ) {
                 });
             }
         });
-        /*$("#certificationForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
 
-        //$("#remove").hide();
         @if(isset($certification['id']) && $certification['id']!='')
         $("#remove").on("click", function(event){
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/certification/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
                         }
                     }
                 });
-                
+
             }
         });
         @endif
@@ -276,7 +266,7 @@ function getCertificationDetails(){
             if(response.data.error == false){
                 $('#id').val(response.data.certification.id);
                 $scope.certification = response.data.certification.certification;
-                $scope.school = response.data.certification.school;                
+                $scope.school = response.data.certification.school;
                 $scope.dd = response.data.certification.dd;
                 $scope.mm = response.data.certification.mm;
                 $scope.yyyy = response.data.certification.yyyy;

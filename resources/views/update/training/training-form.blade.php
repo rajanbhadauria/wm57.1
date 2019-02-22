@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -188,10 +188,12 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function (form) {
+                var formData = $("#trainingForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     url: $("#trainingForm").attr("action"),
-                    data: $("#trainingForm").serialize(),
+                    data: formData,
                     success: function (response) {
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -200,21 +202,6 @@ if( isset($redirectBack) ) {
             }
         });
 
-        /*$("#trainingForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
-
-        //$("#remove").hide();
-
 
         @if(isset($training['id']) && $training['id'] != '')
 
@@ -222,11 +209,13 @@ if( isset($redirectBack) ) {
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
                     url: "{{URL::to('update/training/remove')}}/" + $("#id").val(),
-                    data: $(this).serialize(),
+                    data: formData,
                     success: function (response) {
                         if (response.error == 0) {
                             window.location.href = "{{$redirectBack}}";
@@ -277,7 +266,7 @@ if( isset($redirectBack) ) {
                 if(response.data.error == false){
                     $('#id').val(response.data.training.id);
                     $scope.training = response.data.training.training;
-                    $scope.school = response.data.training.school;                
+                    $scope.school = response.data.training.school;
                     $scope.dd = response.data.training.dd;
                     $scope.mm = response.data.training.mm;
                     $scope.yyyy = response.data.training.yyyy;

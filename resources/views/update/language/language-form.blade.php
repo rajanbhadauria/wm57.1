@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -34,11 +34,11 @@ if( isset($redirectBack) ) {
 
                                 <div class="input-field custom-form">
                                     <input id="language" name="language" type="text" class="validate" value="{{isset($language['language'])?$language['language']:''}}"
-                                        required 
+                                        required
                                     >
                                     <label for="language" ng-class="{ active:  language }">Language <span>*</span></label>
-                                </div> 
-                                
+                                </div>
+
 
                                 <div class=" custom-form mb20">
                                     <label for="Fixsalary" class="active " style="width: 100%; display: block">Select  <span>*</span></label>
@@ -55,7 +55,7 @@ if( isset($redirectBack) ) {
                                         <label class="pr0" for="speak">Speak</label>
                                       </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     @if(isset($language['id']) && $language['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -70,15 +70,15 @@ if( isset($redirectBack) ) {
                                         <input type="hidden" name="id" id="id" value="{{isset($language['id'])?$language['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save"  />
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -86,7 +86,7 @@ if( isset($redirectBack) ) {
 <script>
     $(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -108,39 +108,26 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $("#languageForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#languageForm").attr("action"),
-                    data:$("#languageForm").serialize(),
+                    data:formData,
                     success: function(response){
-                        console.log(response);
                         window.location.href = "{{$redirectBack}}";
                     }
                 });
             }
         });
 
-       /* $("#languageForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
 
         $(".checkbox").on("click", function(){
             if($(this).is(":checked")){
@@ -154,21 +141,23 @@ if( isset($redirectBack) ) {
 
         @if(isset($language['id']) && $language['id']!='')
         $("#remove").on("click", function(event){
-            event.preventDefault();
+
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/language/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
                         }
                     }
                 });
-                
+
             }
         });
         @endif
@@ -199,11 +188,11 @@ function getLanguageDetails(){
                 if(response.data.language.speak == "1"){
                     $("#speak").val("1");
                     $("#speak").prop('checked', true);
-                }    
+                }
 
                 $("#cancel").hide();
-                $("#remove").show();                        
-                
+                $("#remove").show();
+
             }
             console.log(response)
         });

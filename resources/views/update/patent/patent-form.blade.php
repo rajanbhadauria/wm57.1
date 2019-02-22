@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -35,18 +35,18 @@ if( isset($redirectBack) ) {
 
                                 <div class="input-field custom-form">
                                     <input id="patent" name="patent" type="text" class="alphanumeric fourlength validate" value="{{isset($patent['patent'])?$patent['patent']:''}}"
-                                        required 
+                                        required
                                     >
                                     <label for="patent" ng-class="{ active:  patent }">Project name <span>*</span></label>
-                                </div> 
+                                </div>
                                 <div class="input-field custom-form">
                                     <input id="reference" name="reference" type="text" class="alphanumeric fourlength" value="{{isset($patent['reference'])?$patent['reference']:''}}"
                                         ng-model="reference"
                                     >
                                     <label for="reference" ng-class="{ active:  reference }">Patent number / reference </label>
                                 </div>
-                                
-                                   
+
+
                                 <div class="input-field custom-form">
                                     <input id="status" name="status" type="text" class="" value="{{isset($patent['status'])?$patent['status']:''}}"
                                         ng-model="status"
@@ -59,7 +59,7 @@ if( isset($redirectBack) ) {
                                         <label for="best">Highlight above as Key achievement</label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     @if(isset($patent['id']) && $patent['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -70,20 +70,20 @@ if( isset($redirectBack) ) {
                                         <a href="{{$redirectBack}}" class="waves-effect waves-light btn-black display-block">Cancel</a>
                                     </div>
                                     @endif
-                                    
+
                                     <div class="col s6 pr0 custom-submit">
                                         <input type="hidden" name="id" id="id" value="{{isset($patent['id'])?$patent['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save" />
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -91,7 +91,7 @@ if( isset($redirectBack) ) {
 <script>
     $(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -114,17 +114,19 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
+                var formData = $("#patentForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#patentForm").attr("action"),
-                    data:$("#patentForm").serialize(),
+                    data:formData,
                     success: function(response){
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -151,18 +153,20 @@ if( isset($redirectBack) ) {
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/patent/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
                         }
                     }
                 });
-                
+
             }
         });
         @endif
@@ -174,7 +178,7 @@ if( isset($redirectBack) ) {
                 $(this).val("0");
             }
         });
-        
+
     });
 
 /*var app = angular.module('PatentFromApp', []);
@@ -186,8 +190,8 @@ function getPatentDetails(){
             if(response.data.error == false){
                 $('#id').val(response.data.patent.id);
                 $scope.patent = response.data.patent.patent;
-                $scope.reference = response.data.patent.reference;   
-                $scope.status = response.data.patent.status;  
+                $scope.reference = response.data.patent.reference;
+                $scope.status = response.data.patent.status;
 
                 if(response.data.patent.best == "1"){
                     $("#best").val("1");

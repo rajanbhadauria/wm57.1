@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -207,12 +207,12 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function (form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $("#courseForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     url: $("#courseForm").attr("action"),
-                    data: $("#courseForm").serialize(),
+                    data: formData,
                     success: function (response) {
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -220,30 +220,19 @@ if( isset($redirectBack) ) {
                 });
             }
         });
-        /*$("#courseForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
 
-        //$("#remove").hide();
         @if(isset($course['id']) && $course['id'] != '')
         $("#remove").on("click", function (event) {
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
                     url: "{{URL::to('update/course/remove')}}/" + $("#id").val(),
-                    data: $(this).serialize(),
+                    data: formData,
                     success: function (response) {
                         if (response.error == 0) {
                             window.location.href = "{{$redirectBack}}";
@@ -294,7 +283,7 @@ if( isset($redirectBack) ) {
                 if(response.data.error == false){
                     $('#id').val(response.data.course.id);
                     $scope.course = response.data.course.course;
-                    $scope.school = response.data.course.school;                
+                    $scope.school = response.data.course.school;
                     $scope.dd = response.data.course.dd;
                     $scope.mm = response.data.course.mm;
                     $scope.yyyy = response.data.course.yyyy;

@@ -64,7 +64,11 @@
                         $('#imagesavemessage').show();
                         $('#savebtn').hide();
                         $("#loading").hide();
-                        window.setTimeout(function(){window.location.reload() ;},1000)
+                        @if(isset($return_url))
+                        window.location.href = "{{URL::to($return_url)}}";
+                        @else
+                        window.setTimeout(function(){window.location.reload() ;},0)
+                        @endif
 
                     },
                     error: function(){$("#loading").hide();}
@@ -80,8 +84,11 @@
                     url:"{{URL::to('user/remove-image')}}",
                     success: function(response){
                         if(response.error == 0){
-                            //$("#profile").attr("src","{{ url('uploads/images/user/user-img-white.jpg') }}");
-                            window.location.reload() ;
+                        @if(isset($return_url))
+                            window.setTimeout(function(){window.location.href = "{{URL::to($return_url)}}" ;},1000)
+                        @else
+                            window.setTimeout(function(){window.location.reload() ;},0)
+                        @endif
                         }
                     }
                 });

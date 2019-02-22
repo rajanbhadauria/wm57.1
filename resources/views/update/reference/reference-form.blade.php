@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 //print_r($countryCodeList);
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -22,7 +22,7 @@ if( isset($redirectBack) ) {
             </div>
         </div>
     </section>
-    <div class="section wrappit" ng-app="ReferenceFromApp" ng-controller="myCtrl">
+    <div class="section wrappit" ng-controller="myCtrl">
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
@@ -34,20 +34,20 @@ if( isset($redirectBack) ) {
 
                                 <div class="input-field custom-form">
                                     <input id="reference" name="reference" type="text" class="alphanumeric fourlength validate" value="{{isset($reference['reference'])?$reference['reference']:''}}"
-                                        required 
+                                        required
                                     >
-                                    
+
                                     <label for="reference" ng-class="{ active:  reference }">Name <span>*</span></label>
-                                </div> 
+                                </div>
                                 <div class="input-field custom-form">
                                     <input id="school" name="school" type="text" class="alphanumeric fourlength" value="{{isset($reference['school'])?$reference['school']:''}}" ng-model="school">
                                     <label for="school" ng-class="{ active:  school }" >College / University / Company</label>
                                 </div>
-                                
-                                
+
+
                                 <div class="input-field custom-form">
                                     <input id="role" name="role" type="text" class="alphanumeric sixlength" value="{{isset($reference['role'])?$reference['role']:''}}"
-                                        
+
                                         ng-model="role"
                                     >
                                     <label for="role" ng-class="{ active:  role }">Functional role / Designation</label>
@@ -90,7 +90,7 @@ if( isset($redirectBack) ) {
 
                                     <label for="email" ng-class="{ active:  email }">Contact Email <span>*</span></label>
                                 </div>
-                                
+
                                 <div class="row">
                                     @if(isset($reference['id']) && $reference['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -105,21 +105,21 @@ if( isset($redirectBack) ) {
                                         <input type="hidden" name="id" id="id" value="{{isset($reference['id'])?$reference['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save" />
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 <script>
     $(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -130,7 +130,7 @@ if( isset($redirectBack) ) {
             rules: {
                 reference: {required: true},
                 email: {required: true,email:true }
-                
+
             },
             messages: {
                 reference: {
@@ -147,17 +147,19 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
+                var formData = $("#referenceForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#referenceForm").attr("action"),
-                    data:$("#referenceForm").serialize(),
+                    data:formData,
                     success: function(response){
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -165,65 +167,30 @@ if( isset($redirectBack) ) {
                 });
             }
         });
-        /*$("#referenceForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
 
-       // $("#remove").hide();
 
         @if(isset($reference['id']) && $reference['id']!='')
         $("#remove").on("click", function(event){
-            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
+            var formData = $(this).serializeArray();
+            formData.push({ name: "_token", value: "{{ csrf_token()}}" });
             if (r == true) {
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/reference/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
                         }
                     }
                 });
-                
+
             }
         });
         @endif
     });
 
-/*var app = angular.module('ReferenceFromApp', []);
-
-function getReferenceDetails(){
-    app.controller('myCtrl', function($scope, $http) {
-        $http.post("{{URL::to('update/get-reference-details')}}",{'id':'{{$id}}' })
-        .then(function(response) {
-            if(response.data.error == false){
-                $('#id').val(response.data.reference.id);
-                $scope.reference = response.data.reference.reference;
-                $scope.school = response.data.reference.school;                
-                $scope.role = response.data.reference.role;
-                $scope.remarks = response.data.reference.remarks;
-                $scope.phone = response.data.reference.phone;
-                $scope.email = response.data.reference.email;
-                $("#cancel").hide();
-                $("#remove").show();
-            }
-            console.log(response)
-        });
-    });
-}
-
-getReferenceDetails();*/
 </script>
 @endsection

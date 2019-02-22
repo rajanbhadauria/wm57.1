@@ -26,7 +26,7 @@ if(isset($sectionid)) {
                 <div class="inner-half-container">
                     <div class="row">
                         <div class="">
-                            
+
                             <ul class="collapsible no-shadow" data-collapsible="accordion">
                                 @include("update.contact.contact")
                                 @include("update.profileImage.profileImage")
@@ -35,6 +35,7 @@ if(isset($sectionid)) {
                                 @include("update.education.education")
                                 @include("update.project.project")
                                 @include("update.skill.skill")
+                                @include("update.skill.skill_soft")
                                 @include("update.certification.certification")
                                 @include("update.training.training")
                                 @include("update.course.course")
@@ -44,19 +45,19 @@ if(isset($sectionid)) {
                                 @include("update.language.language")
                                 @include("update.address.current-address")
                                 @include("update.address.permanent-address")
-                                @include("update.reference.reference")                                
-                               
+                                @include("update.reference.reference")
+
                             </ul>
-                            
-                            
-                        </div> 
-                       
+
+
+                        </div>
+
                     </div>
                 </div>
-               
-            </div>  
+
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -64,7 +65,7 @@ if(isset($sectionid)) {
 
 function PPCheck(section, value){
     $.ajax({
-        url: "{{ URL::to('update/pp-check') }}", 
+        url: "{{ URL::to('update/pp-check') }}",
         type: 'POST',
         dataType: 'html',
         data: {
@@ -72,11 +73,11 @@ function PPCheck(section, value){
             "value" : value,
         },
         beforeSend: function(){
-          
+
         },
         success: function(data){
-          
-          
+
+
         },
     });
 }
@@ -118,7 +119,7 @@ function PPCheck(section, value){
                 data:{ "shareData":shareData } ,
                 success: function(response){
                     //window.location.href = url;
-                    
+
                 }
             });
         });
@@ -139,7 +140,7 @@ function PPCheck(section, value){
                 data:{ "shareData":shareData } ,
                 success: function(response){
                     window.location.href = url;
-                    
+
                 }
             });
 
@@ -147,7 +148,7 @@ function PPCheck(section, value){
 
     });
 
-    
+
 </script>
 
 @endsection

@@ -207,41 +207,32 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function (form) {
-                $("#projectForm").submit();
+                var formData = $('#projectForm').serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     url: $("#projectForm").attr("action"),
-                    data: $("#projectForm").serialize(),
+                    data: formData,
                     success: function (response) {
                         window.location.href = "{{$redirectBack}}";
                     }
                 });
             }
         });
-        /*$("#projectForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
+
         @if(isset($project['id']) && $project['id'] != '')
         //$("#remove").hide();
 
         $("#remove").on("click", function (event) {
-            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $('#projectForm').serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
                     url: "{{URL::to('update/project/remove')}}/" + $("#id").val(),
-                    data: $(this).serialize(),
+                    data: formData,
                     success: function (response) {
                         if (response.error == 0) {
                             window.location.href = "{{$redirectBack}}";

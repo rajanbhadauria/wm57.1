@@ -6,7 +6,7 @@
                                                 <label for="certificationData"></label>
                                             </div>
                                             <div class="fl">
-                                                Certifications @if($certificationCount > 0) ({{$certificationCount}}) @endif
+                                                Professional summary @if($certificationCount > 0) ({{$certificationCount}}) @endif
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                             <a href="{{URL::to('update/certification')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
@@ -31,13 +31,13 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            
+
                                             @if($certificationCount > 0)
                                                 @foreach($certificationInfo as $certification)
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/certification')}}/{{$certification->id}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">{{$certification->certification}}</span> 
+                                                        <span class="bold">{{$certification->certification}}</span>
                                                         <span class="normal">- {{$certification->school}}</span>
                                                     </div>
                                                         <span class="secondary-content">
@@ -45,13 +45,13 @@
                                                         </span>
                                                     </a>
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/certification')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add certification</span> 
-                                                        <span class="normal"></span> 
+                                                        <span class="bold">Click to add professional summary</span>
+                                                        <span class="normal"></span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -59,8 +59,8 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                            
-                                        </ul> 
+
+
+                                        </ul>
                                     </div>
                                 </li>

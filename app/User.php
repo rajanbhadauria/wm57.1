@@ -27,4 +27,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getAllMembers($isActive = "1") {
+        return User::where('status', $isActive)->where('role', '3')->get()->toArray();
+    }
 }

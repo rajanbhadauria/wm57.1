@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -33,10 +33,10 @@ if( isset($redirectBack) ) {
                             <form action="{{URL::to('update/award-save')}}" method="POST" id="awardForm" name="awardForm" >
 
                                 <div class="input-field custom-form">
-                                    <input id="award" name="award" type="text" class="validate fourlength" required value="{{isset($award['award'])?$award['award']:''}}" 
+                                    <input id="award" name="award" type="text" class="validate fourlength" required value="{{isset($award['award'])?$award['award']:''}}"
                                     >
                                     <label for="award" ng-class="{ active:  award }">Name of awards / recognition <span>*</span></label>
-                                </div> 
+                                </div>
                                 <div class="input-field custom-form">
                                     <input id="school" name="school" type="text" class="companyname" required value="{{isset($award['school'])?$award['school']:''}}" >
                                     <label for="school" ng-class="{ active:  school }">School / College / University / Company <span>*</span></label>
@@ -56,7 +56,7 @@ if( isset($redirectBack) ) {
                                     </li>
                                     <li class="custom-form dt-drpdwn mr10">
                                         <div class="input-field">
-                                            <select id="mm" name="mm" 
+                                            <select id="mm" name="mm"
                                             >
                                                 <option value="" selected>MM</option>
                                                 @foreach($mm as $m)
@@ -81,18 +81,18 @@ if( isset($redirectBack) ) {
                                         </div>
                                     </li>
                                 </ul>
-                                
+
                                 <div class="input-field custom-form">
                                     <input id="city" name="city" type="text" class="alpha fourlength" value="{{isset($award['city'])?$award['city']:''}}"
-                                        
+
                                         ng-model="city"
                                     >
                                     <label for="city" ng-class="{ active:  city }">City</label>
                                 </div>
-                                   
+
                                 <div class="input-field custom-form">
                                     <input id="country" name="country" type="text" class="alpha fourlength" value="{{isset($award['country'])?$award['country']:''}}"
-                                        
+
                                         ng-model="country"
                                     >
                                     <label for="country" ng-class="{ active:  country }">Country </label>
@@ -103,7 +103,7 @@ if( isset($redirectBack) ) {
                                         <label for="best">Highlight above as Key achievement</label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     @if(isset($award['id']) && $award['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -118,15 +118,15 @@ if( isset($redirectBack) ) {
                                         <input type="hidden" name="id" id="id" value="{{isset($award['id'])?$award['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save"/>
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -134,7 +134,7 @@ if( isset($redirectBack) ) {
 <script>
     $(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -155,7 +155,7 @@ if( isset($redirectBack) ) {
                         return ($("#mm").val()!="" || $("#yyyy").val()!="");
                     }
                 }
-                
+
             },
             messages: {
                 award: {
@@ -178,19 +178,19 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $("#awardForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#awardForm").attr("action"),
-                    data:$("#awardForm").serialize(),
+                    data:formData,
                     success: function(response){
                         console.log(response);
                         window.location.href = "{{$redirectBack}}";
@@ -198,36 +198,27 @@ if( isset($redirectBack) ) {
                 });
             }
         });
-        /*$("#awardForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
+
 
         @if(isset($award['id']) && $award['id']!='')
             $("#remove").on("click", function(event){
                 event.preventDefault();
                 var r = confirm("Are you sure you want to delete!");
                 if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                     $.ajax({
                         type:"POST",
                         dataType : "JSON",
                         url:"{{URL::to('update/award/remove')}}/"+$("#id").val(),
-                        data:$(this).serialize(),
+                        data:formData,
                         success: function(response){
                             if(response.error == 0){
                                 window.location.href = "{{$redirectBack}}";
                             }
                         }
                     });
-                    
+
                 }
             });
 
@@ -276,7 +267,7 @@ function getAwardDetails(){
             if(response.data.error == false){
                 $('#id').val(response.data.award.id);
                 $scope.award = response.data.award.award;
-                $scope.school = response.data.award.school;                
+                $scope.school = response.data.award.school;
                 $scope.dd = response.data.award.dd;
                 $scope.mm = response.data.award.mm;
                 $scope.yyyy = response.data.award.yyyy;

@@ -15,7 +15,7 @@ class UserController extends Controller
         $this->middleware('auth');
     }
     //
-    public function profileImage(){
+    public function profileImage(Request $request){
         $public_path =  public_path();
         if(strpos(Auth::user()->avatar, 'ttp')) {
             $data['profileImage'] = Auth::user()->avatar;
@@ -24,6 +24,7 @@ class UserController extends Controller
         } else {
             $data['profileImage'] = uploads_url('images/user/user-img-white.jpg');
         }
+        $data['return_url'] = $request->query('ref_url');
         return view('user.profile-image',$data);
     }
 

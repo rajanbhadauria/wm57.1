@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add objective</h1>
+                    <h1>Add/Update professional summary</h1>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@ if( isset($redirectBack) ) {
 
                                     ></textarea>
 
-                                    <label for="Objective" ng-class="{ active:  objective }" >Objective <span>*</span></label>
+                                    <label for="Objective" ng-class="{ active:  objective }" >Professional summary <span>*</span></label>
                                 </div>
 
                                 <div class="row">
@@ -93,8 +93,8 @@ if( isset($redirectBack) ) {
             messages: {
                 objective: {
                     required: "Required",
-                    maxlength: "Characters should not be greater than 200.",
-                    maxlength: "Enter Objective with more than 50 characters "
+                    maxlength: "Max length should be 200 characters",
+                    minlength: "Minimum length should be 50 characters"
                 }
             },
             errorClass: 'validationError',
@@ -110,12 +110,12 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $('#objectiveForm').serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#objectiveForm").attr("action"),
-                    data:$("#objectiveForm").serialize(),
+                    data:formData,
                     success: function(response){
                         window.location.href = "{{$redirectBack}}";
                     }
@@ -123,31 +123,17 @@ if( isset($redirectBack) ) {
             }
         });
 
-       /* $("#objectiveForm").submit(function( event ) {
-            event.preventDefault();
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-        });*/
-
-       // $("#remove").hide();
-
         @if(isset($objective['id']) && $objective['id']!='')
         $("#remove").on("click", function(event){
-            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/objective/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";

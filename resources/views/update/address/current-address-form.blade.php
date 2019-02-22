@@ -180,14 +180,13 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $("#currentAddressForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#currentAddressForm").attr("action"),
-                    data:$("#currentAddressForm").serialize(),
+                    data:formData,
                     success: function(response){
-                        console.log(response);
                         window.location.href = "{{$redirectBack}}";
                     }
                 });
@@ -213,11 +212,13 @@ if( isset($redirectBack) ) {
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/current-address/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";

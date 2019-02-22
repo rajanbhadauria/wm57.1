@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
 	if($redirectBack == "view"){
@@ -31,13 +31,13 @@ if( isset($redirectBack) ) {
 					<div class="row">
 						<div class="">
 							<form action="{{URL::to('update/travel-save')}}" method="POST" id="travelForm" name="travelForm" >
-								
+
 								<div class="input-field custom-form">
-									<input id="project" name="project" type="text" class="fourlength validate" value="{{isset($travel['project'])?$travel['project']:''}}" required 
+									<input id="project" name="project" type="text" class="fourlength validate" value="{{isset($travel['project'])?$travel['project']:''}}" required
 									>
 									<label for="travel" ng-class="{ active:  project }">Project name <span>*</span></label>
-								</div> 
-								
+								</div>
+
 								<div class="input-field custom-form">
 									<textarea id="projectDesc" name="projectDesc" class="mb25"
 										ng-model="projectDesc"
@@ -46,7 +46,7 @@ if( isset($redirectBack) ) {
 								</div>
 								<div class="input-field custom-form">
 									<input id="company" name="company" type="text" class="alphanumeric fivelength validate" value="{{isset($travel['company'])?$travel['company']:''}}"
-										
+
 										ng-model="company"
 									>
 									<label for="company" ng-class="{ active:  company }">Company name</label>
@@ -55,7 +55,7 @@ if( isset($redirectBack) ) {
 								<div class="input-field custom-form">
 									<span class="form-label custm-lbl">Start date </span>
 								</div>
-								 
+
 								<ul class="d-flex mb0">
 									<li class="custom-form dt-drpdwn mr10">
 										<div class="input-field">
@@ -72,7 +72,7 @@ if( isset($redirectBack) ) {
 									</li>
 									<li class="custom-form dt-drpdwn mr10">
 										<div class="input-field">
-											<select id="mmStart" name="mmStart" 
+											<select id="mmStart" name="mmStart"
 												ng-model="mmStart"
 											>
 												<option value="" selected>MM</option>
@@ -145,21 +145,27 @@ if( isset($redirectBack) ) {
 								</ul>
 
 
-								
+
 								<div class="input-field custom-form">
 									<input id="city" name="city" type="text" class="alpha fourlength" value="{{isset($travel['city'])?$travel['city']:''}}"
 										ng-model="city"
 									>
 									<label for="city" ng-class="{ active:  city }">City</label>
 								</div>
-								   
+
 								<div class="input-field custom-form">
 									<input id="country" name="country" type="text" class="alpha fourlength" value="{{isset($travel['country'])?$travel['country']:''}}"
 										ng-model="country"
 									>
 									<label for="country" ng-class="{ active:  country }">Country </label>
 								</div>
-																  
+                                <div class=" custom-form mb20 custm-lbl">
+                                        <div class="display-inline">
+                                            <input class="with-gap" name="best" type="checkbox" id="best" value="1"
+                                                {{(isset($travel['best']) && $travel['best']=='1')?'checked=checked':''}} />
+                                            <label for="best">Highlight above as Key achievement</label>
+                                        </div>
+                                    </div>
 								<div class="row">
                                     @if(isset($travel['id']) && $travel['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -171,18 +177,18 @@ if( isset($redirectBack) ) {
                                     </div>
                                     @endif
 									<div class="col s6 pr0 custom-submit">
-										<input type="hidden" name="id" id="id" value="{{isset($travel['id'])?$travel['id']:''}}">
+										<input type="hidden" name="id" id="id" value="{{isset($travel['id'])?$travel['id']:'0'}}">
 										<input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save" />
 									</div>
-								</div>    
-							   
+								</div>
+
 							</form>
-						</div> 
+						</div>
 					</div>
 				</div>
-			</div>  
+			</div>
 		  </div>
-		</div>  
+		</div>
 	  </div>
 	</div>
 
@@ -192,9 +198,9 @@ if( isset($redirectBack) ) {
 
 
 	$(document).ready(function() {
-		
+
 		$.validator.addMethod("alphanumeric", function(value, element) {
-			return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+			return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
 		}, "Please enter alpha numeric value only.");
 		$.validator.setDefaults({
 			ignore: [],
@@ -204,7 +210,7 @@ if( isset($redirectBack) ) {
 		$( "#travelForm" ).validate({
 			rules: {
 				project: {required: true}
-				
+
 			},
 			messages: {
 				project: {
@@ -217,19 +223,20 @@ if( isset($redirectBack) ) {
 			errorPlacement: function( error, element ) {
 				error.insertAfter( element);
 			},
-			highlight: function (element, errorClass, validClass) { 
-				$(element).parents("span").addClass(errorClass); 
-			},      
-			unhighlight: function (element, errorClass, validClass) { 
-				$(element).parents("span").removeClass(errorClass); 
+			highlight: function (element, errorClass, validClass) {
+				$(element).parents("span").addClass(errorClass);
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$(element).parents("span").removeClass(errorClass);
 			},
 			submitHandler: function(form) {
+                var formData = $("#travelForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
 				$.ajax({
 					type:"POST",
 					url:$("#travelForm").attr("action"),
-					data:$("#travelForm").serialize(),
+					data:formData,
 					success: function(response){
-						console.log(response);
 						window.location.href = "{{$redirectBack}}";
 					}
 				});
@@ -255,21 +262,22 @@ if( isset($redirectBack) ) {
         @if(isset($travel['id']) && $travel['id']!='')
 
 		$("#remove").on("click", function(event){
-			event.preventDefault();
 			var r = confirm("Are you sure you want to delete!");
 			if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
 				$.ajax({
 					type:"POST",
 					dataType : "JSON",
 					url:"{{URL::to('update/travel/remove')}}/"+$("#id").val(),
-					data:$(this).serialize(),
+					data:formData,
 					success: function(response){
 						if(response.error == 0){
 							window.location.href = "{{$redirectBack}}";
 						}
 					}
 				});
-				
+
 			}
 		});
 		@endif
@@ -338,10 +346,10 @@ function getTravelDetails(){
 			if(response.data.error == false){
 				$('#id').val(response.data.travel.id);
 				$scope.project = response.data.travel.project;
-				
+
 				$scope.projectDesc = response.data.travel.projectDesc;
 				$scope.company = response.data.travel.company;
-				
+
 
 
 				$scope.city = response.data.travel.city;

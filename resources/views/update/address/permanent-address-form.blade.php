@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<?php 
-// This section is for redirect back 
+<?php
+// This section is for redirect back
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
@@ -21,7 +21,7 @@ if( isset($redirectBack) ) {
             </div>
         </div>
     </section>
-    <div class="section wrappit" ng-app="PermanentAddressFromApp" ng-controller="myCtrl">
+    <div class="section wrappit">
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
@@ -30,24 +30,24 @@ if( isset($redirectBack) ) {
                     <div class="row mb20">
                         <div class="">
                             <form action="{{URL::to('update/permanent-address-save')}}" method="POST" id="permanentAddressForm" name="permanentAddressForm" novalidate>
-                                
+
                                 <div class="input-field custom-form">
                                     <input id="houseNumber" name="houseNumber" type="text" class="validaddress fourlength validate" value="{{isset($permanentAddress['houseNumber'])?$permanentAddress['houseNumber']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="houseNumber"
                                     >
                                     <label for="houseNumber" ng-class="{ active:  houseNumber }">Room / Flat / House number</label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="blockSector" name="blockSector" type="text" class="alphanumeric fourlength validate" value="{{isset($permanentAddress['blockSector'])?$permanentAddress['blockSector']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="blockSector"
                                     >
                                     <label for="blockSector" ng-class="{ active:  blockSector }">Block / Sector</label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="societyName" name="societyName" type="text" class="alphanumeric fourlength validate" value="{{isset($permanentAddress['societyName'])?$permanentAddress['societyName']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="societyName"
                                     >
                                     <label for="societyName" ng-class="{ active:  societyName }">Building / Locality / Society name</label>
@@ -60,7 +60,7 @@ if( isset($redirectBack) ) {
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="area" name="area" type="text" class="validate" value="{{isset($permanentAddress['area'])?$permanentAddress['area']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="area"
                                     >
                                     <label for="area" ng-class="{ active:  area }">Area name</label>
@@ -73,19 +73,19 @@ if( isset($redirectBack) ) {
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="city" name="city" type="text" class="alphanu fourlength validate"  value="{{isset($permanentAddress['city'])?$permanentAddress['city']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="city"
                                     >
                                     <label for="city" ng-class="{ active:  city }">City</label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="country" name="country" type="text" class="alpha fourlength validate"  value="{{isset($permanentAddress['country'])?$permanentAddress['country']:''}}"
-                                    	required 
+                                    	required
                                     	ng-model="country"
                                     >
                                     <label for="country" ng-class="{ active:  country }">Country</label>
                                 </div>
-                                                                                                
+
                                 <div class="row">
                                     @if(isset($permanentAddress['id']) && $permanentAddress['id']!='')
                                     <div class="col s6 pl0" id="remove">
@@ -100,15 +100,15 @@ if( isset($redirectBack) ) {
                                     	<input type="hidden" name="id" id="id" value="{{isset($permanentAddress['id'])?$permanentAddress['id']:''}}">
                                         <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Save" ng-disabled="permanentAddressForm.$invalid" />
                                     </div>
-                                </div>    
-                               
+                                </div>
+
                             </form>
-                        </div> 
+                        </div>
                     </div>
                 </div>
-            </div>  
+            </div>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -116,7 +116,7 @@ if( isset($redirectBack) ) {
 
 	$(document).ready(function() {
         $.validator.addMethod("alphanumeric", function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);    
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
         $.validator.setDefaults({
             ignore: [],
@@ -133,7 +133,7 @@ if( isset($redirectBack) ) {
                 pincode: { required:true,alphanumeric:true },
                 city: { required:true, alphanumeric:true  },
                 country: { required:true, alphanumeric:true  }
-                
+
             },
             messages: {
 
@@ -171,21 +171,20 @@ if( isset($redirectBack) ) {
             errorPlacement: function( error, element ) {
                 error.insertAfter( element);
             },
-            highlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").addClass(errorClass); 
-            },      
-            unhighlight: function (element, errorClass, validClass) { 
-                $(element).parents("span").removeClass(errorClass); 
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents("span").addClass(errorClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function(form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+                var formData = $("#permanentAddressForm").serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     url:$("#permanentAddressForm").attr("action"),
-                    data:$("#permanentAddressForm").serialize(),
+                    data:formData,
                     success: function(response){
-                        console.log(response);
                         window.location.href = "{{$redirectBack}}";
                     }
                 });
@@ -200,7 +199,7 @@ if( isset($redirectBack) ) {
                 success: function(response){
                     console.log(response);
                     window.location.href = "{{$redirectBack}}";
-                    
+
                 }
             });
         });*/
@@ -212,18 +211,20 @@ if( isset($redirectBack) ) {
             event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
+                var formData = $(this).serializeArray();
+                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/permanent-address/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:formData,
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
                         }
                     }
                 });
-                
+
             }
         });
         @endif
@@ -243,7 +244,7 @@ function getPermanentAddressDetails(){
                 $scope.blockSector 	= response.data.permanentAddress.blockSector;
                 $scope.societyName 	= response.data.permanentAddress.societyName;
                 $scope.landmark    	= response.data.permanentAddress.landmark;
-                $scope.area 		= response.data.permanentAddress.area;		
+                $scope.area 		= response.data.permanentAddress.area;
                 $scope.pincode 		= response.data.permanentAddress.pincode;
                 $scope.city 		= response.data.permanentAddress.city;
                 $scope.country 		= response.data.permanentAddress.country;
