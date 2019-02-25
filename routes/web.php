@@ -22,10 +22,14 @@ Route::get('/know-more', function () {
 Auth::routes();
 
 Route::get('/', 'IndexController@index');
+Route::get('/terms', 'IndexController@terms');
+Route::get('/policy', 'IndexController@policy');
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
-Route::get('/forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::get('forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::get('reactivate/{email}', 'Auth\LoginController@reactivate');
+Route::post('closed-activate', 'Auth\LoginController@closedActivate');
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'));
@@ -35,8 +39,12 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
     Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/settings', array('as' => 'settings', 'uses' => 'HomeController@settings'));
+    Route::get('/deactivate', array('as' => 'settings', 'uses' => 'HomeController@deactivate'));
 });
-
+Route::group(['middleware' => ['auth', 'isactive']], function(){
+    Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
+});
 
 
 Route::group(array('prefix' => 'user'), function(){
@@ -45,6 +53,8 @@ Route::group(array('prefix' => 'user'), function(){
 	Route::any('/save-profile-image', array('as' => 'user.save-profile-image', 'uses' => 'UserController@saveProfileImage'));
 	Route::any('/save-crop-image', array('as' => 'user.save-crop-image', 'uses' => 'UserController@saveCropImage'));
     Route::any('/remove-image', array('as' => 'user.remove-image', 'uses' => 'UserController@imageRemove'));
+    Route::post('/deactivate', array('as' => 'user.deactivate', 'uses' => 'UserController@deactivate'));
+    Route::get('/deactivateresp', array('as' => 'user.deactivateresp', 'uses' => 'UserController@deactivateresp'));
 });
 
 Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), function(){

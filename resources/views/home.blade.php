@@ -71,8 +71,8 @@
 								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
 								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
 							  </ul>
-							  <a href="memberlist.html" class="waves-effect waves-light btn-black ak-btn-half-first">My network</a>
-							  <a href="contact-list.html" class="waves-effect waves-light btn-black ak-btn-half-second">Find WM members</a>
+							  <a href="{{URL::to('/home')}}" class="waves-effect waves-light btn-black ak-btn-half-first">My network</a>
+							  <a href="{{URL::to('/memberlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Find WM members</a>
 						  </div>
 					  </div>
 					</div>

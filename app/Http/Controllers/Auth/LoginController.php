@@ -72,6 +72,22 @@ class LoginController extends Controller
 
     }
 
+    private function generateRandomString($length = 5) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        $wmid = User::where('wmid', 'WM'.strtoupper($randomString))->get()->all();
+        if(count($wmid)>0) {
+            $this->generateRandomString();
+        }
+
+        return 'WM'.strtoupper($randomString);
+    }
+
+
     public function createUser($user){
 
         $authUser = User::where("email", $user->email)->first();
@@ -83,6 +99,7 @@ class LoginController extends Controller
             $authUser->save();
             return $authUser;
         } else {
+            $wmid = $this->generateRandomString();
             $authUser = new User();
             $authUser->name         = $user->name;
             $authUser->google_id    = $user->id;
@@ -91,9 +108,50 @@ class LoginController extends Controller
             $authUser->status       = "1";
             $authUser->avatar       = $user->avatar;
             $authUser->activate_token = $user->token;
+            $authUser->wmid = $wmid;
             $authUser->social_type = $user->social_type;
             $authUser->save();
             return $authUser;
+        }
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        $upuser = User::find(Auth::id());
+        if($user->account_status == 'closed') {
+            Auth::logout();
+            return redirect('/reactivate/'.$upuser->email);
+        }
+        if($user->account_status == 'deactive') {
+           $upuser->account_status = 'active';
+            $upuser->save();
+            return redirect('/home')->with('success','Your account activated successfully');
+        }
+        if($user->status == '0') {
+             return redirect('/activate-account');
+         }
+        return redirect('/home');
+    }
+
+    public function reactivate($email) {
+        $data['email'] = $email;
+        return view('user.reacitvate',$data);
+    }
+
+    public function closedActivate(Request $request) {
+        $input = $request->all();
+        if(!$input) {
+            return '{error: true, message: "Invalid request."}';
+        } else {
+            $user = User::where('email', $input['email'])->update(['account_status'=>'active']);
+            if($user) {
+                session(['success' => 'Your account activated successfully.']);
+                return response()->json(['success'=>true]);
+
+            }
+            else {
+                return response()->json(['error'=>'false', 'message' => "There is some server error. Please try later!"]);
+            }
         }
     }
 

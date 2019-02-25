@@ -59,12 +59,11 @@ class RegisterController extends Controller
 
     protected function validator(array $data)
     {
-        echo "<pre>"; print_r($_POST); echo "</pre>";
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
-            'g-recaptcha-response' => 'required|recaptcha',
+            'g-recaptcha-response' => 'required',
         ]);
     }
 
@@ -75,7 +74,20 @@ class RegisterController extends Controller
         ];
     }
 
+    private function generateRandomString($length = 5) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz12388647374636411';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        $wmid = User::where('wmid', 'WM'.strtoupper($randomString))->get()->all();
+        if(count($wmid)>0) {
+            $this->generateRandomString();
+        }
 
+        return 'WM'.strtoupper($randomString);
+    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -86,12 +98,14 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $activate_token = str_random(64);
+        $wmid = $this->generateRandomString();
         $user =  User::create([
             'name' => $data['first_name'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'role'  => "3",
+            'wmid' => $wmid,
             'status'   => "0",
             'activate_token' => $activate_token,
             'password' => bcrypt($data['password']),

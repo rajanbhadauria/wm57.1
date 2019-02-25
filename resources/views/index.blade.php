@@ -82,13 +82,13 @@
                 <p class="common-para ak-logoslognTxt">Check and keep floating your Resume</p>
                 <a href="know-more" class="waves-effect waves-light gray-link display-block ak-homeKnowMore">Know more</a>
 				<ul class="ak-user-face ak-homeUser">
-				    <li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-					<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-					<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-					<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-					<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
+                @if($user_counts>0)
+                    <?php foreach( $users as $user) { ?>
+				    <li><img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}" /></li>
+                    <?php } ?>
+                @endif
 				</ul>
-				<p class="common-para">32,433 users</p>
+				<p class="common-para">{{$user_counts}} users</p>
               </div>
             </div>
           </div>

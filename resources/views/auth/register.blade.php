@@ -96,7 +96,7 @@
                             </div>
 
                             <div class="link-container blue-text">
-                                <label for="accept">By logging in, you (user) agree to WorkMedian's <a class="blue-link link-underline fln " href="term.html">Terms</a> and <a class="blue-link link-underline fln" href="term.html">Policy</a></label>
+                            <label for="accept">By logging in, you (user) agree to WorkMedian's <a class="blue-link link-underline fln " href="{{URL::to('/terms')}}">Terms</a> and <a class="blue-link link-underline fln" href="{{URL::to('/policy')}}">Policy</a></label>
                             </div>
 
                         </form>

@@ -137,4 +137,28 @@ class UserController extends Controller
             $message->to($user_email,$user_first_name)->subject("WorkMedian : Activate account");
         });
     }
+
+    public function deactivate(Request $request) {
+        $input = $request->all();
+        if(!$input) {
+            return '{error: true, message: "Please select any option"}';
+        } else {
+            $user = User::find(Auth::id());
+            if($user) {
+                $user->account_status = $input['account_status'];
+                $user->save();
+                return response()->json(['success'=>true]);
+            }
+            else {
+                return response()->json(['error'=>'false', 'message' => "There is some server error. Please try later!"]);
+            }
+        }
+    }
+
+    public function deactivateresp(Request $request) {
+        $status = $request->query('status');
+        $message = $status === 'closed' ? "Your account closed successfully" : "Your account is deactivated successfully";
+        Auth::logout();
+        return redirect('login')->with('success',$message);
+    }
 }
