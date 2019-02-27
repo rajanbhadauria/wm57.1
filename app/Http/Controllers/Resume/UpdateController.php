@@ -10,6 +10,7 @@ use Auth,View;
 use App\User;
 use DateTime;
 
+use App\Model\Resumetitle;
 use App\Model\Contact;
 use App\Model\Objective;
 use App\Model\Address;
@@ -28,6 +29,10 @@ use App\Model\Language;
 use App\Model\Reference;
 use App\Model\Work;
 use App\Model\Resume;
+use App\Model\InterestsList;
+use App\Model\Interests;
+use App\Model\work_categories;
+
 
 class UpdateController extends Controller
 {
@@ -60,9 +65,16 @@ class UpdateController extends Controller
 
         $user_id = Auth::id();
 
+        $data['resumetitleInfo'] = Resumetitle::where("user_id","=",$user_id)->get()->first();
+        $data['resumetitleCount'] = Resumetitle::where("user_id","=",$user_id)->count();
+
         $data['profileImageData'] = User::select("avatar","avatar_updated","profilePrivate")->where("id","=",$user_id)->get()->first();
+
         $data['contactInfo'] = Contact::where("user_id","=",$user_id)->get()->first();
         $data['contactCount'] = Contact::where("user_id","=",$user_id)->count();
+
+        $data['interestInfo'] = Interests::where("user_id","=",$user_id)->get()->first();
+        $data['interestCount'] = Interests::where("user_id","=",$user_id)->count();
 
         $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->get()->first();
         $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->count();
@@ -88,6 +100,8 @@ class UpdateController extends Controller
         $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->get();
         $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->count();
 
+        $data['interestsInfo'] = Interests::where("user_id","=", Auth::id())->get();
+        $data['interestsCount'] = Interests::where("user_id","=", Auth::id())->count();
 
         $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->get();
         $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->count();
@@ -117,7 +131,52 @@ class UpdateController extends Controller
         $data["resumeAccess"]  = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
 
         return view('update.index',$data);
-	}
+    }
+    // +++++++++++++++++++++++++++++++++ Resume Title Section ++++++++++++++++++++++++++++++
+    public function resumeTitle() {
+        $data['resume_title'] = Resumetitle::where("user_id","=", Auth::id())->get()->first();
+        return view('update.resume.resumetitle-form',$data);
+    }
+
+    public function getResumeTitleDetails(){
+    	$data['resumetitle'] = Resumetitle::where("user_id","=", Auth::id())->get()->first();
+    	if($data['resumetitle'] == ""){
+    		$data['error'] = true;
+    	} else{
+            $data['error'] = false;
+        }
+    	return response()->json($data);
+    }
+
+    public function resumeTitleSave(Request $request){
+    	$input = $request->all();
+    	if($input['id'] == 0){
+            $resumetitle = new Resumetitle();
+        } else{
+           $resumetitle = Resumetitle::find($input['id']);
+        }
+    	$resumetitle->user_id = Auth::id();
+    	$resumetitle->resume_title = $input['resume_title'];
+        $resumetitle->resume_brand = $input['resume_brand'];
+        $resumetitle->resume_message = $input['resume_message'];
+        $resumetitle->thanks_note = $input['thanks_note'];
+    	$resumetitle->save();
+        return redirect()->back()->with('success', 'Resume Title details updated successfully.');
+    }
+
+    public function resumeTitleRemove($id){
+        $resumetitle = Resumetitle::find($id);
+        $data['error'] = "1";
+        if(isset($resumetitle->user_id)){
+            if($resumetitle->user_id == Auth::id()){
+                $data['error'] = "0";
+                $resumetitle->delete();
+            }
+        }
+        return response()->json($data);
+    }
+
+    // +++++++++++++++++++++++++++++++++++++ Contact Section ++++++++++++++++++++++++++++++++++//
 
     public function contact(){
 
@@ -171,7 +230,7 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    // ---------------------------------------------------------
+    // ------------------------- Professional Summary --------------------------------
 
     public function objective(){
         $data['objective'] = Objective::where("user_id","=", Auth::id())->get()->first();
@@ -213,11 +272,9 @@ class UpdateController extends Controller
         }
         return response()->json($data);
     }
-
+    // +++++++++++++++++++++++++++++++ Current Address +++++++++++++++++++++++++++
     public function currentAddress(){
-        //print_r(Auth::id());
         $data['currentAddress'] = Address::where("user_id","=", Auth::id())->where("type","0")->get()->first();
-        //print_r($data['currentAddress']);
         return view('update.address.current-address-form',$data);
     }
 
@@ -264,7 +321,7 @@ class UpdateController extends Controller
         }
         return response()->json($data);
     }
-
+// +++++++++++++++++++++++++++++++ Permanent Address +++++++++++++++++++++++++++
     public function permanentAddress(){
         $data['permanentAddress'] = Address::where("user_id","=", Auth::id())->where("type","1")->get()->first();
         return view('update.address.permanent-address-form',$data);
@@ -314,7 +371,7 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-
+// +++++++++++++++++++++++++++++++ Education Section +++++++++++++++++++++++++++
     public function education($id=0){
         $data['id'] = $id;
         $data['education'] = Education::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
@@ -376,7 +433,7 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-
+// +++++++++++++++++++++++++++++++ Project Section +++++++++++++++++++++++++++
     public function project($id=0){
         $data['id'] = $id;
         $data['project'] = Project::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
@@ -435,7 +492,7 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-
+// +++++++++++++++++++++++++++++++ Skills Section +++++++++++++++++++++++++++
     public function skill($id=0){
         $data['id'] = $id;
         $restult = SkillList::where('skill_type','functional')->get()->toArray();
@@ -555,18 +612,65 @@ class UpdateController extends Controller
         }
         return response()->json($data);
     }
-
-
-   /* public function updateNewSoftSkill(Request $request){
-        $input = $request->all();
-        //echo $input["name"];
-
-        $newSkill = new SkillList();
-        $newSkill->head = $input["name"];
-        $newSkill->name = $input["name"];
-        $newSkill->save();
-    } */
     /* end soft skills */
+
+     /* interests */
+
+     public function interests($id=0){
+        $data['id'] = $id;
+        $restult = InterestsList::get()->toArray();
+
+        $interestsList = array();
+
+        foreach ($restult as $key => $value) {
+            $interestsList[$key] = $value['name'];
+        }
+
+        $data['interestsList'] = $interestsList;
+        return view('update.interests.interests-form',$data);
+    }
+
+    public function getInterestsDetails(Request $request){
+        $input = $request->all();
+        $data['interests'] = Interests::where("user_id","=", Auth::id())->get()->first();
+        $data['interestsCount'] = Interests::where("user_id","=", Auth::id())->count();
+        if($data['interestsCount'] <= 0){
+            $data['error'] = true;
+        } else{
+            $data['error'] = false;
+        }
+        return response()->json($data);
+    }
+
+    public function interestsSave(Request $request){
+        $input = $request->all();
+
+        $skills = json_encode($input['interests']);
+
+        if($input['id'] == 0){
+            $skill = new Interests();
+        } else{
+           $skill = Interests::find($input['id']);
+        }
+        $skill->user_id = Auth::id();
+        $skill->interest  = $skills;
+        $skill->save();
+
+    }
+
+    public function interestsRemove($id){
+        $skill = Interests::find($id);
+        $data['error'] = "1";
+        if(isset($skill->user_id)){
+            if($skill->user_id == Auth::id()){
+                $data['error'] = "0";
+                $skill->delete();
+            }
+        }
+        return response()->json($data);
+    }
+
+    /* end of intrests */
 
     public function certification($id=0){
         $data['id'] = $id;
@@ -731,6 +835,7 @@ class UpdateController extends Controller
 
     public function travel($id=0){
         $data['id'] = $id;
+        $data['work_categories'] = work_categories::orderBy('title')->get()->toArray();
         $data['travel'] = Travel::where("user_id","=", Auth::id())->where("id",$data['id'])->get()->first();
         return view('update.travel.travel-form',$data);
     }
@@ -755,9 +860,11 @@ class UpdateController extends Controller
            $travel = Travel::find($input['id']);
         }
         $travel->user_id = Auth::id();
+        $travel->work_category      = $input['work_category'];
         $travel->project            = $input['project'];
         $travel->projectDesc        = $input['projectDesc'];
         $travel->company            = $input['company'];
+        $travel->url                = $input['url'];
 
         $travel->ddStart            = isset($input['ddStart'])?$input['ddStart']:"";
         $travel->mmStart            = isset($input['mmStart'])?$input['mmStart']:"";
@@ -1115,6 +1222,10 @@ class UpdateController extends Controller
                 Contact::where("user_id","=",$user_id)->update(['private' => $value]);
                 break;
 
+            case 'resumetitle':
+                Resumetitle::where("user_id","=",$user_id)->update(['private' => $value]);
+                break;
+
             case 'objective':
                 Objective::where("user_id","=",$user_id)->update(['private' => $value]);
                 break;
@@ -1128,11 +1239,11 @@ class UpdateController extends Controller
                 break;
 
             case 'education':
-                Education::where("user_id","=",$user_id)->update(['private' => $value]);
+                Education::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'project':
-                Project::where("user_id","=",$user_id)->update(['private' => $value]);
+                Project::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'skill':
@@ -1144,23 +1255,23 @@ class UpdateController extends Controller
                 break;
 
             case 'certification':
-                Certification::where("user_id","=",$user_id)->update(['private' => $value]);
+                Certification::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'training':
-                Training::where("user_id","=",$user_id)->update(['private' => $value]);
+                Training::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'course':
-                Course::where("user_id","=",$user_id)->update(['private' => $value]);
+                Course::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'travel':
-                Travel::where("user_id","=",$user_id)->update(['private' => $value]);
+                Travel::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'award':
-                Award::where("user_id","=",$user_id)->update(['private' => $value]);
+                Award::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'patent':
@@ -1168,11 +1279,15 @@ class UpdateController extends Controller
                 break;
 
             case 'language':
-                Language::where("user_id","=",$user_id)->update(['private' => $value]);
+                Language::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             case 'reference':
-                Reference::where("user_id","=",$user_id)->update(['private' => $value]);
+                Reference::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                break;
+
+            case 'work':
+                Work::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
                 break;
 
             default:

@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row mb0">
                 <div class="col s12">
-                    @if(Auth::check())
+                    @if(Auth::check() && Auth::user()->status)
                     <a href="#" data-activates="site_nav" class="button-collapse waves-effect main-menu-icon">
                         <i class="material-icons">menu</i>
                     </a>
@@ -31,9 +31,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li style="display:none;">
-                            <a href="login.php" class="waves-effect btn-google btn-block box-shadow-no bg-gplus btn-hsin">Logout</a>
-                        </li>
+
                     </ul>
                     @endif
                 </div>

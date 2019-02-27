@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Update contact details</h1>
+                    <h1>{{isset($contact['id'])?'Update':'Add'}} contact details</h1>
                 </div>
             </div>
         </div>
@@ -280,41 +280,6 @@ if( isset($redirectBack) ) {
     });
 </script>
 
-<script>
-/*var app = angular.module('ContactFromApp', []);
 
-function getContactDetails(){
-    app.controller('myCtrl', function($scope, $http) {
-        $http.post("{{URL::to('update/get-contact-details')}}")
-        .then(function(response) {
-            if(response.data.error == false){
-                $('#id').val(response.data.contact.id);
-                $scope.primaryEmailTxt = "{{$primaryEmail}}"//response.data.contact.primaryEmail;
-                $scope.primaryEmail = "{{$primaryEmail}}"//response.data.contact.primaryEmail;
-                $scope.primaryPhone = response.data.contact.primaryPhone;
-                $scope.altEmail = response.data.contact.altEmail;
-                $scope.altPhone = response.data.contact.altPhone;
-
-                $('#primaryPhoneCode').find('option[value="'+response.data.contact.primaryPhoneCode+'"]').prop('selected', true);
-                $("#primaryPhoneCode").material_select();
-                $scope.primaryPhoneCode = response.data.contact.primaryPhoneCode;
-
-                $('#altPhoneCode').find('option[value="'+response.data.contact.altPhoneCode+'"]').prop('selected', true);
-                $("#altPhoneCode").material_select();
-                $scope.altPhoneCode = response.data.contact.altPhoneCode;
-
-                $('#altRelation').find('option[value="'+response.data.contact.altRelation+'"]').prop('selected', true);
-                $("#altRelation").material_select();
-                $scope.altRelation = response.data.contact.altRelation;
-
-                $("#cancel").hide();
-                $("#remove").show();
-            }
-            console.log(response)
-        });
-    });
-}
-getContactDetails();*/
-</script>
 @endsection
 

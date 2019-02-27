@@ -7,7 +7,7 @@
                 <ul class="nav">
                     <li class="header">
                         <a class="nav-home" href="{{ url('/home') }}">
-                            <p>WorkMedian <span>[WM5456R]</span></p>
+                            <p>WorkMedian <span>[{{Auth::user()->wmid}}]</span></p>
                             <!-- <span  class="menu-close waves-effect waves-white">
                                 <i class="material-icons">close</i>
                             </span> -->
@@ -79,8 +79,8 @@
                             Password activation link</a></li>
                 </ul>
                 <ul class="nav">
-                    <li><a class="waves-effect waves-light-grey" href="termsconditions.php">Terms &amp; conditions </a></li>
-                    <li><a class="waves-effect waves-light-grey" href="privacypolicy.php">Privacy policy</a></li>
+                <li><a class="waves-effect waves-light-grey" href="{{url('/terms')}}">Terms &amp; conditions </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{url('/privacy')}}">Privacy policy</a></li>
                 </ul>
             </div>
         </div>
@@ -165,30 +165,6 @@
     </div>
 </div>
 @endif
-
-<!-- User Image Upload Modal -->
-<div id="imageUploadModal" class="modal fade" role="dialog" style="z-index:999; display:none">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" style="float:right">&times;</button>
-                <h4 class="modal-title">Change / Upload Image</h4>
-            </div>
-            <div class="modal-body">
-                <div id="fileuploader">Upload</div>
-                <input type="hidden" id="uploadImageName" value="">
-                <input type="hidden" id="uploadOrignalName" value="">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" id="save-avatar">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
 

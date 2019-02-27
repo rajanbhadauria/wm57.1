@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add/Update professional summary</h1>
+                    <h1>{{isset($objective['id'])?'Update':'Add'}} professional summary</h1>
                 </div>
             </div>
         </div>

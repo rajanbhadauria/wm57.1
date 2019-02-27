@@ -16,7 +16,14 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Update permanent address</h1>
+                    <h1>
+                            @if(isset($permanentAddress['id']))
+                                Update
+                            @else
+                                Add
+                            @endif
+                            permanent address
+                    </h1>
                 </div>
             </div>
         </div>

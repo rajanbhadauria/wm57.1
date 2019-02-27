@@ -159,7 +159,12 @@
                     @endif
 
                         <div class="col s6 pr0" id="cancel">
-                            <a href="/home?sectionid=profileimage" class="waves-effect waves-light btn-black display-block">Cancel</a>
+                                @if(isset($return_url))
+                                <a href="{{URL::to($return_url)}}" class="waves-effect waves-light btn-black display-block">Cancel</a>
+                                @else
+                                <a href="{{url('user/profile-image')}}" class="waves-effect waves-light btn-black display-block">Cancel</a>
+                                @endif
+
                         </div>
                     @endif
                 </div>

@@ -18,38 +18,42 @@
                                                 <div>
                                                 Hide / Show
                                                 </div>
-                                                <div class="button-content top10">
-                                                    <div class = "switch">
-                                                        <label>
-                                                            @if($courseCount > 0 && $courseInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="course" checked>
-                                                            @else
-                                                                <input type="checkbox" class="PPCheck" data-id="course">
-                                                            @endif
-                                                            <span class = "lever"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+
                                             </li>
                                             @if($courseCount > 0)
                                                 @foreach($courseInfo as $course)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/course')}}/{{$course->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$course->course}}</span> 
-                                                        <span class="normal">- {{$course->school}}</span> 
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                        <div class = "switch">
+                                                            <label>
+                                                                @if($course['private'])
+                                                                    <input type="checkbox" data-value="<?php echo $course['id']?>" class="PPCheck" data-id="course" checked>
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $course['id']?>" class="PPCheck" data-id="course">
+                                                                @endif
+                                                                <span class = "lever"></span>
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/course')}}/{{$course->id}}" class="collapsible-body-inner">
+                                                            <div class="update-desc">
+                                                                <span class="bold">{{$course->course}}</span>
+                                                                <span class="normal">- {{$course->school}}</span>
+                                                            </div>
+                                                            <span class="secondary-content">
+                                                                <i class="material-icons">edit</i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/course')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add subject / course</span> 
+                                                        <span class="bold">Click to add subject / course</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -57,7 +61,7 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                        </ul> 
+
+                                        </ul>
                                     </div>
                                 </li>

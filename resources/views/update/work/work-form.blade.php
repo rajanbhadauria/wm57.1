@@ -225,7 +225,7 @@ if( isset($redirectBack) ) {
                                         <label for="Fixsalary" class="active block-label" style="width: 100%; ">Fix
                                             salary</label>
                                         <div class="display-inline">
-                                            <input class="with-gap numeric" name="fixSalaryType" type="radio" id="fixSalaryType1"
+                                            <input class="with-gap" name="fixSalaryType" type="radio" id="fixSalaryType1"
                                                 value="annual"
                                                 {{(isset($work['fixSalaryType']) && $work['fixSalaryType']=='annual')?'checked=checked':''}} />
                                             <label for="fixSalaryType1">Annual</label>
@@ -238,7 +238,7 @@ if( isset($redirectBack) ) {
                                         </div>
                                     </div>
                                     <div class="input-field custom-form cf-hide ">
-                                        <input id="fixSalary" name="fixSalary" type="number" class="" value="{{(isset($work['fixSalary']) && $work['fixSalary']!='')?$work['fixSalary']:''}}">
+                                        <input id="fixSalary" name="fixSalary" type="text" class="" value="{{(isset($work['fixSalary']) && $work['fixSalary']!='')?$work['fixSalary']:''}}">
                                         <label for="fixSalary" ng-class="{ active: fixSalary }">Fix salary number</label>
                                     </div>
 
@@ -259,7 +259,7 @@ if( isset($redirectBack) ) {
                                         </div>
                                     </div>
                                     <div class="input-field custom-form cf-hide">
-                                        <input id="variableSalary" name="variableSalary" type="number" class="numeric"
+                                        <input id="variableSalary" name="variableSalary" type="text" class="numeric"
                                             value="{{(isset($work['variableSalary']) && $work['variableSalary']!='')?$work['variableSalary']:''}}">
                                         <label for="variableSalary" ng-class="{ active: variableSalary }">Variable
                                             salary number</label>
@@ -267,7 +267,7 @@ if( isset($redirectBack) ) {
                                     <div class="input-field custom-form cf-hide">
                                         <input id="ctc" name="ctc" type="text" readonly="readonly" class="readonly-field"
                                             value="{{(isset($work['ctc']) && $work['ctc']!='')?$work['ctc']:''}}">
-                                        <label for="ctc" ng-class="{ active: ctc }">CTC</label>
+                                        <label for="ctc" id="ctc_label"  ng-class="{ active:  ctc }">CTC</label>
                                     </div>
                                     <div class=" custom-form mb20 custm-lbl">
                                         <div class="display-inline">
@@ -277,10 +277,6 @@ if( isset($redirectBack) ) {
                                             <label for="best">Highlight above as Key achievement</label>
                                         </div>
                                     </div>
-                                    <!--<div class="link-container-inside">
-                                    <a class="blue-link less-form" style="display:none">Less form</a>
-                                </div>-->
-
                                     <div class="row">
                                         @if(isset($work['id']) && $work['id']!='')
                                         <div class="col s6 pl0" id="remove">
@@ -308,11 +304,19 @@ if( isset($redirectBack) ) {
         </div>
     </div>
 </div>
-
-
-
 <script>
+    function formatNumber(number) {
+        number = number.toString();
+        number = number.replace(/,/g , '');
+        var lastThree = number.substring(number.length-3);
+        var otherNumbers = number.substring(0,number.length-3);
+        if(otherNumbers != '')
+            lastThree = ',' + lastThree;
+        var newNumber = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+        return newNumber;
+    }
     $(document).ready(function () {
+
         $.validator.addMethod("alphanumeric", function (value, element) {
             return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
@@ -375,21 +379,25 @@ if( isset($redirectBack) ) {
                             ':checked'));
                     }
                 },
-                mmEnd: {
-                    required: function (element) {
-                        return $("#ddEnd").val() != "";
-                    }
-                },
-                yyyyEnd: {
-                    required: function (element) {
-                        return ($("#mmEnd").val() != "" || $("#yyyyEnd").val() != "");
-                    }
-                },
                 mmStart: {
                     required: function (element) {
                         return ($("#ddStart").val() != "" || $("#mmStart").val() == "");
                     }
-                }
+                },
+                mmEnd: {
+                    required: {
+                        depends: function(element) {
+                            return $("#employementStatus").val() === "2";
+                        }
+                    }
+                },
+                yyyyEnd: {
+                    required: {
+                        depends: function(element) {
+                            return $("#employementStatus").val() === "2";
+                        }
+                    }
+                },
 
 
             },
@@ -453,21 +461,7 @@ if( isset($redirectBack) ) {
                 });
             }
         });
-        /*$("#workForm").submit(function( event ) {
-            event.preventDefault();
-            //var radioValue = $("input[name='fixSalaryType']:checked").val();
 
-            $.ajax({
-                type:"POST",
-                url:$(this).attr("action"),
-                data:$(this).serialize(),
-                success: function(response){
-                    console.log(response);
-                    window.location.href = "{{$redirectBack}}";
-                }
-            });
-
-        });*/
         @if(isset($work['id']) && $work['id'] != '')
         $("#remove").on("click", function (event) {
             event.preventDefault();
@@ -566,235 +560,55 @@ if( isset($redirectBack) ) {
                 }
             }
         });
-
-
-
+        $('#ctc').on('chnage', function (e) {
+            if (e.which >= 37 && e.which <= 40) return;
+            $('#ctc').val(formatNumber($('#ctc').val()));
+        });
         $('#fixSalary').on('keyup', function (e) {
-            if ($(this).val() != '') {
-                var selValue = $('input[name=fixSalaryType]:checked').val();
-                var muitple = 1;
-                if (selValue == 'annual') {
-                    muitple = 12;
-                }
-                if ($('#variableSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val()) + parseInt($('#fixSalary').val())) *
-                        muitple);
-                } else {
-                    $('#ctc').val(parseInt($('#fixSalary').val()));
-
-                }
-            }
+            if (e.which >= 37 && e.which <= 40) return;
+            $('#fixSalary').val(formatNumber($('#fixSalary').val()));
+            updateCtc();
         });
-
         $('#variableSalary').on('keyup', function (e) {
-            if ($(this).val() != '') {
-
-                var selValue = $('input[name=fixSalaryType]:checked').val();
-                var muitple = 1;
-                if (selValue == 'annual') {
-                    muitple = 12;
-                }
-                if ($('#fixSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val()) + parseInt($('#fixSalary').val())) *
-                        muitple);
-                } else {
-                    $('#ctc').val(parseInt($('#variableSalary').val()));
-
-                }
-            }
+            if (e.which >= 37 && e.which <= 40) return;
+            $('#variableSalary').val(formatNumber( $('#variableSalary').val()));
+            updateCtc();
         });
-
-        $('input[name=fixSalaryType]').on('change', function (e) {
-            if ($(this).val() != '') {
-                if (e.target.value.trim() == '' || e.target.value == 0) {} else {
-                    if ($(this).parents().children('.validationError')) {
-                        $($(this).parents().children('.validationError')).hide();
-                    }
-                }
-
-                var selValue = $('input[name=fixSalaryType]:checked').val();
-                var selValue1 = $('input[name=variableSalaryType]:checked').val();
-                // $('input[name=variableSalaryType][value=' + selValue + ']').prop('checked', 'checked');
-                var muitple = 1;
-                var muitple1 = 1;
-                if (selValue == 'annual') {
-                    muitple = 12;
-                }
-                if (selValue1 == 'annual') {
-                    muitple1 = 12;
-                }
-                if ($('#fixSalary').val() != '' && $('#variableSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val() * muitple1) + parseInt($(
-                        '#fixSalary').val() * muitple)));
-                } else if ($('#variableSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val())) * muitple1);
-                } else if ($('#fixSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#fixSalary').val())) * muitple);
-                }
-            }
+        $('input[name=fixSalaryType]:radio').on('click', function (e) {
+            updateCtc();
         });
-
-
-        $('input[name=variableSalaryType]').on('change', function (e) {
-            if ($(this).val() != '') {
-
-
-                var selValue1 = $('input[name=fixSalaryType]:checked').val();
-                var selValue = $('input[name=variableSalaryType]:checked').val();
-                // $('input[name=variableSalaryType][value=' + selValue + ']').prop('checked', 'checked');
-                var muitple = 1;
-                var muitple1 = 1;
-                if (selValue1 == 'annual') {
-                    muitple = 12;
-                }
-                if (selValue == 'annual') {
-                    muitple1 = 12;
-                }
-                if ($('#fixSalary').val() != '' && $('#variableSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val() * muitple1) + parseInt($(
-                        '#fixSalary').val() * muitple)));
-                } else if ($('#variableSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#variableSalary').val())) * muitple1);
-                } else if ($('#fixSalary').val() != '') {
-                    $('#ctc').val((parseInt($('#fixSalary').val())) * muitple);
-                }
-            }
+        $('input[name=variableSalaryType]:radio').on('click', function (e) {
+            updateCtc();
         });
+       function updateCtc() {
+            var fixcheck  = $('input[name=fixSalaryType]:checked').val();
+            var varcheck = $('input[name=variableSalaryType]:checked').val();
+            var fixmulti = 0, varmulti = 0;
+            if(fixcheck == 'month') {
+                fixmulti = 12;
+            }
+            if(fixcheck == 'annual') {
+                fixmulti = 1;
+            }
+            if(varcheck == 'month') {
+                varmulti = 12;
+            }
+            if(varcheck == 'annual') {
+                varmulti = 1;
+            }
+            var varTotal =  parseInt($('#variableSalary').val().replace(/,/g , ''))*varmulti;
+            var fixTotal = parseInt($('#fixSalary').val().replace(/,/g , ''))*fixmulti;
+            console.log(varTotal, fixTotal);
+            var totalCtc = varTotal+fixTotal;
+            if(!isNaN(totalCtc)) {
+                totalCtc = formatNumber(totalCtc);
+                $('#ctc').val(totalCtc);
+                $('#ctc_label').removeClass('active').addClass('active');
+            }
+       }
 
-        // Page-scolling-input-focus
-
-        //     var $htmlOrBody = $('html, body'),
-        //     scrollTopPadding = 20,
-        //     scrollTopLast = 0;
-        // if($(window).width() <= 1024){
-        //     $('input').focus(function() {
-        //        scrollTopLast = $(window).scrollTop();
-        //        $htmlOrBody.animate({
-        //            scrollTop: $(this).offset().top - scrollTopPadding
-        //         }, 300);
-        //     }).blur(function() {
-        //         $htmlOrBody.animate({
-        //            scrollTop: scrollTopLast
-        //         }, 300);
-        //     });
-        // }
-
-
-        /*     $('.less-form').on('click',function(){
-                 $('.cf-hide').hide();
-                 $(this).hide();
-                 $('.more-form').show();
-             });
-             $('.more-form').on('click',function(){
-                 $('.cf-hide').show();
-                 $(this).hide();
-                 $('.less-form').show();
-             });*/
     });
-    /*var app = angular.module('WorkFromApp', []);
 
-    function getWorkDetails(){
-        app.controller('myCtrl', function($scope, $http) {
-            $http.post("{{URL::to('update/get-work-details')}}",{'id':'{{$id}}' })
-            .then(function(response) {
-                if(response.data.error == false){
-                    $('#id').val(response.data.work.id);
-
-                    $scope.user_id              =response.data.work.id;
-                    $scope.company              =response.data.work.company;
-                    //$scope.employementType      =response.data.work.employementType;
-                    //$scope.employementStatus    =response.data.work.employementStatus;
-                    $scope.city                 =response.data.work.city;
-                    $scope.country              =response.data.work.country;
-                    $scope.level                =response.data.work.level;
-                    $scope.designation          =response.data.work.designation;
-                    $scope.department           =response.data.work.department;
-                    $scope.role                 =response.data.work.role;
-                    $scope.roleDesc             =response.data.work.roleDesc;
-                    $scope.teamSize             =response.data.work.teamSize;
-                    //$scope.fixSalaryType        =response.data.work.fixSalaryType
-                    //$scope.WorkStartDate        =response.data.work.WorkStartDate;
-                    //$scope.WorkEndDate          =response.data.work.WorkEndDate;
-                    //$scope.fixCurrency          =response.data.work.fixCurrency;
-
-                    $scope.fixSalary            =response.data.work.fixSalary;
-                    //$scope.variableCurrency     =response.data.work.variableCurrency;
-                    //$scope.variableSalaryType   =response.data.work.variableSalaryType;
-                    $scope.variableSalary       =response.data.work.variableSalary;
-                    $scope.ctc                  =response.data.work.ctc;
-
-
-                    if(response.data.work.fixSalaryType == "annual"){
-                        $("#fixSalaryType1").prop( "checked", true );
-                    } else {
-                        $("#fixSalaryType2").prop( "checked", true );
-                    }
-
-                    if(response.data.work.fixCurrency == "USD"){
-                        $("#fixCurrency1").prop( "checked", true );
-                    } else {
-                        $("#fixCurrency2").prop( "checked", true );
-                    }
-
-
-                    if(response.data.work.variableSalaryType == "annual"){
-                        $("#variableSalaryType1").prop( "checked", true );
-                    } else {
-                        $("#variableSalaryType2").prop( "checked", true );
-                    }
-
-
-                    $('#employementType').find('option[value="'+response.data.work.employementType+'"]').prop('selected', true);
-                    $("#employementType").material_select();
-
-
-                    $scope.employementType = response.data.work.employementType;
-
-                    $('#employementStatus').find('option[value="'+response.data.work.employementStatus+'"]').prop('selected', true);
-                    $("#employementStatus").material_select();
-                    $scope.employementStatus = response.data.work.employementStatus;
-
-
-                    $('#ddStart').find('option[value="'+response.data.work.ddStart+'"]').prop('selected', true);
-                    $("#ddStart").material_select();
-                    $scope.ddStart = response.data.work.ddStart;
-
-                    $('#mmStart').find('option[value="'+response.data.work.mmStart+'"]').prop('selected', true);
-                    $("#mmStart").material_select();
-                    $scope.mmStart = response.data.work.mmStart;
-
-                    $('#yyyyStart').find('option[value="'+response.data.work.yyyyStart+'"]').prop('selected', true);
-                    $("#yyyyStart").material_select();
-                    $scope.yyyyStart = response.data.work.yyyyStart;
-
-                    $('#ddEnd').find('option[value="'+response.data.work.ddEnd+'"]').prop('selected', true);
-                    $("#ddEnd").material_select();
-                    $scope.ddEnd = response.data.work.ddEnd;
-
-                    $('#mmEnd').find('option[value="'+response.data.work.mmEnd+'"]').prop('selected', true);
-                    $("#mmEnd").material_select();
-                    $scope.mmEnd = response.data.work.mmEnd;
-
-                    $('#yyyyEnd').find('option[value="'+response.data.work.yyyyEnd+'"]').prop('selected', true);
-                    $("#yyyyEnd").material_select();
-                    $scope.yyyyEnd = response.data.work.yyyyEnd;
-
-
-                    if(response.data.work.best == "1"){
-                        $("#best").val("1");
-                        $("#best").prop('checked', true);
-                    }
-
-                    $("#cancel").hide();
-                    $("#remove").show();
-
-                }
-                console.log(response)
-            });
-        });
-    }
-
-    getWorkDetails();*/
 </script>
 
 

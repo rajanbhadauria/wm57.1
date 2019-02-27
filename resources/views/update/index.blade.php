@@ -28,24 +28,40 @@ if(isset($sectionid)) {
                         <div class="">
 
                             <ul class="collapsible no-shadow" data-collapsible="accordion">
-                                @include("update.contact.contact")
-                                @include("update.profileImage.profileImage")
+                                @include("update.resume.resumetitle")
                                 @include("update.objective.objective")
-                                @include("update.work.work")
-                                @include("update.education.education")
-                                @include("update.project.project")
                                 @include("update.skill.skill")
-                                @include("update.skill.skill_soft")
+                                @include("update.work.work")
+                                @include("update.project.project")
+                                @include("update.education.education")
                                 @include("update.certification.certification")
-                                @include("update.training.training")
                                 @include("update.course.course")
-                                @include("update.travel.travel")
                                 @include("update.award.award")
-                                @include("update.patent.patent")
-                                @include("update.language.language")
+                                @include("update.skill.skill_soft")
+                                @include("update.interests.interests")
+                                @include("update.reference.reference")
                                 @include("update.address.current-address")
                                 @include("update.address.permanent-address")
-                                @include("update.reference.reference")
+                                @include("update.language.language")
+                                @include("update.contact.contact")
+
+                                @include("update.profileImage.profileImage")
+
+
+
+
+
+
+                                @include("update.travel.travel")
+                                @include("update.training.training")
+                               <!--
+                                    @include("update.patent.patent")
+
+                                -->
+
+
+
+
 
                             </ul>
 
@@ -63,7 +79,7 @@ if(isset($sectionid)) {
 
 <script>
 
-function PPCheck(section, value){
+function PPCheck(section, value, id=0){
     $.ajax({
         url: "{{ URL::to('update/pp-check') }}",
         type: 'POST',
@@ -71,6 +87,9 @@ function PPCheck(section, value){
         data: {
             "section" : section,
             "value" : value,
+            "_token": "{{ csrf_token()}}",
+            "id" : id
+
         },
         beforeSend: function(){
 
@@ -96,7 +115,8 @@ function PPCheck(section, value){
         $(".PPCheck").on("click", function(){
             var section = $(this).attr("data-id");
             var value = $(this).prop("checked");
-            PPCheck(section,value);
+            var id = $(this).attr("data-value");
+            PPCheck(section,value, id);
         })
 
         $(".shareCheckbox").on("click", function(){

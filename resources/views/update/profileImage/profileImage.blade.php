@@ -9,7 +9,6 @@
                                                 Profile image
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
-                                            <a href="{{URL::to('user/profile-image')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
                                         </div>
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">

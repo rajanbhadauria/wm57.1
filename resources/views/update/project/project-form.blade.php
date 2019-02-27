@@ -18,7 +18,7 @@ if( isset($redirectBack) ) {
     <div class="container">
         <div class="row mb0">
             <div class="col s12 pr">
-                <h1>Add key assignment / project</h1>
+                <h1>{{isset($project['id'])?'Update':'Add'}} key assignment / project</h1>
             </div>
         </div>
     </div>

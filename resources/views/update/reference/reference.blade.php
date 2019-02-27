@@ -18,38 +18,41 @@
                                                 <div>
                                                 Hide / Show
                                                 </div>
-                                                <div class="button-content top10">
-                                                    <div class = "switch">
-                                                        <label>
-                                                            @if($referenceCount > 0 && $referenceInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="reference" checked>
-                                                            @else
-                                                                <input type="checkbox" class="PPCheck" data-id="reference">
-                                                            @endif
-                                                            <span class = "lever"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+
                                             </li>
                                             @if($referenceCount > 0)
                                                 @foreach($referenceInfo as $reference)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/reference')}}/{{$reference->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$reference->reference}}</span> 
-                                                        <span class="normal">- {{$reference->school}}</span>
-                                                    </div> 
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                            <div class = "switch">
+                                                                    <label>
+                                                                        @if($reference['private'])
+                                                                            <input type="checkbox" data-value="<?php echo $reference['id']?>" class="PPCheck" data-id="reference" checked>
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $reference['id']?>" class="PPCheck" data-id="reference">
+                                                                        @endif
+                                                                        <span class = "lever"></span>
+                                                                    </label>
+                                                                </div>
+                                                    </div>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/reference')}}/{{$reference->id}}" class="collapsible-body-inner">
+                                                            <div class="update-desc">
+                                                                <span class="bold">{{$reference->reference}}</span>
+                                                                <span class="normal">- {{$reference->school}}</span>
+                                                            </div>
+                                                            <span class="secondary-content">
+                                                                <i class="material-icons">edit</i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/reference')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add reference</span> 
+                                                        <span class="bold">Click to add reference</span>
                                                         <span class="normal"></span>
                                                     </div>
                                                         <span class="secondary-content">
@@ -58,7 +61,7 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                        </ul> 
+
+                                        </ul>
                                     </div>
                                 </li>

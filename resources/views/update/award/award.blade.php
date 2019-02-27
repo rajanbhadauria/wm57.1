@@ -6,7 +6,7 @@
                                                 <label for="awardData"></label>
                                             </div>
                                             <div class="fl">
-                                                Awards and recognitions @if($awardCount > 0) ({{$awardCount}}) @endif
+                                                Awards and honors @if($awardCount > 0) ({{$awardCount}}) @endif
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                             <a href="{{URL::to('update/award')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
@@ -33,23 +33,38 @@
                                             </li>
                                             @if($awardCount > 0)
                                                 @foreach($awardInfo as $award)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/award')}}/{{$award->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$award->award}}</span> 
-                                                        <span class="normal">- {{$award->school}}</span>
-                                                    </div> 
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                        <div class = "switch">
+                                                            <label>
+                                                                @if($award['private'])
+                                                                    <input type="checkbox" data-value="<?php echo $award['id']?>" class="PPCheck" data-id="award" checked>
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $award['id']?>" class="PPCheck" data-id="award">
+                                                                @endif
+                                                                <span class = "lever"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/award')}}/{{$award->id}}" class="collapsible-body-inner">
+                                                        <div class="update-desc">
+                                                            <span class="bold">{{$award->award}}</span>
+                                                            <span class="normal">- {{$award->school}}</span>
+                                                        </div>
+                                                            <span class="secondary-content">
+                                                                <i class="material-icons">edit</i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/award')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add award and recognition</span> 
+                                                        <span class="bold">Click to add award and recognition</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -57,7 +72,7 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                        </ul> 
+
+                                        </ul>
                                     </div>
                                 </li>

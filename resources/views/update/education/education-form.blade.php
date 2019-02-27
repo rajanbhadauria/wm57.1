@@ -18,7 +18,7 @@ if( isset($redirectBack) ) {
     <div class="container">
         <div class="row mb0">
             <div class="col s12 pr">
-                <h1>Add education</h1>
+                <h1>{{isset($education['id'])?'Update':'Add'}} education</h1>
             </div>
         </div>
     </div>
@@ -282,8 +282,7 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function (form) {
-                event.preventDefault();
-                console.log($(this).attr("action"));
+
                 $.ajax({
                     type: "POST",
                     url: $("#educationForm").attr("action"),

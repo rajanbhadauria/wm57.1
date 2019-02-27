@@ -18,43 +18,46 @@
                                                 <div>
                                                 Hide / Show
                                                 </div>
-                                                <div class="button-content top10">
-                                                    <div class = "switch">
-                                                        <label>
-                                                            @if($languageCount > 0 && $languageInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="language" checked>
-                                                            @else
-                                                                <input type="checkbox" class="PPCheck" data-id="language">
-                                                            @endif
-                                                            <span class = "lever"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
                                             </li>
                                             @if($languageCount > 0)
                                                 @foreach($languageInfo as $language)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/language')}}/{{$language->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$language->language}}</span> 
-                                                        <span class="normal">- 
-                                                                                {{$language->read=="1"?"Read,":""}}
-                                                                                {{$language->write=="1"?"Write,":""}}
-                                                                                {{$language->speak=="1"?"Speak,":""}}
-                                                        </span> 
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                        <div class = "switch">
+                                                            <label>
+                                                                @if($language['private'])
+                                                                    <input type="checkbox" data-value="<?php echo $language['id']?>" class="PPCheck" data-id="language" checked>
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $language['id']?>" class="PPCheck" data-id="language">
+                                                                @endif
+                                                                <span class = "lever"></span>
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/language')}}/{{$language->id}}" class="collapsible-body-inner">
+                                                            <div class="update-desc">
+                                                                <span class="bold">{{$language->language}}</span>
+                                                                <span class="normal">-
+                                                                                        {{$language->read=="1"?"Read,":""}}
+                                                                                        {{$language->write=="1"?"Write,":""}}
+                                                                                        {{$language->speak=="1"?"Speak,":""}}
+                                                                </span>
+                                                            </div>
+                                                                <span class="secondary-content">
+                                                                    <i class="material-icons">edit</i>
+                                                                </span>
+                                                        </a>
+                                                    </div>
+
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/language')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add language</span> 
-                                                        <span class="normal"></span> 
+                                                        <span class="bold">Click to add language</span>
+                                                        <span class="normal"></span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -62,7 +65,7 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                        </ul> 
+
+                                        </ul>
                                     </div>
                                 </li>

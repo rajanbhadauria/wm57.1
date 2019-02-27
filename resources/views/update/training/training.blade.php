@@ -18,38 +18,42 @@
                                                 <div>
                                                 Hide / Show
                                                 </div>
-                                                <div class="button-content top10">
-                                                    <div class = "switch">
-                                                        <label>
-                                                            @if($trainingCount > 0 && $trainingInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="training" checked>
-                                                            @else
-                                                                <input type="checkbox" class="PPCheck" data-id="training">
-                                                            @endif
-                                                            <span class = "lever"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+
                                             </li>
                                             @if($trainingCount > 0)
                                                 @foreach($trainingInfo as $training)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/training')}}/{{$training->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$training->training}}</span> 
-                                                        <span class="normal">- {{$training->school}}</span> 
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                            <div class = "switch">
+                                                                    <label>
+                                                                        @if($training['private'])
+                                                                            <input type="checkbox" data-value="<?php echo $training['id']?>" class="PPCheck" data-id="training" checked>
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $training['id']?>" class="PPCheck" data-id="training">
+                                                                        @endif
+                                                                        <span class = "lever"></span>
+                                                                    </label>
+                                                                </div>
                                                     </div>
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/training')}}/{{$training->id}}" class="collapsible-body-inner">
+                                                            <div class="update-desc">
+                                                                <span class="bold">{{$training->training}}</span>
+                                                                <span class="normal">- {{$training->school}}</span>
+                                                            </div>
+                                                                <span class="secondary-content">
+                                                                    <i class="material-icons">edit</i>
+                                                                </span>
+                                                        </a>
+                                                    </div>
+
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
                                                     <a href="{{URL::to('update/training')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add training attended</span> 
+                                                        <span class="bold">Click to add training attended</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -57,7 +61,7 @@
                                                     </a>
                                                 </li>
                                             @endif
-                                            
-                                        </ul> 
+
+                                        </ul>
                                     </div>
                                 </li>

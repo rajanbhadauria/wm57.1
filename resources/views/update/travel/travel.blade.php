@@ -6,10 +6,10 @@
                                                 <label for="travelData"></label>
                                             </div>
                                             <div class="fl">
-                                                Work related travels @if($travelCount > 0) ({{$travelCount}}) @endif
+                                                Publications, Research, Patent etc details @if($travelCount > 0) ({{$travelCount}}) @endif
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
-                                            <a href="{{URL::to('update/travel')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
+                                            <a href="{{URL::to('update/miscellaneous')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
                                         </div>
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
@@ -34,30 +34,45 @@
 
                                             @if($travelCount > 0)
                                                 @foreach($travelInfo as $travel)
-                                                <li class="collection-item">
-                                                    <a href="{{URL::to('update/travel')}}/{{$travel->id}}" class="collapsible-body-inner">
-                                                    <div class="update-desc">
-                                                        <span class="bold">{{$travel->project}}</span> 
-                                                        <span class="normal">- {{$travel->company}}</span> 
+                                                <li class="collection-item row">
+                                                    <div class="col s3 p0">
+                                                            <div class = "switch">
+                                                                    <label>
+                                                                        @if($travel['private'])
+                                                                            <input type="checkbox" data-value="<?php echo $travel['id']?>" class="PPCheck" data-id="travel" checked>
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $travel['id']?>" class="PPCheck" data-id="travel">
+                                                                        @endif
+                                                                        <span class = "lever"></span>
+                                                                    </label>
+                                                                </div>
                                                     </div>
-                                                        <span class="secondary-content">
-                                                            <i class="material-icons">edit</i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="col s9 p0">
+                                                        <a href="{{URL::to('update/miscellaneous')}}/{{$travel->id}}" class="collapsible-body-inner">
+                                                            <div class="update-desc">
+                                                                <span class="bold">{{$travel->project}}</span>
+                                                                <span class="normal">- {{$travel->company}}</span>
+                                                            </div>
+                                                            <span class="secondary-content">
+                                                                <i class="material-icons">edit</i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+
                                                 </li>
-                                                @endforeach  
+                                                @endforeach
                                             @else
                                                 <li class="collection-item">
-                                                    <a href="{{URL::to('update/travel')}}" class="collapsible-body-inner">
+                                                    <a href="{{URL::to('update/miscellaneous')}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
-                                                        <span class="bold">Click to add work related travel</span> 
+                                                        <span class="bold">Click to Publications, Research, Patent etc details</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
                                                         </span>
                                                     </a>
                                                 </li>
-                                            @endif                                      
-                                        </ul> 
+                                            @endif
+                                        </ul>
                                     </div>
                                 </li>

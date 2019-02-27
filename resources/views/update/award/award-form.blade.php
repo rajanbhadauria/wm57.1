@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add awards and recognition</h1>
+                    <h1>{{isset($award['id'])?'Update':'Add'}} awards and recognition</h1>
                 </div>
             </div>
         </div>

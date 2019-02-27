@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
 		<div class="container">
 			<div class="row mb0">
 				<div class="col s12 pr">
-					<h1>Add Work related travels</h1>
+					<h1>{{isset($travel['id'])?'Update':'Add'}} Publications / Research / Patent etc</h1>
 				</div>
 			</div>
 		</div>
@@ -31,25 +31,45 @@ if( isset($redirectBack) ) {
 					<div class="row">
 						<div class="">
 							<form action="{{URL::to('update/travel-save')}}" method="POST" id="travelForm" name="travelForm" >
-
+                                <div class="clearfix">&nbsp;</div>
+                                <div class="input-field custom-form">
+                                    <select id="work_category" name="work_category" required data-msg="Required">
+                                        <option value="">Select</option>
+                                        @if($work_categories > 0)
+                                            @foreach($work_categories as $work_category)
+                                    <option value="{{$work_category['id']}}"{{isset($travel['work_category']) && $travel['work_category'] == $work_category['id']?'selected':''}} >
+                                        {{$work_category['title']}}
+                                    </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <label for="work_category" class="active">Other activities <span>*</span></label>
+                                </div>
 								<div class="input-field custom-form">
 									<input id="project" name="project" type="text" class="fourlength validate" value="{{isset($travel['project'])?$travel['project']:''}}" required
 									>
-									<label for="travel" ng-class="{ active:  project }">Project name <span>*</span></label>
-								</div>
+									<label for="project" id="project_label" ng-class="{ active:  project }">Publications / Research / Patent etc name <span>*</span></label>
+                                </div>
+
+                                <div class="input-field custom-form">
+                                        <input id="url" name="url" type="url" class="fourlength validate" value="{{isset($travel['url'])?$travel['url']:''}}" required
+                                        >
+                                        <label for="url" id="url" ng-class="{ active:  url }">Url</label>
+                                </div>
 
 								<div class="input-field custom-form">
 									<textarea id="projectDesc" name="projectDesc" class="mb25"
 										ng-model="projectDesc"
 									>{{isset($travel['projectDesc'])?$travel['projectDesc']:''}}</textarea>
-									<label for="projectDesc" ng-class="{ active:  projectDesc }">Project description</label>
+									<label for="projectDesc" ng-class="{ active:  projectDesc }">Details</label>
 								</div>
 								<div class="input-field custom-form">
 									<input id="company" name="company" type="text" class="alphanumeric fivelength validate" value="{{isset($travel['company'])?$travel['company']:''}}"
 
 										ng-model="company"
 									>
-									<label for="company" ng-class="{ active:  company }">Company name</label>
+									<label for="company" ng-class="{ active:  company }">College / Insititute /
+                                        Company name</label>
 								</div>
 
 								<div class="input-field custom-form">
@@ -191,57 +211,70 @@ if( isset($redirectBack) ) {
 		</div>
 	  </div>
 	</div>
-
-
-
 <script>
 
+updateLabel = function(){
+    var label = $.trim($('#work_category option:selected').text());
+    if(label != "" && label != "Select") {
+      $("#project_label").html(label+" name");
+    } else {
+        $("#project_label").html('Publications / Research / Patent etc');
+    }
+}
+$(document).ready(function() {
+    updateLabel();
+    $('#work_category').on('change' ,function(){
+        updateLabel();
+    });
 
-	$(document).ready(function() {
+    $.validator.addMethod("alphanumeric", function(value, element) {
+        return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
+    }, "Please enter alpha numeric value only.");
+    $.validator.setDefaults({
+        ignore: [],
+        onfocusout: function () { return true; }
+    });
 
-		$.validator.addMethod("alphanumeric", function(value, element) {
-			return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
-		}, "Please enter alpha numeric value only.");
-		$.validator.setDefaults({
-			ignore: [],
-			onfocusout: function () { return true; }
-		});
+    $( "#travelForm" ).validate({
+        rules: {
+            project: {required: true},
+            url: {url:true}
 
-		$( "#travelForm" ).validate({
-			rules: {
-				project: {required: true}
 
-			},
-			messages: {
-				project: {
-					required: "Required"
-				}
-			},
-			errorClass: 'validationError',
-			errorElement : 'span',
-			//errorLabelContainer: '.validationError',
-			errorPlacement: function( error, element ) {
-				error.insertAfter( element);
-			},
-			highlight: function (element, errorClass, validClass) {
-				$(element).parents("span").addClass(errorClass);
-			},
-			unhighlight: function (element, errorClass, validClass) {
-				$(element).parents("span").removeClass(errorClass);
-			},
-			submitHandler: function(form) {
-                var formData = $("#travelForm").serializeArray();
-                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
-				$.ajax({
-					type:"POST",
-					url:$("#travelForm").attr("action"),
-					data:formData,
-					success: function(response){
-						window.location.href = "{{$redirectBack}}";
-					}
-				});
-			}
-		});
+        },
+        messages: {
+            project: {
+                required: "Required"
+            },
+            url: {
+                url: "Enter vaild url"
+            }
+        },
+        errorClass: 'validationError',
+        errorElement : 'span',
+        //errorLabelContainer: '.validationError',
+        errorPlacement: function( error, element ) {
+            error.insertAfter( element);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).parents("span").addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).parents("span").removeClass(errorClass);
+        },
+        submitHandler: function(form) {
+            var formData = $("#travelForm").serializeArray();
+            formData.push({ name: "_token", value: "{{ csrf_token()}}" });
+            $.ajax({
+                type:"POST",
+                url:$("#travelForm").attr("action"),
+                data:formData,
+                success: function(response){
+                    window.location.href = "{{$redirectBack}}";
+                }
+            });
+        }
+    });
 
 		/*$("#travelForm").submit(function( event ) {
 			event.preventDefault();
@@ -390,7 +423,7 @@ function getTravelDetails(){
 				$("#remove").show();
 
 			}
-			console.log(response)
+			//console.log(response)
 		});
 	});
 }

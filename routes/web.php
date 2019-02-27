@@ -30,12 +30,12 @@ Route::get('password-pending', 'Auth\ForgotPasswordController@forgotResponse');
 Route::get('forgot-password', 'Auth\ForgotPasswordController@showLinkRequestForm');
 Route::get('reactivate/{email}', 'Auth\LoginController@reactivate');
 Route::post('closed-activate', 'Auth\LoginController@closedActivate');
+Route::get('/logout', 'HomeController@logout')->name('logout')->middleware('auth');
+Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'))->middleware('auth');
+Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'))->middleware('auth');
 
-Route::group(['middleware' => ['auth']], function(){
-    Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'));
-    Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'));
+Route::group(['middleware' => ['auth','isactive']], function(){
     Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'));
-    Route::get('/logout', 'HomeController@logout')->name('logout');
     Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
     Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
     Route::get('/home', 'HomeController@index')->name('home');
@@ -46,8 +46,7 @@ Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
 });
 
-
-Route::group(array('prefix' => 'user'), function(){
+Route::group(['prefix' => 'user', 'middleware' => ['auth','isactive']], function(){
 	Route::any('/profile-image', array('as' => 'user.upload-file', 'uses' => 'UserController@profileImage'));
 	Route::any('/upload-file', array('as' => 'user.upload-file', 'uses' => 'UploadController@uploadFile'));
 	Route::any('/save-profile-image', array('as' => 'user.save-profile-image', 'uses' => 'UserController@saveProfileImage'));
@@ -61,7 +60,17 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 	Route::get('/', ['as' => 'update.index', 'uses' => 'Resume\UpdateController@index']);
 	Route::post('/pp-check', ['as' => 'update.pp-check', 'uses' => 'Resume\UpdateController@PPCheck']);
 
-	Route::get('/contact', ['as' => 'update.contact', 'uses' => 'Resume\UpdateController@contact']);
+    Route::get('/resume-title-cover-note', ['as' => 'update.resume-title', 'uses' => 'Resume\UpdateController@resumeTitle']);
+    Route::post('/get-resume-title-details', ['as' => 'update.get-resume-title-details', 'uses' => 'Resume\UpdateController@getResumeTitleDetails']);
+    Route::post('/resume-title-save', ['as' => 'update.resume-title.save', 'uses' => 'Resume\UpdateController@resumeTitleSave']);
+    Route::post('/resume-title/remove/{id}', ['as' => 'update.resume-title.remove', 'uses' => 'Resume\UpdateController@resumeTitleRemove']);
+
+    Route::get('/interests', ['as' => 'update.interests', 'uses' => 'Resume\UpdateController@interests']);
+    Route::post('/get-interests-details', ['as' => 'update.get-interests-details', 'uses' => 'Resume\UpdateController@getInterestsDetails']);
+    Route::post('/interests-save', ['as' => 'update.interests.save', 'uses' => 'Resume\UpdateController@interestsSave']);
+    Route::get('/interests/remove/{id}', ['as' => 'update.interests.remove', 'uses' => 'Resume\UpdateController@interestsRemove']);
+
+    Route::get('/contact', ['as' => 'update.contact', 'uses' => 'Resume\UpdateController@contact']);
 	Route::post('/get-contact-details', ['as' => 'update.get-contact-details', 'uses' => 'Resume\UpdateController@getContactDetails']);
 	Route::post('/contact-save', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactSave']);
     Route::post('/contact/remove/{id}', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactRemove']);
@@ -138,8 +147,8 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
     Route::post('/course-save', ['as' => 'update.course-save', 'uses' => 'Resume\UpdateController@courseSave']);
     Route::post('/course/remove/{id}', ['as' => 'update.course-remove', 'uses' => 'Resume\UpdateController@courseRemove']);
 
-    Route::get('/travel', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
-    Route::get('/travel/{id}', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
+    Route::get('/miscellaneous', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
+    Route::get('/miscellaneous/{id}', ['as' => 'update.travel', 'uses' => 'Resume\UpdateController@travel']);
     Route::post('/get-travel-details', ['as' => 'update.get-travel-details', 'uses' => 'Resume\UpdateController@getTravelDetails']);
     Route::post('/travel-save', ['as' => 'update.travel-save', 'uses' => 'Resume\UpdateController@travelSave']);
     Route::post('/travel/remove/{id}', ['as' => 'update.travel-remove', 'uses' => 'Resume\UpdateController@travelRemove']);

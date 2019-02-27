@@ -6,10 +6,10 @@
 
 if( isset($redirectBack) ) {
     if($redirectBack == "view"){
-        $redirectBack = URL::to('resume/view?sectionid=softskillInfo');
+        $redirectBack = URL::to('resume/view?sectionid=interestInfo');
     }
 } else {
-    $redirectBack = URL::to('update?sectionid=softskillInfo');
+    $redirectBack = URL::to('update?sectionid=interestInfo');
 }
 ?>
 
@@ -17,12 +17,12 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add/Update Personal management skills</h1>
+                    <h1>Add/Update Interests</h1>
                 </div>
             </div>
         </div>
     </section>
-    <div class="section wrappit" ng-app="SoftSkillFromApp" ng-controller="myCtrl">
+    <div class="section wrappit" ng-app="InterestsFromApp" ng-controller="myCtrl">
       <div class="container">
         <div class="center-wrapper" id="heightSet" >
           <div class="center-container">
@@ -30,11 +30,11 @@ if( isset($redirectBack) ) {
                 <div class="inner-half-container" id="loginDiv"  >
                     <div class="row mb20">
                         <div class="">
-                            <form action="{{URL::to('update/soft-skill-save')}}" method="POST" id="skillForm" name="skillForm" novalidate>
-
+                            <form action="{{URL::to('update/interests-save')}}" method="POST" id="interestsForm" name="interestsForm" novalidate>
+                                {{ csrf_field() }}
                                 <div class="input-field custom-form">
-                                    <p><span id="multiple-input" class="select3-input" name="skills"></span></p>
-                                    <label class="active">Soft management skills <span>*</span></label>
+                                    <p><span id="multiple-input" class="select3-input" name="interests"></span></p>
+                                    <label class="active">Interests <span>*</span></label>
                                 </div>
 
                                 <div class="row">
@@ -47,8 +47,8 @@ if( isset($redirectBack) ) {
                                     </div>
 
                                     <div class="col s6 pr0 custom-submit">
-                                        <input type="hidden" name="id" id="id" value="0">
-                                        <a href="javascript:void(0)" name="saveSkillButton" id="saveSkillButton" class="waves-effect waves-light btn-blue display-block" >Save</a>
+                                    <input type="hidden" name="id" id="id" value="{{isset($interests['id'])?$interests['id']:''}}">
+                                        <a href="javascript:void(0)" name="saveInterestsButton" id="saveInterestsButton" class="waves-effect waves-light btn-blue display-block" >Save</a>
                                     </div>
                                 </div>
 
@@ -67,18 +67,18 @@ if( isset($redirectBack) ) {
 
     $(document).ready(function() {
 
-        $("#skillForm").on('submit', function(e){
+        $("#interestsForm").on('submit', function(e){
             e.preventDefault();
             e.preventDefault();
         });
-        $("#saveSkillButton").on('click', function( event ) {
+        $("#saveInterestsButton").on('click', function( event ) {
 
             $.ajax({
                 type:"POST",
-                url:"{{URL::to('update/soft-skill-save')}}",
+                url:"{{URL::to('update/interests-save')}}",
                 data:{
                     "id":$("#id").val(),
-                    "skills":$('#multiple-input').select3('data'),
+                    "interests":$('#multiple-input').select3('data'),
                     "_token": "{{ csrf_token()}}"
                 },
                 success: function(response){
@@ -90,15 +90,14 @@ if( isset($redirectBack) ) {
         $("#remove").hide();
 
         $("#remove").on("click", function(event){
+            event.preventDefault();
             var r = confirm("Are you sure you want to delete!");
             if (r == true) {
-                var formData = $(this).serializeArray();
-                formData.push({ name: "_token", value: "{{ csrf_token()}}" });
                 $.ajax({
-                    type:"POST",
+                    type:"GET",
                     dataType : "JSON",
-                    url:"{{URL::to('update/soft-skill/remove')}}/"+$("#id").val(),
-                    data:formData,
+                    url:"{{URL::to('update/interests/remove')}}/"+$("#id").val(),
+                    data:$(this).serialize(),
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
@@ -110,6 +109,8 @@ if( isset($redirectBack) ) {
         });
 
     });
+
+
 </script>
 
 
@@ -117,7 +118,7 @@ if( isset($redirectBack) ) {
 <script>
 
 
-        var skills = <?php echo json_encode($skillList);?>;
+        var interests = <?php echo json_encode($interestsList);?>;
 
 
                 var transformText = $.fn.select3.transformText;
@@ -126,8 +127,8 @@ if( isset($redirectBack) ) {
                 function queryFunction(query) {
                     var term = query.term;
                     var offset = query.offset || 0;
-                    var results = skills.filter(function(skill) {
-                        return transformText(skill).indexOf(transformText(term)) > -1;
+                    var results = interests.filter(function(interest) {
+                        return transformText(interest).indexOf(transformText(term)) > -1;
                     });
                     results.sort(function(a, b) {
                         a = transformText(a);
@@ -149,19 +150,19 @@ if( isset($redirectBack) ) {
 </script>
 
 <script type="text/javascript">
-var app = angular.module('SoftSkillFromApp', []);
+var app = angular.module('InterestsFromApp', []);
 
-function getSoftSkillDetails(){
+function getInterestDetails(){
     app.controller('myCtrl', function($scope, $http) {
-        $http.post("{{URL::to('update/get-soft-skill-details')}}",{'id':'{{$id}}' })
+        $http.post("{{URL::to('update/get-interests-details')}}",{'id':'{{$id}}' })
         .then(function(response) {
             if(response.data.error == false){
-                $('#id').val(response.data.softSkill.id);
+                $('#id').val(response.data.interests.id);
 
                 var SkillObj = $('#multiple-input').select3({
                     multiple: true,
                     placeholder: 'Type to search',
-                    data:JSON.parse(response.data.softSkill.soft_skill),
+                    data:JSON.parse(response.data.interests.interest),//[{"id":"Amsterdam","text":"Amsterdam"},{"id":"Barcelona","text":"Barcelona"},{"id":"Bremen","text":"Bremen"}],
                     query: queryFunction
                 });
 
@@ -180,11 +181,12 @@ function getSoftSkillDetails(){
             }
 
 
+            console.log(response.data)
         });
     });
 }
 
-getSoftSkillDetails();
+getInterestDetails();
 
 
 </script>
