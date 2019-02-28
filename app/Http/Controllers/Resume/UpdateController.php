@@ -32,6 +32,7 @@ use App\Model\Resume;
 use App\Model\InterestsList;
 use App\Model\Interests;
 use App\Model\work_categories;
+use App\Model\UserBasicInformations;
 
 
 class UpdateController extends Controller
@@ -67,6 +68,9 @@ class UpdateController extends Controller
 
         $data['resumetitleInfo'] = Resumetitle::where("user_id","=",$user_id)->get()->first();
         $data['resumetitleCount'] = Resumetitle::where("user_id","=",$user_id)->count();
+
+        $data['basicInfo'] = UserBasicInformations::where("user_id","=",$user_id)->get()->first();
+        $data['basicInfoCount'] = UserBasicInformations::where("user_id","=",$user_id)->count();
 
         $data['profileImageData'] = User::select("avatar","avatar_updated","profilePrivate")->where("id","=",$user_id)->get()->first();
 
@@ -133,7 +137,8 @@ class UpdateController extends Controller
         return view('update.index',$data);
     }
     // +++++++++++++++++++++++++++++++++ Resume Title Section ++++++++++++++++++++++++++++++
-    public function resumeTitle() {
+    public function resumeTitle(Request $request) {
+        $data['return_url'] = ($request->query('url')) ? $request->query('url') : 'update?sectionid=resumetitleInfo';
         $data['resume_title'] = Resumetitle::where("user_id","=", Auth::id())->get()->first();
         return view('update.resume.resumetitle-form',$data);
     }
@@ -1218,9 +1223,13 @@ class UpdateController extends Controller
                 User::where("id","=",$user_id)->update(['profilePrivate' => $value]);
                 break;
 
+            case 'basic_info':
+                UserBasicInformations::where("user_id","=",$user_id)->update(['private' => $value]);
+            break;
+
             case 'contact':
                 Contact::where("user_id","=",$user_id)->update(['private' => $value]);
-                break;
+            break;
 
             case 'resumetitle':
                 Resumetitle::where("user_id","=",$user_id)->update(['private' => $value]);

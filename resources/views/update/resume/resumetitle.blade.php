@@ -20,7 +20,7 @@
                 <div class="button-content top10">
                     <div class = "switch">
                         <label>
-                            @if($contactInfo['private'])
+                            @if($resumetitleInfo['private'])
                                 <input type="checkbox" class="PPCheck" data-id="resumetitle" checked>
                             @else
                                 <input type="checkbox" class="PPCheck" data-id="resumetitle">

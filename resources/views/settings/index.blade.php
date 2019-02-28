@@ -18,10 +18,10 @@
               <div class="container-card">
                 <ul class="reset-list-style settings-menu">
                   <li class="settings-title">
-                   <label for="">User account (WM 4544FG)</label>
+                   <label for="">User account ({{Auth::user()->wmid}})</label>
                   </li>
                   <li>
-                      <a class="waves-effect waves-light-grey" href="{{ url('/postsignup') }}"><span>Basic user information</span><span class="warn-ico rotate180"><i class="material-icons">info</i></span>  <i class="material-icons">chevron_right</i></a>           
+                      <a class="waves-effect waves-light-grey" href="{{ url('/postsignup') }}"><span>Basic user information</span><span class="warn-ico rotate180"><i class="material-icons">info</i></span>  <i class="material-icons">chevron_right</i></a>
                   </li>
                   <li>
                     <a class="waves-effect waves-light-grey" href="{{URL::to('/change-password')}}"><span>Change password</span><i class="material-icons">chevron_right</i></a>
@@ -92,7 +92,7 @@
                   </li>
                   <li class="switch-item">
                     <span>Google</span>
-                    <div class="switch">  
+                    <div class="switch">
                           <label>
                               <input type="checkbox">
                               <span class = "lever"></span>
@@ -129,13 +129,13 @@
                   <li>
                     <a href="">Payment terms<i class="material-icons">chevron_right</i></a>
                   </li>
-                </ul> 
+                </ul>
               </div>
-              
+
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
   </div>
 @endsection

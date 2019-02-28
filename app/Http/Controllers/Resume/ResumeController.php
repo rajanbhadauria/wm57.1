@@ -29,6 +29,8 @@ use App\Helper\Email;
 use App\Model\Resume;
 
 use App\Model\Notification;
+use App\Model\UserBasicInformations;
+use App\Model\Resumetitle;
 
 class ResumeController extends Controller
 {
@@ -40,27 +42,12 @@ class ResumeController extends Controller
 
     public function index(Request $request){
         $input = $request->all();
-        //Email::send(); // for test helper
         return view('resume.index');
     }
 
-    public function emailExample(){
-        $user_id = "101";
-        $activate_token = "123321123321";
-        $url = URL::to('activate')."/".$user_id."/".$activate_token;
-        $data['link'] = $url;
-        $data['username'] = $user_first_name = "Vikas Saini";
-
-        $user_email = "vikas1234saini@gmail.com";
-        $user_first_name = "Vikas Saini";
-        Mail::send("email.welcome", $data, function ($message) use ($user_email, $user_first_name) {
-            $message->to($user_email,$user_first_name)->subject("WorkMedian : Activate account");
-        });
-    }
-
-	public function view(Request $request){
+    public function view(Request $request){
         $input = $request->all();
-        
+
         $input = $request->all();
         if(isset($input['sectionid'])){
             $data['sectionid'] = $input['sectionid'];
@@ -112,7 +99,102 @@ class ResumeController extends Controller
 
         $data['educationInfo'] = Education::where("user_id","=", Auth::id())->orderBy('educationDate', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", Auth::id())->count();
-        
+
+        $data['projectInfo'] = Project::where("user_id","=", Auth::id())->get();
+        $data['projectCount'] = Project::where("user_id","=", Auth::id())->count();
+
+        $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get();
+        $data['skillCount'] = Skill::where("user_id","=", Auth::id())->count();
+
+        $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->get();
+        $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->count();
+
+        $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->get();
+        $data['trainingCount'] = Training::where("user_id","=", Auth::id())->count();
+
+        $data['courseInfo'] = Course::where("user_id","=", Auth::id())->get();
+        $data['courseCount'] = Course::where("user_id","=", Auth::id())->count();
+
+        $data['travelInfo']  = Travel::where("user_id","=", Auth::id())->get();
+        $data['travelCount'] = Travel::where("user_id","=", Auth::id())->count();
+
+        $data['awardInfo']  = Award::where("user_id","=", Auth::id())->get();
+        $data['awardCount'] = Award::where("user_id","=", Auth::id())->count();
+
+        $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->get();
+        $data['patentCount'] = Patent::where("user_id","=", Auth::id())->count();
+
+        $data['languageInfo']  = Language::where("user_id","=", Auth::id())->get();
+        $data['languageCount'] = Language::where("user_id","=", Auth::id())->count();
+
+        $data['referenceInfo']  = Reference::where("user_id","=", Auth::id())->get();
+        $data['referenceCount'] = Reference::where("user_id","=", Auth::id())->count();
+
+        $data['basicInfo']  = UserBasicInformations::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+        $data['basicInfoCount'] = UserBasicInformations::where("user_id","=", Auth::id())->count();
+
+        $data['coverNote']  = Resumetitle::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+        $data['coverNoteCount'] = Resumetitle::where("user_id","=", Auth::id())->count();
+
+        return view('resume.resumeview',$data);
+
+    }
+
+	public function view_old(Request $request){
+        $input = $request->all();
+
+        $input = $request->all();
+        if(isset($input['sectionid'])){
+            $data['sectionid'] = $input['sectionid'];
+        }
+
+
+        $ownerEmail = Auth::user()->email;
+        $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
+        $user_id = Auth::id();
+
+        $data['profileData'] = User::where("id","=",$user_id)->get()->first();
+        $data['contactInfo'] = Contact::where("user_id","=",$user_id)->get()->first();
+        $data['contactCount'] = Contact::where("user_id","=",$user_id)->count();
+
+        $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->get()->first();
+        $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->count();
+
+        $data['currentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("type","0")->get()->first();
+        $data['currentAddressCount'] = Address::where("user_id","=", Auth::id())->where("type","0")->count();
+
+        $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("type","1")->get()->first();
+        $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("type","1")->count();
+
+        $data['workInfo']  = Work::where("user_id","=", Auth::id())->orderBy('workStartDate', 'desc')->get();
+        $data['workCount'] = Work::where("user_id","=", Auth::id())->count();
+
+        $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("employementStatus","=","1")->get()->first();
+        $data['currentWorkCount']  = Work::where("user_id","=", Auth::id())->where("employementStatus","=","1")->count();
+
+
+        if($data['workCount'] > 0 ){
+
+            if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
+                $data['workEnding'] = $data['workInfo'][0]->workEndDate;
+            }else{
+                $data['workEnding'] = date('Y-m-d H:i:s');
+            }
+            foreach ($data['workInfo'] as $key => $work) {
+                if($work->workEndDate!='0000-00-00 00:00:00'){
+                    $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
+                }else{
+                    $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
+                }
+                $data['workStarting'] = $work->workStartDate;
+            }
+            //echo $data['workStarting'].",".$data['workEnding']."<br />";
+            $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
+        }
+
+        $data['educationInfo'] = Education::where("user_id","=", Auth::id())->orderBy('educationDate', 'desc')->get();
+        $data['educationCount'] = Education::where("user_id","=", Auth::id())->count();
+
         $data['projectInfo'] = Project::where("user_id","=", Auth::id())->get();
         $data['projectCount'] = Project::where("user_id","=", Auth::id())->count();
 
@@ -150,7 +232,7 @@ class ResumeController extends Controller
     }
 
     public function dateDiffrence($date1,$date2){
-        
+
 
         $date1 = new DateTime($date1);
         $date2 = new DateTime($date2);
@@ -161,11 +243,16 @@ class ResumeController extends Controller
 
     public function saveShareData(Request $request){
         $input = $request->all();
-        print_r($input);
-        session(['shareData' => $input]);
 
+        session(['shareData' => $input]);
         $ownerEmail = Auth::user()->email;
-        Resume::where("ownerEmail","=",$ownerEmail)->update($input['shareData']);
+        if(Resume::where("ownerEmail","=",$ownerEmail)->count()>0) {
+            Resume::where("ownerEmail","=",$ownerEmail)->update($input['shareData']);
+        } else {
+            $resume = new Resume();
+            $input['shareData']["ownerEmail"] = $ownerEmail;
+            $resume->insert($input['shareData']);
+        }
     }
 
     public function getShareData(){
@@ -177,12 +264,12 @@ class ResumeController extends Controller
         //print_r($shareData);
     }
 
-    public function send(){  
+    public function send(){
         $user_id = Auth::id();
         $data['profileData'] = User::where("id","=",$user_id)->get()->first();
         $data['currentWorkInfo']  = Work::where("user_id","=", $user_id)->where("employementStatus","=","1")->get()->first();
         $data['currentWorkCount']  = Work::where("user_id","=", $user_id)->where("employementStatus","=","1")->count();
-    
+
         return view('resume.send',$data);
     }
 
@@ -200,7 +287,7 @@ class ResumeController extends Controller
             $resume = new Resume();
             $resume->ownerEmail = $ownerEmail;
             $resume->userEmail = $userEmail;
-            $resume->subject = $input['subject'];            
+            $resume->subject = $input['subject'];
             $resume->save();
             $shareData = session('shareData');
             Resume::where("id","=", $resume->id)->update($shareData['shareData']);
@@ -231,7 +318,7 @@ class ResumeController extends Controller
         return response()->json($data);
     }
 
-    public function resume($id){        
+    public function resume($id){
         $data["resumeAccess"] = $resumeAccess = Resume::find($id);
         $ownerData = User::where("email","=",$resumeAccess['ownerEmail'])->get()->first();
 
@@ -277,7 +364,7 @@ class ResumeController extends Controller
 
         $data['educationInfo'] = Education::where("user_id","=", $user_id)->orderBy('educationDate', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", $user_id)->count();
-        
+
         $data['projectInfo'] = Project::where("user_id","=", $user_id)->get();
         $data['projectCount'] = Project::where("user_id","=", $user_id)->count();
 
@@ -308,12 +395,12 @@ class ResumeController extends Controller
         $data['referenceInfo']  = Reference::where("user_id","=", $user_id)->get();
         $data['referenceCount'] = Reference::where("user_id","=", $user_id)->count();
 
-        return view('resume.resume',$data);   
+        return view('resume.resume',$data);
 
     }
 
 
-    public function profile($user_id){        
+    public function profile($user_id){
 
         $data['profileData'] = User::where("id","=",$user_id)->get()->first();
         $data['contactInfo'] = Contact::where("user_id","=",$user_id)->get()->first();
@@ -355,7 +442,7 @@ class ResumeController extends Controller
 
         $data['educationInfo'] = Education::where("user_id","=", $user_id)->orderBy('educationDate', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", $user_id)->count();
-        
+
         $data['projectInfo'] = Project::where("user_id","=", $user_id)->get();
         $data['projectCount'] = Project::where("user_id","=", $user_id)->count();
 
@@ -386,7 +473,7 @@ class ResumeController extends Controller
         $data['referenceInfo']  = Reference::where("user_id","=", $user_id)->get();
         $data['referenceCount'] = Reference::where("user_id","=", $user_id)->count();
 
-        return view('resume.profile',$data);   
+        return view('resume.profile',$data);
 
     }
 

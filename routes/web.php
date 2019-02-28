@@ -41,6 +41,8 @@ Route::group(['middleware' => ['auth','isactive']], function(){
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/settings', array('as' => 'settings', 'uses' => 'HomeController@settings'));
     Route::get('/deactivate', array('as' => 'settings', 'uses' => 'HomeController@deactivate'));
+    Route::get('/postsignup', array('as' => 'postsignup', 'uses' => 'HomeController@postsignup'));
+    Route::post('/postsignup/save', array('as' => 'postsignup', 'uses' => 'HomeController@postsignupSave'));
 });
 Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
@@ -179,4 +181,18 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 
     Route::get('/create-date', ['as' => 'update.create-date', 'uses' => 'Resume\UpdateController@createDate']);
     Route::get('/date-diffrence', ['as' => 'update.date-diffrence', 'uses' => 'Resume\UpdateController@dateDiffrence']);
+});
+
+Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), function(){
+    Route::get('/', ['as' => 'resume', 'uses' => 'Resume\ResumeController@index']);
+    Route::get('/view', ['as' => 'resume.view', 'uses' => 'Resume\ResumeController@view']);
+    Route::post('/save', ['as' => 'resume.view', 'uses' => 'Resume\ResumeController@view']);
+    Route::post('/save-share-data', ['as' => 'resume.save-share-data', 'uses' => 'Resume\ResumeController@saveShareData']);
+
+    Route::get('/send', ['as' => 'resume.send', 'uses' => 'Resume\ResumeController@send']);
+    Route::post('/send-save', ['as' => 'resume.send-save', 'uses' => 'Resume\ResumeController@sendSave']);
+    Route::get('/get-share-data', ['as' => 'resume.get-share-data', 'uses' => 'Resume\ResumeController@getShareData']);
+
+    Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
+
 });

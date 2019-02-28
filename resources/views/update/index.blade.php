@@ -30,6 +30,7 @@ if(isset($sectionid)) {
                             <ul class="collapsible no-shadow" data-collapsible="accordion">
                                 @include("update.resume.resumetitle")
                                 @include("update.objective.objective")
+                                @include("update.basic_information.basicinfo")
                                 @include("update.skill.skill")
                                 @include("update.work.work")
                                 @include("update.project.project")
@@ -125,18 +126,17 @@ function PPCheck(section, value, id=0){
             } else {
                 $(this).val("0");
             }
-            //event.preventDefault();
+
             $(".shareCheckbox").each(function(){
                 shareData[$(this).attr('id')] = $(this).val();
             });
 
             var url = $(this).attr("href");
-            console.log(shareData);
 
             $.ajax({
                 type:"POST",
                 url:"{{URL::to('resume/save-share-data')}}",
-                data:{ "shareData":shareData } ,
+                data:{ "shareData":shareData, "_token": "{{ csrf_token()}}" } ,
                 success: function(response){
                     //window.location.href = url;
 

@@ -164,7 +164,7 @@ if( isset($redirectBack) ) {
                     url:$("#resumeTitleForm").attr("action"),
                     data:formData,
                     success: function(response){
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{url($return_url)}}";
                     }
                 });
             }
@@ -183,7 +183,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         if(response.error == 0){
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{url($return_url)}}";
                         }
                     }
                 });
