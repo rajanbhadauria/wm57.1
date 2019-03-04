@@ -23,7 +23,7 @@ if( isset($redirectBack) ) {
         </div>
     </div>
 </section>
-<div class="section wrappit" ng-app="EducationFromApp" ng-controller="myCtrl">
+<div class="section wrappit">
     <div class="container">
         <div class="center-wrapper" id="heightSet">
             <div class="center-container">
@@ -34,6 +34,7 @@ if( isset($redirectBack) ) {
                                 <form action="{{URL::to('update/education-save')}}" method="POST" id="educationForm"
                                     name="educationForm" novalidate>
                                     {{ csrf_field() }}
+                                    <input type="hidden" name="returnUrl" value="{{$returnUrl}}">
                                     <div class="input-field custom-form">
                                         <select id="education" name="education" required ng-model="education">
                                             <option value="">Select</option>
@@ -227,7 +228,7 @@ if( isset($redirectBack) ) {
                 },
                 yyyy: {
                     required: function (element) {
-                        return ($("#mm").val() != "" || $("#yyyy").val() != "");
+                        return ($("#yyyy").val() == "yyyy" || $("#yyyy").val() == "");
                     }
                 }
                 //  branch: { required: true, alphanumeric:true }
@@ -282,16 +283,16 @@ if( isset($redirectBack) ) {
                 $(element).parents("span").removeClass(errorClass);
             },
             submitHandler: function (form) {
-
-                $.ajax({
+                return true;
+               /* $.ajax({
                     type: "POST",
                     url: $("#educationForm").attr("action"),
                     data: $("#educationForm").serialize(),
                     success: function (response) {
-                        console.log(response);
                         window.location.href = "{{$redirectBack}}";
                     }
                 });
+                */
             }
         });
 
@@ -369,62 +370,7 @@ if( isset($redirectBack) ) {
 
     });
 
-    /*var app = angular.module('EducationFromApp', []);
 
-    function getEducationDetails(){
-        app.controller('myCtrl', function($scope, $http) {
-            $http.post("{{URL::to('update/get-education-details')}}",{'id':'{{$id}}' })
-            .then(function(response) {
-                if(response.data.error == false){
-                    $('#id').val(response.data.education.id);
-
-                    $scope.school = response.data.education.school;
-                    $scope.city = response.data.education.city;
-                    $scope.city = response.data.education.city;
-                    $scope.country = response.data.education.country;
-                    $scope.educationName = response.data.education.educationName;
-                    $scope.branch = response.data.education.branch;
-                    $scope.grade = response.data.education.grade;
-                    $scope.gradeValue = response.data.education.gradeValue;
-
-
-                    $('#education').find('option[value="'+response.data.education.education+'"]').prop('selected', true);
-                    $("#education").material_select();
-                    $scope.education = response.data.education.education;
-
-
-                    $('#dd').find('option[value="'+response.data.education.dd+'"]').prop('selected', true);
-                    $("#dd").material_select();
-                    $scope.dd = response.data.education.dd;
-
-                    $('#mm').find('option[value="'+response.data.education.mm+'"]').prop('selected', true);
-                    $("#mm").material_select();
-                    $scope.mm = response.data.education.mm;
-
-                    $('#yyyy').find('option[value="'+response.data.education.yyyy+'"]').prop('selected', true);
-                    $("#yyyy").material_select();
-                    $scope.yyyy = response.data.education.yyyy;
-
-                    $('#grade').find('option[value="'+response.data.education.grade+'"]').prop('selected', true);
-                    $("#grade").material_select();
-                    $scope.grade = response.data.education.grade;
-
-                    if(response.data.education.best == "1"){
-                        $("#best").val("1");
-                        $("#best").prop('checked', true);
-                    }
-
-                    $("#cancel").hide();
-                    $("#remove").show();
-                }
-
-
-                console.log(response)
-            });
-        });
-    }
-
-    getEducationDetails();*/
 </script>
 
 

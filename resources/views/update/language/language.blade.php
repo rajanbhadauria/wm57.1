@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="languageInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="languageData" name"languageData" @if($resumeAccess && $resumeAccess->languageData=='1') value="1" checked="checked" @else value="0" @endif  />
+                                                <input type="checkbox" class="shareCheckbox" id="languageData" name"languageData" @if(($resumeAccess && $resumeAccess->languageData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif  />
                                                 <label for="languageData"></label>
                                             </div>
                                             <div class="fl">
@@ -26,9 +26,9 @@
                                                         <div class = "switch">
                                                             <label>
                                                                 @if($language['private'])
-                                                                    <input type="checkbox" data-value="<?php echo $language['id']?>" class="PPCheck" data-id="language" checked>
-                                                                @else
                                                                     <input type="checkbox" data-value="<?php echo $language['id']?>" class="PPCheck" data-id="language">
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $language['id']?>" class="PPCheck" data-id="language" checked>
                                                                 @endif
                                                                 <span class = "lever"></span>
                                                             </label>
@@ -69,3 +69,15 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="language"]').on('change', function() {
+                                                if($('.PPCheck[data-id="language"]:checked').length == 0) {
+                                                    $("#languageData").prop('checked',false);
+                                                } else {
+                                                    $("#languageData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>
+

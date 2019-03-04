@@ -46,14 +46,13 @@ if( isset($redirectBack) ) {
                                     <label for="work_category" class="active">Other activities <span>*</span></label>
                                 </div>
 								<div class="input-field custom-form">
-									<input id="project" name="project" type="text" class="fourlength validate" value="{{isset($travel['project'])?$travel['project']:''}}" required
+									<input id="project" name="project" type="text" class="validate" value="{{isset($travel['project'])?$travel['project']:''}}" required
 									>
 									<label for="project" id="project_label" ng-class="{ active:  project }">Publications / Research / Patent etc name <span>*</span></label>
                                 </div>
 
                                 <div class="input-field custom-form">
-                                        <input id="url" name="url" type="url" class="fourlength validate" value="{{isset($travel['url'])?$travel['url']:''}}" required
-                                        >
+                                        <input id="url" name="url" type="text" class="fourlength validate" value="{{isset($travel['url'])?$travel['url']:''}}">
                                         <label for="url" id="url" ng-class="{ active:  url }">Url</label>
                                 </div>
 
@@ -64,7 +63,7 @@ if( isset($redirectBack) ) {
 									<label for="projectDesc" ng-class="{ active:  projectDesc }">Details</label>
 								</div>
 								<div class="input-field custom-form">
-									<input id="company" name="company" type="text" class="alphanumeric fivelength validate" value="{{isset($travel['company'])?$travel['company']:''}}"
+									<input id="company" name="company" type="text" class="validate" value="{{isset($travel['company'])?$travel['company']:''}}"
 
 										ng-model="company"
 									>
@@ -105,16 +104,13 @@ if( isset($redirectBack) ) {
 									</li>
 									<li class="custom-form dt-drpdwn">
 										<div class="input-field">
-											<select id="yyyyStart" name="yyyyStart"
-												required
-												data-msg="Required"
-											>
+											<select id="yyyyStart" name="yyyyStart">
 												<option value="" selected>YYYY</option>
 												<?php for($i=$maxYYYY; $i>= $minYYYY;$i--) { ?>
 													<option value="{{$i}}" {{(isset($travel['yyyyStart']) && $travel['yyyyStart']==$i)?'selected=selected':''}}>{{$i}}</option>
 												<?php } ?>
 											</select>
-											<label class="active" for="yyyyStart">YYYY <span>*</span></label>
+											<label class="active" for="yyyyStart">YYYY</label>
 										</div>
 									</li>
 								</ul>
@@ -152,14 +148,13 @@ if( isset($redirectBack) ) {
 									</li>
 									<li class="custom-form dt-drpdwn">
 										<div class="input-field">
-											<select id="yyyyEnd" name="yyyyEnd"
-											>
+											<select id="yyyyEnd" name="yyyyEnd" required data-msg="Required">
 												<option value="" selected>YYYY</option>
 												<?php for($i=$maxYYYY; $i>= $minYYYY;$i--) { ?>
 													<option value="{{$i}}" {{(isset($travel['yyyyEnd']) && $travel['yyyyEnd']==$i)?'selected=selected':''}}>{{$i}}</option>
 												<?php } ?>
 											</select>
-											<label class="active" for="yyyyEnd">YYYY</label>
+											<label class="active" for="yyyyEnd">YYYY <span>*</span></label>
 										</div>
 									</li>
 								</ul>
@@ -238,12 +233,13 @@ $(document).ready(function() {
     $( "#travelForm" ).validate({
         rules: {
             project: {required: true},
-            url: {url:true}
-
-
+            company: {required:true}
         },
         messages: {
             project: {
+                required: "Required"
+            },
+            company: {
                 required: "Required"
             },
             url: {
@@ -270,26 +266,12 @@ $(document).ready(function() {
                 url:$("#travelForm").attr("action"),
                 data:formData,
                 success: function(response){
-                    window.location.href = "{{$redirectBack}}";
+                    window.location.href = "{{url($returnUrl)}}";
                 }
             });
         }
     });
 
-		/*$("#travelForm").submit(function( event ) {
-			event.preventDefault();
-			$.ajax({
-				type:"POST",
-				url:$(this).attr("action"),
-				data:$(this).serialize(),
-				success: function(response){
-					console.log(response);
-					window.location.href = "{{$redirectBack}}";
-				}
-			});
-		});*/
-
-		//$("#remove").hide();
 
 
         @if(isset($travel['id']) && $travel['id']!='')
@@ -306,7 +288,7 @@ $(document).ready(function() {
 					data:formData,
 					success: function(response){
 						if(response.error == 0){
-							window.location.href = "{{$redirectBack}}";
+							window.location.href = "{{url($returnUrl)}}";
 						}
 					}
 				});

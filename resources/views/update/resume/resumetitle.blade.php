@@ -2,17 +2,18 @@
     <div class="collapsible-header" id="resumetitleInfo">
         <div class="custom-collapsible-header-inner">
             <div class="fl disable-bubble">
-                <input type="checkbox" class="shareCheckbox" id="resumetitleData" name"resumetitleData" @if($resumeAccess && $resumeAccess->resumetitleData=='1') value="1" checked="checked" @else value="0" @endif />
+                <input type="checkbox" class="shareCheckbox" id="resumetitleData" name"resumetitleData" @if(($resumeAccess && $resumeAccess->resumetitleData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                 <label for="resumetitleData"></label>
             </div>
             <div class="fl">
-                Resume title
+                Resume title and cover note
             </div>
             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
         </div>
     </div>
     <div class="collapsible-body custom-collapsible-body">
         <ul class="collection with-header">
+            @if($resumetitleCount > 0)
             <li class="collection-header">
                 <div>
                 Hide / Show
@@ -21,15 +22,16 @@
                     <div class = "switch">
                         <label>
                             @if($resumetitleInfo['private'])
-                                <input type="checkbox" class="PPCheck" data-id="resumetitle" checked>
-                            @else
                                 <input type="checkbox" class="PPCheck" data-id="resumetitle">
+                            @else
+                                <input type="checkbox" class="PPCheck" data-id="resumetitle" checked>
                             @endif
                             <span class = "lever"></span>
                         </label>
                     </div>
                 </div>
             </li>
+            @endif
             <li class="collection-item">
                 <a href="{{URL::to('update/resume-title-cover-note')}}" class="collapsible-body-inner">
                 <div class="update-desc">
@@ -53,3 +55,14 @@
         </ul>
     </div>
 </li>
+<script>
+        $(document).ready(function(){
+            $('.PPCheck[data-id="resumetitle"]').on('change', function() {
+                if($('.PPCheck[data-id="resumetitle"]:checked').length == 0) {
+                   $("#resumetitleData").prop('checked',false);
+                } else {
+                    $("#resumetitleData").prop('checked',true);
+                }
+            });
+        });
+    </script>

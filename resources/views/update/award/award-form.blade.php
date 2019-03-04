@@ -152,7 +152,7 @@ if( isset($redirectBack) ) {
                 },
                 yyyy: {
                     required: function(element){
-                        return ($("#mm").val()!="" || $("#yyyy").val()!="");
+                        return ($("#yyyy").val()=="yyyy" || $("#yyyy").val()=="");
                     }
                 }
 
@@ -192,8 +192,7 @@ if( isset($redirectBack) ) {
                     url:$("#awardForm").attr("action"),
                     data:formData,
                     success: function(response){
-                        console.log(response);
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{url($returnUrl)}}";
                     }
                 });
             }
@@ -214,7 +213,7 @@ if( isset($redirectBack) ) {
                         data:formData,
                         success: function(response){
                             if(response.error == 0){
-                                window.location.href = "{{$redirectBack}}";
+                                window.location.href = "{{url($returnUrl)}}";
                             }
                         }
                     });

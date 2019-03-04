@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="workInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="workData" name"workData" @if($resumeAccess && $resumeAccess->workData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="workData" name"workData" @if(($resumeAccess && $resumeAccess->workData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="workData"></label>
                                             </div>
                                             <div class="fl">
@@ -28,9 +28,9 @@
                                                             <div class = "switch">
                                                                 <label>
                                                                     @if($work['private'])
-                                                                        <input type="checkbox" class="PPCheck" data-value="<?php echo $work['id']?>" data-id="work" checked>
-                                                                    @else
                                                                         <input type="checkbox" class="PPCheck" data-value="<?php echo $work['id']?>" data-id="work">
+                                                                    @else
+                                                                        <input type="checkbox" class="PPCheck" data-value="<?php echo $work['id']?>" data-id="work" checked>
                                                                     @endif
                                                                     <span class = "lever"></span>
                                                                 </label>
@@ -40,7 +40,7 @@
                                                     <a href="{{URL::to('update/work')}}/{{$work->id}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
                                                         <span class="bold">{{$work->company}}</span>
-                                                        <span class="normal">- {{$work->role}} - {{$work->city}}</span>
+                                                        <span class="normal">- {{$work->department}} - {{$work->city}}</span>
                                                     </div>
                                                         <span class="secondary-content">
                                                             <i class="material-icons">edit</i>
@@ -65,3 +65,22 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="work"]').on('change', function() {
+                                                if($('.PPCheck[data-id="work"]:checked').length == 0) {
+                                                   $("#workData").prop('checked',false);
+                                                } else {
+                                                    $("#workData").prop('checked',true);
+                                                }
+                                            });
+
+                                            $("#workData").on('change', function(){
+                                                if($('#workData:checked').length == 0) {
+                                                   $(".PPCheck[data-id='work']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='work']").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

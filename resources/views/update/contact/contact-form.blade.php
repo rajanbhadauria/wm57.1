@@ -54,6 +54,11 @@ if( isset($redirectBack) ) {
 
                                     <label ng-class="{ active: altEmail }" for="altEmail">Alternate Email</label>
                                 </div>
+                                <div class="input-field custom-form">
+                                        <input id="url" name="url" type="url" class="validate" value="{{isset($contact['url'])?$contact['url']:'http://'}}">
+
+                                        <label ng-class="{ active: url }" for="url">Website</label>
+                                    </div>
                                 <ul class="d-flex mb0 mobile-number-field">
                                         <li class="input-field custom-form country-code">
                                             <select  ng-required='primaryPhone' id="primaryPhoneCode" name="primaryPhoneCode" ng-model="primaryPhoneCode" >
@@ -173,7 +178,9 @@ if( isset($redirectBack) ) {
                     required: function(element){
                         return ($("#altPhoneCode").val()!="" || $("#altPhone").val()!="");
                     }
-                }
+                },
+                url: {url: true}
+
 
             },
             messages: {
@@ -199,7 +206,10 @@ if( isset($redirectBack) ) {
                 },
                 altRelation: {
                     required: "Required"
-                }
+                },
+                url: {
+                    url: "Enter valid url"
+                },
             },
             errorClass: 'validationError',
             errorElement : 'span',

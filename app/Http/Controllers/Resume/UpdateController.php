@@ -166,7 +166,7 @@ class UpdateController extends Controller
         $resumetitle->resume_message = $input['resume_message'];
         $resumetitle->thanks_note = $input['thanks_note'];
     	$resumetitle->save();
-        return redirect()->back()->with('success', 'Resume Title details updated successfully.');
+        return redirect()->back();//->with('success', 'Resume Title details updated successfully.');
     }
 
     public function resumeTitleRemove($id){
@@ -215,12 +215,13 @@ class UpdateController extends Controller
     	$contact->primaryEmail = $input['primaryEmail'];
     	$contact->altEmail = $input['altEmail'];
     	$contact->primaryPhoneCode = $input['primaryPhoneCode'];
-    	$contact->primaryPhone = $input['primaryPhone'];
+        $contact->primaryPhone = $input['primaryPhone'];
+        $contact->url = $input['url'];
     	$contact->altPhoneCode = isset($input['altPhoneCode'])?$input['altPhoneCode']:"";
     	$contact->altPhone = $input['altPhone'];
     	$contact->altRelation = isset($input['altRelation'])?$input['altRelation']:"";
         $contact->save();
-        return redirect()->back()->with('success', 'Contact details updated successfully.');
+        return redirect()->back();//->with('success', 'Contact details updated successfully.');
     }
 
     public function contactRemove($id){
@@ -237,9 +238,9 @@ class UpdateController extends Controller
 
     // ------------------------- Professional Summary --------------------------------
 
-    public function objective(){
+    public function objective(Request $request){
         $data['objective'] = Objective::where("user_id","=", Auth::id())->get()->first();
-        //print_r($data);
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : 'update?sectionid=objectiveInfo';
         return view('update.objective.objective-form',$data);
     }
 
@@ -263,7 +264,7 @@ class UpdateController extends Controller
         $objective->user_id = Auth::id();
         $objective->objective = $input['objective'];
         $objective->save();
-        return redirect()->back()->with('success', 'Objective updated successfully.');
+        return redirect()->back();//->with('success', 'Objective updated successfully.');
     }
 
     public function objectiveRemove($id){
@@ -311,7 +312,7 @@ class UpdateController extends Controller
         $currentAddress->city         = $input['city'];
         $currentAddress->country      = $input['country'];
         $currentAddress->save();
-        return redirect()->back()->with('success', 'Current Address updated successfully.');
+        return redirect()->back();//->with('success', 'Current Address updated successfully.');
 
     }
 
@@ -360,7 +361,7 @@ class UpdateController extends Controller
         $permanentAddress->city         = $input['city'];
         $permanentAddress->country      = $input['country'];
         $permanentAddress->save();
-        return redirect()->back()->with('success', 'Permanent address updated successfully.');
+        return redirect()->back();//->with('success', 'Permanent address updated successfully.');
 
     }
 
@@ -377,14 +378,15 @@ class UpdateController extends Controller
     }
 
 // +++++++++++++++++++++++++++++++ Education Section +++++++++++++++++++++++++++
-    public function education($id=0){
+    public function education($id=0, Request $request){
         $data['id'] = $id;
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : 'update?sectionid=educationInfo';
         $data['education'] = Education::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         return view('update.education.education-form',$data);
     }
 
-    public function getEducationDetails(Request $request){
-        $input = $request->all();
+    public function getEducationDetails(Request $request){        $input = $request->all();
+
         $data['education'] = Education::where("user_id","=", Auth::id())->where("id",$input['id'])->get()->first();
         $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("id",$input['id'])->count();
         if($data['educationCount'] <= 0){
@@ -422,7 +424,8 @@ class UpdateController extends Controller
 
         $education->best                 =isset($input['best'])?$input['best']:"0";
         $education->save();
-        return redirect('/update')->with('success', 'Education details updated successfully.');
+        $returnUrl = ($input['returnUrl']) ? $input['returnUrl'] : 'update?sectionid=educationInfo';
+        return redirect('/'.$returnUrl);//->with('success', 'Education details updated successfully.');
     }
 
 
@@ -482,7 +485,7 @@ class UpdateController extends Controller
 
         $project->best              = isset($input['best'])?$input['best']:"0";
         $project->save();
-        return redirect('/update')->with('success', 'Projects details updated successfully.');
+        return redirect('/update');//->with('success', 'Projects details updated successfully.');
     }
 
     public function projectRemove($id){
@@ -564,16 +567,14 @@ class UpdateController extends Controller
     }
 
     /* soft skills */
-    public function softskill($id=0){
+    public function softskill($id=0, Request $request){
         $data['id'] = $id;
         $restult = SkillList::where('skill_type','soft')->get()->toArray();
-
         $skillList = array();
-
         foreach ($restult as $key => $value) {
             $skillList[$key] = $value['name'];
         }
-
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=softskillInfo";
         $data['skillList'] = $skillList;
         return view('update.skill.skill_soft-form',$data);
     }
@@ -677,8 +678,9 @@ class UpdateController extends Controller
 
     /* end of intrests */
 
-    public function certification($id=0){
+    public function certification($id=0, Request $request){
         $data['id'] = $id;
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=certificationInfo";
         $data['certification'] = Certification::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         return view('update.certification.certification-form',$data);
     }
@@ -732,8 +734,9 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function training($id=0){
+    public function training($id=0, Request $request){
         $data['id'] = $id;
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=trainingInfo";
         $data['training'] = Training::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         return view('update.training.training-form',$data);
     }
@@ -742,6 +745,7 @@ class UpdateController extends Controller
         $input = $request->all();
         $data['training'] = Training::where("user_id","=", Auth::id())->where("id",$input['id'])->get()->first();
         $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("id",$input['id'])->count();
+
         if($data['trainingCount'] <= 0){
             $data['error'] = true;
         } else{
@@ -785,8 +789,9 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function course($id=0){
+    public function course($id=0, Request $request){
         $data['id'] = $id;
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=courseInfo";
         $data['course'] = Course::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         return view('update.course.course-form',$data);
     }
@@ -838,10 +843,11 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function travel($id=0){
+    public function travel($id=0, Request $request){
         $data['id'] = $id;
         $data['work_categories'] = work_categories::orderBy('title')->get()->toArray();
         $data['travel'] = Travel::where("user_id","=", Auth::id())->where("id",$data['id'])->get()->first();
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=travelInfo";
         return view('update.travel.travel-form',$data);
     }
 
@@ -905,8 +911,9 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function award($id=0){
+    public function award($id=0, Request $request){
         $data['id'] = $id;
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=awardInfo";
         $data['award'] = Award::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         return view('update.award.award-form',$data);
     }
@@ -1004,9 +1011,10 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function language($id=0){
+    public function language($id=0, Request $request){
         $data['id'] = $id;
         $data['language'] = Language::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=languageInfo";
         return view('update.language.language-form',$data);
     }
 
@@ -1049,11 +1057,11 @@ class UpdateController extends Controller
         return response()->json($data);
     }
 
-    public function reference($id=0){
+    public function reference($id=0, Request $request){
         $data['id'] = $id;
         $data['reference'] = Reference::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         $data['countryCodeList'] = ["93","355","213","1-684","376","244","1-264","672","1-268","54","374","297","61","43","994","1-242","973","880","1-246","375","32","501","229","1-441","975","591","387","267","55","246","1-284","673","359","226","257","855","237","1","238","1-345","236","235","56","86","61","61","57","269","682","506","385","53","599","357","420","243","45","253","1-767","1-809, 1-829, 1-849","670","593","20","503","240","291","372","251","500","298","679","358","33","689","241","220","995","49","233","350","30","299","1-473","1-671","502","44-1481","224","245","592","509","504","852","36","354","91","62","98","964","353","44-1624","972","39","225","1-876","81","44-1534","962","7","254","686","383","965","996","856","371","961","266","231","218","423","370","352","853","389","261","265","60","960","223","356","692","222","230","262","52","691","373","377","976","382","1-664","212","258","95","264","674","977","31","599","687","64","505","227","234","683","850","1-670","47","968","92","680","970","507","675","595","51","63","64","48","351","1-787, 1-939","974","242","262","40","7","250","590","290","1-869","1-758","590","508","1-784","685","378","239","966","221","381","248","232","65","1-721","421","386","677","252","27","82","211","34","94","249","597","47","268","46","41","963","886","992","255","66","228","690","676","1-868","216","90","993","1-649","688","1-340","256","380","971","44","1","598","998","678","379","58","84","681","212","967","260","263"];
-//print_r($data);
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url') : "update?sectionid=softskillInfo";
         return view('update.reference.reference-form',$data);
     }
 
@@ -1101,13 +1109,15 @@ class UpdateController extends Controller
     }
 
 
-    public function work($id=0){
+    public function work($id=0, Request $request){
+
         if($id!=0){
             $data['work'] = Work::where("user_id","=", Auth::id())->where("id",$id)->get()->first();
         }else{
             $data['work'] = array();
         }
-
+        $data['returnUrl'] = ($request->query('url')) ? $request->query('url'): 'update?sectionid=workInfo';
+        $data['returnUrl'] = url('/'. $data['returnUrl'] );
         $data['id'] = $id;
         return view('update.work.work-form',$data);
     }
@@ -1131,6 +1141,7 @@ class UpdateController extends Controller
         } else{
            $work = Work::find($input['id']);
         }
+        $data['returnUrl'] = ($input['returnUrl']) ? $input['returnUrl'] : 'update?sectionid=workInfo';
 
         $work->user_id = Auth::id();
         $work->company              =$input['company'];
@@ -1144,8 +1155,8 @@ class UpdateController extends Controller
         $work->role                 =$input['role'];
         $work->roleDesc             =$input['roleDesc'];
         $work->teamSize             =$input['teamSize'];
-        $work->ddStart              = isset($input['ddStart'])?$input['ddStart']:"";
-        $work->mmStart              = isset($input['mmStart'])?$input['mmStart']:"";
+        $work->ddStart              = isset($input['ddStart'])?$input['ddStart']:"01";
+        $work->mmStart              = isset($input['mmStart'])?$input['mmStart']:"01";
         $work->yyyyStart            = isset($input['yyyyStart'])?$input['yyyyStart']:"";
 
         if(isset($input['ddStart']) && $input['ddStart'] !="" ){
@@ -1153,16 +1164,19 @@ class UpdateController extends Controller
         } else{
             $work->workStartDate        = $this->createDate("01",$input['mmStart'],$input['yyyyStart']);
         }
-        $work->ddEnd                = isset($input['ddEnd'])?$input['ddEnd']:"";
-        $work->mmEnd                = isset($input['mmEnd'])?$input['mmEnd']:"";
-        $work->yyyyEnd              = isset($input['yyyyEnd'])?$input['yyyyEnd']:"";
-        if(isset($input['ddEnd']) && $input['ddEnd'] != "" && $input['yyyyEnd'] != ""){
-            $work->workEndDate          = $this->createDate($input['ddEnd'],$input['mmEnd'],$input['yyyyEnd']);
+        if(isset($input['yyyyEnd']) && isset($input['mmEnd'])) {
+            $work->ddEnd                = isset($input['ddEnd'])?$input['ddEnd']:"01";
+            $work->mmEnd                = isset($input['mmEnd'])?$input['mmEnd']:"";
+            $work->yyyyEnd              = isset($input['yyyyEnd'])?$input['yyyyEnd']:"";
+            $work->workEndDate          = $this->createDate("01",$input['mmEnd'],$input['yyyyEnd']);
         } else {
+            $work->ddEnd                = "";
+            $work->mmEnd                = "";
+            $work->yyyyEnd              = "";
             $work->workEndDate          = '0000-00-00 00:00:00';
         }
-        //$work->workStartDate        =$input['workStartDate'];
-        //$work->workEndDate          =$input['workEndDate'];
+
+
         $work->fixCurrency          =isset($input['fixCurrency'])?$input['fixCurrency']:"";
         $work->fixSalaryType        =isset($input['fixSalaryType'])?$input['fixSalaryType']:"";
         $work->fixSalary            =$input['fixSalary'];
@@ -1171,9 +1185,8 @@ class UpdateController extends Controller
         $work->variableSalary       =$input['variableSalary'];
         $work->ctc                  =$input['ctc'];
         $work->best                 =isset($input['best'])?$input['best']:"0";
-
         $work->save();
-        return redirect('/update')->with('success', 'Work details updated successfully.');
+        return redirect($data['returnUrl']);//->with('success', 'Work details updated successfully.');
     }
 
 

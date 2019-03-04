@@ -58,7 +58,7 @@ class HomeController extends Controller
          if(!is_object($basic_info)) {
              $basic_info =  new \stdClass();
              $basic_info->first_name = Auth::user()->first_name;
-             $basic_info->last_name = Auth::user()->first_name;
+             $basic_info->last_name = Auth::user()->last_name;
         } else {
            $dob = explode("/", $basic_info->dob);
            $basic_info->ddStart = $dob[1];
@@ -83,7 +83,7 @@ class HomeController extends Controller
         $basicInfo->last_name = $input['last_name'];
         $basicInfo->marital_status = $input['marital_status'];
         $basicInfo->dob = $input['mmStart']."/".$input['ddStart']."/".$input['yyyyStart'];
-        $basicInfo->gender = $input['gender'];
+        $basicInfo->gender = isset($input['gender']) ? $input['gender'] : null;
 
         $basicInfo->save();
         return redirect()->back()->with('success', 'Basic information updated successfully.');

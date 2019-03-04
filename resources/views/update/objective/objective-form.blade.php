@@ -33,11 +33,11 @@ if( isset($redirectBack) ) {
                             <form action="{{URL::to('update/objective-save')}}" method="POST" id="objectiveForm" name="objectiveForm">
                             {{ csrf_field() }}
                                 <div class="input-field custom-form">
-                                    <textarea id="objective" name="objective" class="" data-length="200"
+                                    <textarea id="objective" name="objective" class="" data-length="500"
                                         required
                                         ng-model="objective"
                                         ng-minlength="50"
-                                        ng-maxlength="200"
+                                        ng-maxlength="500"
                                         value="{{isset($objective['objective'])?$objective['objective']:''}}"
 
                                     ></textarea>
@@ -88,12 +88,12 @@ if( isset($redirectBack) ) {
 
         $( "#objectiveForm" ).validate({
             rules: {
-                objective: {required: true, maxlength:200, minlength:50}
+                objective: {required: true, maxlength:500, minlength:50}
             },
             messages: {
                 objective: {
                     required: "Required",
-                    maxlength: "Max length should be 200 characters",
+                    maxlength: "Max length should be 500 characters",
                     minlength: "Minimum length should be 50 characters"
                 }
             },
@@ -117,7 +117,7 @@ if( isset($redirectBack) ) {
                     url:$("#objectiveForm").attr("action"),
                     data:formData,
                     success: function(response){
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{url($returnUrl)}}";
                     }
                 });
             }
@@ -136,7 +136,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         if(response.error == 0){
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{url($returnUrl)}}";
                         }
                     }
                 });

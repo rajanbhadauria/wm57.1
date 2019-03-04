@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use DB;
 use Auth;
 use App\User;
 use Mail,URL;
@@ -31,6 +32,8 @@ use App\Model\Resume;
 use App\Model\Notification;
 use App\Model\UserBasicInformations;
 use App\Model\Resumetitle;
+use App\Model\Softskills;
+use App\Model\Interests;
 
 class ResumeController extends Controller
 {
@@ -79,7 +82,6 @@ class ResumeController extends Controller
 
 
         if($data['workCount'] > 0 ){
-
             if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
                 $data['workEnding'] = $data['workInfo'][0]->workEndDate;
             }else{
@@ -96,6 +98,7 @@ class ResumeController extends Controller
             //echo $data['workStarting'].",".$data['workEnding']."<br />";
             $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
         }
+        $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
         $data['educationInfo'] = Education::where("user_id","=", Auth::id())->orderBy('educationDate', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", Auth::id())->count();
@@ -106,6 +109,9 @@ class ResumeController extends Controller
         $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get();
         $data['skillCount'] = Skill::where("user_id","=", Auth::id())->count();
 
+        $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->first();
+        $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->count();
+
         $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->get();
         $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->count();
 
@@ -115,8 +121,7 @@ class ResumeController extends Controller
         $data['courseInfo'] = Course::where("user_id","=", Auth::id())->get();
         $data['courseCount'] = Course::where("user_id","=", Auth::id())->count();
 
-        $data['travelInfo']  = Travel::where("user_id","=", Auth::id())->get();
-        $data['travelCount'] = Travel::where("user_id","=", Auth::id())->count();
+
 
         $data['awardInfo']  = Award::where("user_id","=", Auth::id())->get();
         $data['awardCount'] = Award::where("user_id","=", Auth::id())->count();
@@ -135,6 +140,17 @@ class ResumeController extends Controller
 
         $data['coverNote']  = Resumetitle::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
         $data['coverNoteCount'] = Resumetitle::where("user_id","=", Auth::id())->count();
+
+        $data['miscellaneousInfo']  = DB::table('travels as TR')
+                                        ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
+                                        ->where("TR.user_id", "=", Auth::id())
+
+                                        ->orderBy('TR.projectStartDate', 'desc')
+                                        ->get(['*', 'TR.id as id']);
+        $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
+
+        $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
+        $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
 
         return view('resume.resumeview',$data);
 

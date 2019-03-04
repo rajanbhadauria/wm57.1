@@ -28,41 +28,26 @@ if(isset($sectionid)) {
                         <div class="">
 
                             <ul class="collapsible no-shadow" data-collapsible="accordion">
-                                @include("update.resume.resumetitle")
-                                @include("update.objective.objective")
-                                @include("update.basic_information.basicinfo")
-                                @include("update.skill.skill")
-                                @include("update.work.work")
-                                @include("update.project.project")
-                                @include("update.education.education")
-                                @include("update.certification.certification")
-                                @include("update.course.course")
-                                @include("update.award.award")
-                                @include("update.skill.skill_soft")
-                                @include("update.interests.interests")
-                                @include("update.reference.reference")
-                                @include("update.address.current-address")
-                                @include("update.address.permanent-address")
-                                @include("update.language.language")
-                                @include("update.contact.contact")
-
-                                @include("update.profileImage.profileImage")
-
-
-
-
-
-
-                                @include("update.travel.travel")
-                                @include("update.training.training")
-                               <!--
-                                    @include("update.patent.patent")
-
-                                -->
-
-
-
-
+                            <!-- Profile Image -->@include("update.profileImage.profileImage")
+                            <!-- Resume Title and Cover Note -->    @include("update.resume.resumetitle")
+                            <!-- Professional Summary -->    @include("update.objective.objective")
+                            <!-- functional domain skills --> @include("update.skill.skill")
+                            <!-- Work Exprience --> @include("update.work.work")
+                            <!-- Key Assignment and Projects --> @include("update.project.project")
+                            <!-- Cerification and Trainings --> @include("update.certification.certification")
+                            <!-- Trainings attended -->@include("update.training.training")
+                            <!-- Publications, Research, Patent etc details-->@include("update.travel.travel")
+                            <!-- Subject and coursed --> @include("update.course.course")
+                            <!-- Education Details --> @include("update.education.education")
+                            <!-- Awards and honors --> @include("update.award.award")
+                            <!-- Personal Management Skills --> @include("update.skill.skill_soft")
+                            <!-- Languages -->@include("update.language.language")
+                            <!-- Interests --> @include("update.interests.interests")
+                            <!-- References -->    @include("update.reference.reference")
+                            <!-- User Basic Info -->     @include("update.basic_information.basicinfo")
+                            <!-- contact details --> @include("update.contact.contact")
+                            <!-- Current address --> @include("update.address.current-address")
+                            <!-- Permanent address -->@include("update.address.permanent-address")
 
                             </ul>
 

@@ -28,6 +28,51 @@ function showWithReadMore($value){
     }
 }
 
+function getMonthName($month) {
+    switch ($month) {
+        case '01':
+            return 'Jan';
+            break;
+
+        case '02':
+            return 'Feb';
+            break;
+        case '03':
+            return 'March';
+            break;
+        case '04':
+            return 'April';
+            break;
+        case '05':
+            return 'May';
+            break;
+        case '06':
+            return 'Jun';
+            break;
+        case '07':
+            return 'July';
+            break;
+            case '08':
+            return 'Aug';
+            break;
+        case '09':
+            return 'Spt';
+            break;
+        case '10':
+            return 'Oct';
+            break;
+            case '11':
+            return 'Nov';
+            break;
+        case '12':
+            return 'Dec';
+            break;
+       default:
+            # code...
+            break;
+    }
+}
+
 function showLanguages($language){
     if($language->read && $language->write && $language->speak){
         echo "Read, Write, Speak";
@@ -59,7 +104,7 @@ function showLanguages($language){
 						<!--<span class="ak-resume-panelceter">Last updated 12th Dec</span>-->
 						<ul class="panel-actions resumebox-actions">
 							<li><a href="javascript:void(0);"  class="text-primary"><i class="material-icons">lock_outline</i></a></li>
-							<li><a href="javascript:void(0);"  class="text-primary"><i class="material-icons">edit</i></a></li>
+							<li><a href="{{url('update')}}"  class="text-primary"><i class="material-icons">edit</i></a></li>
 							<li><a href="javascript:void(0);"  class="text-primary ak-resume-moreFetu"><i class="material-icons">more_horiz</i></a></li>
 						</ul>
 						<div class="ak-resume-moreFetuList">
@@ -94,42 +139,53 @@ function showLanguages($language){
                                             @else
                                                 <h3 class="name">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</h3>
                                             @endif
+                                            @if(isset($workInfo[0]))
 											<div class="display-flex align-items-center sm-display-block">
-												<strong>Senior Vice President</strong>
+												<strong>{{$workInfo[0]->designation }}</strong>
 												<span class="dot-separator"></span>
-												<em class="highlight1">Business Excellence</em>
+												<em class="highlight1">{{$workInfo[0]->department }}</em>
 											</div>
 											<div class="display-flex align-items-center sm-display-block">
-												<strong>Cognizant</strong>
+												<strong>{{$workInfo[0]->company}}</strong>
 												<span class="dot-separator"></span>
-												<em class="highlight1">Noida<span class="dot-separator"></span>India</em>
-											</div>
+												<em class="highlight1">{{$workInfo[0]->city}}<span class="dot-separator"></span>{{$workInfo[0]->country}}</em>
+                                            </div>
+                                            @endif
+                                            @if($educationCount)
 											<span class="hr"></span>
 											<div class="display-flex align-items-center sm-display-block">
-												<strong>MBA</strong>
+												<strong>{{$educationInfo[0]->educationName}}</strong>
 												<span class="dot-separator"></span>
-												<em class="highlight1">Marketing<span class="dot-separator"></span>2003</em>
+												<em class="highlight1">{{$educationInfo[0]->branch}}<span class="dot-separator"></span>{{$educationInfo[0]->yyyy}}</em>
 											</div>
 											<div class="display-flex align-items-center sm-display-block">
-												<strong>Chicago Booth School</strong>
+												<strong>{{$educationInfo[0]->school}}</strong>
 												<span class="dot-separator"></span>
-												<em class="highlight1">New York<span class="dot-separator"></span>US</em>
-											</div>
-											<span class="hr"></span>
+												<em class="highlight1">{{$educationInfo[0]->city}}<span class="dot-separator"></span>{{$educationInfo[0]->country}}</em>
+                                            </div>
+                                            @endif
+                                            <?php if($contactCount>0){ ?>
+                                            <span class="hr"></span>
 											<ul class="user-contact-info sm-content-center">
 												<li class="phone">
-													<img src="assets/images/baseline-phone-24px.svg" />
-													<a href="tel:+1 6565576788">+1 6565576788</a>
+													<img src="{{my_asset('images/baseline-phone-24px.svg')}}" />
+                                                <a href="tel:{{$contactInfo->primaryPhoneCode}} {{$contactInfo->primaryPhone}}">+{{$contactInfo->primaryPhoneCode}}-{{$contactInfo->primaryPhone}}</a>
 												</li>
 												<li class="email">
-													<img src="assets/images/baseline-email-24px.svg" />
-													<a href="mailto:Hkumar@gmail.com">Hkumar@gmail.com</a>
-												</li>
+													<img src="{{my_asset('images/baseline-email-24px.svg')}}" />
+													<a href="mailto:<?php echo $contactInfo->altEmail!="" ? $contactInfo->altEmail: Auth::user()->email; ?>">
+                                                            <?php echo $contactInfo->altEmail!="" ? $contactInfo->altEmail: Auth::user()->email; ?></span>
+
+                                                    </a>
+                                                </li>
+                                                <?php if($contactInfo->url) { ?>
 												<li class="web">
-													<img src="assets/images/web.svg" />
-													<a href="http://www.Hkumar.com">www.Hkumar.com</a>
-												</li>
-											</ul>
+													<img src="{{my_asset('images/web.svg')}}" />
+                                                <a href="{{$contactInfo->url}}">{{$contactInfo->url}}</a>
+                                                </li>
+                                            <?php } ?>
+                                            </ul>
+                                        <?php } ?>
 										</div>
 										<div class="col2 profile-pic">
 											<div class="pic">
@@ -138,7 +194,7 @@ function showLanguages($language){
 										</div>
 									</div>
 									<div class="block hightlightFeture">
-                                        @if($coverNoteCount>0)
+                                    @if($coverNoteCount>0)
                                     <h2>{{$coverNote->resume_title}} <a href="{{url('update/resume-title-cover-note?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 
 										<div class="exp-details hightlightFSkils">
@@ -148,453 +204,313 @@ function showLanguages($language){
 											<p>{{$coverNote->resume_message}}</p>
                                         </div>
                                         @endif
-									</div>
+                                    </div>
+                                    <?php if($workCount > 0) {?>
 									<div class="block">
 										<h2>Work experience
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>
-											<span class="highlight1">8 years 7 months</span>
-											 <a href="#" class="ak-resumeEdit-icon ak-resumeAddicon"><i class="material-icons" style="font-size:18px;">add</i></a>
+                                            <span class="highlight1">{{$totalWorkDuration}}</span>
+                                            <a href="{{url('update/work?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeAddicon"><i class="material-icons medium">add</i></a>
 										</h2>
-
-										<div class="ak-exp-details-editable">
+                                        <?php foreach($workInfo as $work) {?>
+										<div class="ak-exp-details-editable ak-editcol">
 										<div class="exp-details">
 											<div class="col1">
-												<strong>2018</strong>
+												<strong>{{$work->yyyyStart}}</strong>
 											</div>
 											<div class="col2">
-												<strong>Senior Vice President<span class="dot-separator"></span><span class="highlight1">Sales
-														and solutions</span>
-														<a href="#" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
-												</strong>
+                                                <strong>{{$work->designation}}<span class="dot-separator"></span>
+                                                <span class="highlight1">{{$work->department}}</span>
+                                                </strong>
+                                                <a href="{{url('update/work/'.$work->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
 												<p>
-													<strong>Cognizant</strong>
+													<strong>{{$work->company}}</strong>
 													<span class="dot-separator"></span>
-													<span class="highlight1">Noida
-														<span class="dot-separator"></span>India</span>
+													<span class="highlight1">{{$work->city}}
+                                                    <span class="dot-separator"></span>{{$work->country}}</span>
 												</p>
-												<p>Mar 2016 – Present
-													<span class="dot-separator"></span>
-													<span class="highlight1">2 years 2 months</span>
-												</p>
+                                                <p>{{getMonthName($work->mmStart)}} {{$work->yyyyStart}} – {{($work->yyyyEnd) ? getMonthName($work->mmEnd)." ".$work->yyyyEnd: "Present"}}
+												<span class="dot-separator"></span>
+													@if(isset($work->duration))<span class="highlight1">{{$work->duration}}</span>@endif
+                                                </p>
 											</div>
 										</div>
-
+                                        @if($work->roleDesc)
 										<div class="exp-details">
 											<ul class="list">
-												<li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-													Belts ) associated with different verticals
-													of the Organization</li>
-												<li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
+                                            <li>{{$work->roleDesc}}</li>
 											</ul>
-										</div>
-										</div>
-
-										<div class="ak-exp-details-editable">
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2017</strong>
-											</div>
-											<div class="col2">
-												<strong>Assistant Vice President
-													<span class="dot-separator"></span>
-													<span class="highlight1">Operational performance improvement </span>
-													<a href="#" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
-												</strong>
-												<p>HSBC
-													<span class="dot-separator"></span>
-													<span class="highlight1">Noida
-														<span class="dot-separator"></span>India</span>
-												</p>
-												<p>Mar 2018 – Present
-													<span class="dot-separator"></span>
-													<span class="highlight1">2 years 2 months</span>
-												</p>
-											</div>
-										</div>
-
-										<div class="exp-details">
-											<ul class="list">
-												<li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-													Belts ) associated with different verticals
-													of the Organization</li>
-												<li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-											</ul>
-										</div>
-										</div>
-
-										<div class="ak-exp-details-editable">
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2016</strong>
-											</div>
-											<div class="col2">
-												<strong>Assistant Vice President .
-													<span class="highlight1">Operational performance improvement </span>
-													<a href="#" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
-												</strong>
-												<p>HSBC
-													<span class="dot-separator"></span>
-													<span class="highlight1">Noida
-														<span class="dot-separator"></span>India</span>
-												</p>
-												<p>Mar 2018 – Present
-													<span class="dot-separator"></span>
-													<span class="highlight1">2 years 2 months</span>
-												</p>
-											</div>
-										</div>
-
-										<div class="exp-details">
-											<ul class="list">
-												<li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-													Belts ) associated with different verticals
-													of the Organization</li>
-												<li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-											</ul>
-										</div>
-										</div>
-
-										<div class="ak-exp-details-editable">
-										<div class="exp-details">
-											<div class="col1">
-												<strong>-</strong>
-											</div>
-											<div class="col2">
-												<strong>Assistant Vice President .
-													<span class="highlight1">Operational performance improvement </span>
-													<a href="#" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
-												</strong>
-												<p>HSBC
-													<span class="dot-separator"></span>
-													<span class="highlight1">Noida
-														<span class="dot-separator"></span>India</span>
-												</p>
-												<p>Mar 2018 – Present
-													<span class="dot-separator"></span>
-													<span class="highlight1">2 years 2 months</span>
-												</p>
-											</div>
-										</div>
-										</div>
-
-										<div class="exp-details">
-											<ul class="list">
-												<li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-													Belts ) associated with different verticals
-													of the Organization</li>
-												<li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-											</ul>
-										</div>
-									</div>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <?php } ?>
+                                    </div>
+                                <?php } ?>
+                                @if($miscellaneousCount>0)
 									<div class="block">
 										<h2>Work
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>Projects
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>Achievements
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>highlights
-											<a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2018</strong>
-											</div>
-											<div class="col2">
-												<strong>HSBC
-													<span class="dot-separator"></span>Project
-													<span class="dot-separator"></span>
-													<span class="highlight1">Lean Modem dispatch reduction</span>
-												</strong>
-											</div>
-										</div>
+                                            <a href="{{url('update/miscellaneous?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
 
-										<div class="exp-details">
-											<ul class="list">
-												<li>
-													<p>Work on improving FCR from 56% to 88% with a stability leading to
-														34Mn
-														savings.
-														<a href="http://wm.dainidev.com/">http://wm.dainidev.com/</a>
-													</p>
-												</li>
-											</ul>
-										</div>
+                                        @foreach($miscellaneousInfo as $miscellaneous)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                            <div class="exp-details">
+                                                <div class="col1">
+                                                    <strong>{{$miscellaneous->yyyyStart}}</strong>
+                                                </div>
+                                                <div class="col2">
+                                                    <strong>{{$miscellaneous->company}}
+                                                        <span class="dot-separator"></span>{{$miscellaneous->title}}
+                                                        <span class="dot-separator"></span>
+                                                        <span class="highlight1"></span>
+                                                    </strong>
+                                                    <a href="{{url('update/miscellaneous/'.$miscellaneous->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
+                                                </div>
+                                            </div>
+                                            <div class="exp-details">
+                                                <ul class="list">
+                                                    <li>
+                                                        <p>{{$miscellaneous->projectDesc}}
+                                                            @if($miscellaneous->url)
+                                                        <a href="{{$miscellaneous->url}}">{{$miscellaneous->url}}</a>
+                                                                @endif
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
 
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2017</strong>
-											</div>
-											<div class="col2">
-												<strong>Wipro
-													<span class="dot-separator"></span>Publication
-													<span class="dot-separator"></span>
-													<span class="highlight1">Six Sigma CSAT improvement</span>
-												</strong>
-											</div>
-										</div>
-
-
-										<div class="exp-details">
-											<ul class="list">
-												<li>
-													<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc congue
-														efficitur ipsum, ut condimentum dui. Quisque vel
-														libero faucibus, sollicitudin quam ut, commodo ligula. Etiam
-														sagittis
-														scelerisque erat, nec suscipit ligula cursus
-														ac. Vestibulum et nunc fringilla, euismod dolor et, pulvinar velit.
-														Integer finibus elit leo, in venenatis purus sodales
-														id. Fusce a risus non diam tristique scelerisque ac et nunc. Donec
-														ut
-														libero nulla. Donec rhoncus felis ac elit tincidunt
-														lobortis nec id arcu.</p>
-												</li>
-											</ul>
-										</div>
-
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2017</strong>
-											</div>
-											<div class="col2">
-												<strong>HSBC
-													<span class="dot-separator"></span>
-													<span class="highlight1">Lean Modem dispatch reduction</span>
-												</strong>
-												<p>Work on improving FCR from 56% to 88% with a stability leading to 34Mn
-													savings.
-													<a href="http://wm.dainidev.com/">http://wm.dainidev.com/</a>
-												</p>
-											</div>
-										</div>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>-</strong>
-											</div>
-											<div class="col2">
-												<strong>HSBC
-													<span class="dot-separator"></span>
-													<span class="highlight1">Lean Modem dispatch reduction</span>
-												</strong>
-												<p>This tool helps on identifying the method of automation the entire
-													process</p>
-											</div>
-										</div>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2015</strong>
-											</div>
-											<div class="col2">
-												<strong>Cognizant
-													<span class="dot-separator"></span>
-													<span class="highlight1">Six sigma vendor rejects reduction</span>
-												</strong>
-												<p>This tool helps on identifying the method of automation the entire
-													process</p>
-											</div>
-										</div>
-									</div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($softskillCount>0)
 									<div class="block">
-										<h2>Extracurricular activities <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+                                    <h2>Soft skills <a href="{{url('update/soft-skill?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
-											<div class="col1">
-												<strong>2013</strong>
-											</div>
-											<div class="col2">
-												<strong>Amity university
-													<span class="dot-separator"></span>
-													<span class="highlight1">President organizer</span>
-												</strong>
-											</div>
-										</div>
 
-										<div class="exp-details">
-											<ul class="list">
-												<li>Set up to manage students listing down requirements and interests</li>
-											</ul>
-										</div>
-									</div>
-									<div class="block">
-										<h2>Soft skills <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<p>Conflict management, Influencing ability, Change management, Effective
-												presentation
+											<p>
+                                                    <?php
+                                                        $softSkill = json_decode($softskillInfo->soft_skill);
+                                                        $skillsArray = []; $i = 0;
+                                                        foreach($softSkill as $skills) {
+                                                             $skillsArray[$i] =  $skills->text;
+                                                             $i++;
+                                                         }
+                                                         echo implode(", ", $skillsArray);
+                                                    ?>
 											</p>
 										</div>
-									</div>
+                                    </div>
+                                    @endif
+                                    @if($interestCount>0)
 									<div class="block">
-										<h2>Interests <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+                                    <h2>Interests <a href="{{url('update/interests?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
-											<p>Sky diving, Entrepreneurship funnel, Social events, Driving </p>
+											<p>
+                                                    <?php
+                                                    $interest = json_decode($interestInfo->interest);
+                                                    $interestArray = []; $i = 0;
+                                                    foreach($interest as $ints) {
+                                                         $interestArray[$i] =  $ints->text;
+                                                         $i++;
+                                                     }
+                                                     echo implode(", ", $interestArray);
+                                                ?>
+                                            </p>
 										</div>
-									</div>
+                                    </div>
+                                    @endif
+                                    @if($awardCount > 0)
 									<div class="block">
-										<h2>Awards <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2013</strong>
-											</div>
-											<div class="col2">
-												<strong>CEO award of quarter
-													<span class="dot-separator"></span>
-													<span class="highlight1">Cognizant</span>
-												</strong>
-											</div>
-										</div>
+										<h2>Awards <a href="{{url('update/award?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach($awardInfo as $award)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                            <div class="exp-details">
+                                                <div class="col1">
+                                                <strong>{{$award->yyyy}}</strong>
+                                                </div>
+                                                <div class="col2">
+                                                    <strong>{{$award->award}}
+                                                    <span class="dot-separator"></span>
+                                                    <span class="highlight1">{{$award->school}}</span>
+                                                    <a href="{{url('update/award/'.$award->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
+                                                    </strong>
 
-										<div class="exp-details">
-											<ul class="list">
-												<li>Set up to manage students listing down requirements and interests</li>
-											</ul>
-										</div>
-									</div>
-									<div class="block">
-										<h2>Trained on <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2013</strong>
-											</div>
-											<div class="col2">
-												<strong>Design thinking
-													<span class="dot-separator"></span>
-													<span class="highlight1">Accenture</span>
-												</strong>
-											</div>
-										</div>
+                                                </div>
 
-										<div class="exp-details">
-											<ul class="list">
-												<li>Set up to manage students listing down requirements and interests</li>
-											</ul>
-										</div>
-									</div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($trainingCount>0)
 									<div class="block">
-										<h2>Certifications <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
+										<h2>Trained on <a href="{{url('update/training?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach($trainingInfo as $traning)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
 											<div class="col1">
-												<strong>2013</strong>
+												<strong>{{$traning->yyyy}}</strong>
 											</div>
 											<div class="col2">
-												<strong>Six Sigma Black Belt
+												<strong>{{$traning->training}}
 													<span class="dot-separator"></span>
-													<span class="highlight1">Indian statistical institute</span>
-												</strong>
-											</div>
+													<span class="highlight1">{{$traning->school}}</span>
+                                                </strong>
+                                                <a href="{{url('update/training/'.$traning->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
+                                            </div>
+                                        </div>
 										</div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($certificationCount>0)
+									<div class="block">
+										<h2>Certifications <a href="{{url('update/certification?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach ($certificationInfo as $certification)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                            <div class="exp-details">
+                                                <div class="col1">
+                                                <strong>{{$certification->yyyy}}</strong>
+                                                </div>
+                                                <div class="col2">
+                                                    <strong>{{$certification->certification}}
+                                                        <span class="dot-separator"></span>
+                                                        <span class="highlight1">{{$certification->school}} {{$certification->city}} {{$certification->country}}</span>
+                                                    </strong>
+                                                    <a href="{{url('update/certification/'.$certification->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($educationCount>0)
+									<div class="block">
+										<h2>Education <a href="{{url('update/education?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach($educationInfo as $education)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
+											<div class="col1">
+                                            <strong>{{$education->yyyy}}</strong>
+											</div>
+											<div class="col2">
+												<strong>{{$education->educationName}}
+													<span class="dot-separator"></span>{{$education->branch}}
+													<span class="dot-separator"></span>
+													<span class="highlight1">{{$education->school}}
+													<span class="dot-separator"></span>{{$education->gradeValue}}{{$education->grade == 'percentage' ? '%' : ($education->grade == ' GPA' ? 'GPA' : ' Grade') }}</span>
+                                                </strong>
+                                                <a href="{{url('update/education/'.$education->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
+											</div>
+                                        </div>
 
-										<div class="exp-details">
-											<ul class="list">
-												<li>Set up to manage students listing down requirements and interests</li>
-											</ul>
-										</div>
-									</div>
+                                    </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($courseCount > 0)
 									<div class="block">
-										<h2>Education <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2013</strong>
-											</div>
-											<div class="col2">
-												<strong>MBA
-													<span class="dot-separator"></span>Marketing
-													<span class="dot-separator"></span>
-													<span class="highlight1">London school of Business
-														<span class="dot-separator"></span>67%</span>
-												</strong>
-											</div>
-										</div>
-										<div class="exp-details">
-											<div class="col1">
-												<strong>2010</strong>
-											</div>
-											<div class="col2">
-												<strong>BE
-													<span class="dot-separator"></span>Electrical and electronics
-													<span class="dot-separator"></span>
-													<span class="highlight1">Thapar University
-														<span class="dot-separator"></span>7.86 GPA</span>
-												</strong>
-											</div>
-										</div>
-									</div>
+										<h2>Subjects, Courses <a href="{{url('update/course?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach($courseInfo as $course)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
+											<p>{{$course->course}}
+												<span class="highlight1">({{$course->gradeValue}}{{$course->grade == 'percentage' ? '%' : ($course->grade == ' GPA' ? 'GPA' : ' grade') }})</span>
+                                               <a href="{{url('update/course/'.$course->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
+                                            </p>
+                                        </div>
+
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($languageCount>0)
 									<div class="block">
-										<h2>Subjects, Courses <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<p>Antenna
-												<span class="highlight1">(A+ grade)</span> , Modular design
-												<span class="highlight1">(92%)</span>, Analog</p>
-										</div>
-									</div>
+										<h2>Language <a href="{{url('update/language?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
+                                            @foreach($languageInfo as $language1)
+                                            <p>
+                                                {{$language1->language}}
+                                                <span class="highlight1">({{showLanguages($language1)}})</span>
+                                                <a href="{{url('update/language/'.$language1->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
+                                            </p>
+                                            @endforeach
+                                        </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @if($basicInfoCount >0 )
 									<div class="block">
-										<h2>Language <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-											<p>Hindi
-												<span class="highlight1">(Speak. Read. Write)</span>, English
-												<span class="highlight1">(Speak. Read)</span>, German
-												<span class="highlight1">(Speak)</span>
-											</p>
-										</div>
-									</div>
-									<div class="block">
-										<h2>Additional information / Contact details <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+										<h2>Additional information / Contact details <a href="{{url('postsignup?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
 											<ul class="list-table">
 												<li class="col1">
 													<ul>
-														<li>Date of birth</li>
-														<li>Marital status</li>
-														<li>Contact number</li>
-														<li>Alternat number</li>
-														<li>Email</li>
+														<li>@if($basicInfo->dob != '//')Date of birth @endif</li>
+														<li>@if($basicInfo->marital_status)Marital status @endif</li>
+														<li> @if($contactCount)Contact number @endif</li>
+														<li> @if($contactCount && $contactInfo->altPhone!='')Alternat number @endif</li>
+														<li> @if($contactCount)Email @endif</li>
 														<li>Valid passport</li>
-														<li>Current location</li>
-														<li>References</li>
+														<li>@if($currentAddressCount > 0 || $permanentAddressCount>0)Current location @endif</li>
+														<li> @if($referenceCount) References @endif</li>
 													</ul>
 												</li>
 												<li class="col2">
 													<ul>
 														<li>
-															<span class="highlight1">10-Jan-71 (47 years)</span>
+                                                            @if($basicInfo->dob != '//')<span class="highlight1">{{$basicInfo->dob}}</span>@endif
 														</li>
 														<li>
-															<span class="highlight1">Married</span>
+															@if($basicInfo->marital_status)<span class="highlight1">{{$basicInfo->marital_status}}</span>@endif
 														</li>
+
 														<li>
-															<a href="tel:+98 989987789">+98 989987789</a>
+                                                            @if($contactCount)<a href="tel:+{{$contactInfo->primaryPhoneCode }} {{$contactInfo->primaryPhone}}">+{{$contactInfo->primaryPhoneCode}} {{$contactInfo->primaryPhone}}</a>@endif
+                                                        </li>
+                                                        <li>
+                                                            @if($contactCount && $contactInfo->altPhone!='')<a href="+tel:{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}">+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}</a>@endif
+                                                        </li>
+														<li>
+                                                            @if($contactCount)<a href="emailto: {{Auth::user()->email}}">{{Auth::user()->email}}</a>@endif
 														</li>
-														<li>
-															<a href="tel:+98 989987789">+98 989987789</a>
-														</li>
-														<li>
-															<a href="emailto:gsdhh@gmail.com">gsdhh@gmail.com</a>
-														</li>
-														<li>
+
+                                                        <li>
 															<span class="highlight1">Yes</span>
-														</li>
+                                                        </li>
+                                                        <li>
+															<span class="highlight1">
+                                                                @if($currentAddressCount)
+                                                                    {{$currentAddressInfo->city}}, {{$currentAddressInfo->country}}
+                                                                @endif
+                                                                @if($currentAddressCount == 0 && $permanentAddressCount>0)
+                                                                {{$permanentAddressInfo->city}}, {{$permanentAddressInfo->country}}
+                                                            @endif
+                                                            </span>
+                                                        </li>
 														<li>
-															<span class="highlight1">Bhopal, India</span>
-														</li>
-														<li>
-															<a href="tel:+98 989987789">+98 989987789</a>
+                                                            <span class="highlight1">
+                                                                @if($referenceCount)   {{$referenceInfo[0]->email!="" ? $referenceInfo[0]->email: ''}} @endif
+                                                            </span>
 														</li>
 													</ul>
 												</li>
 											</ul>
 										</div>
-									</div>
+                                    </div>
+                                    @endif
+                                    @if($objectiveCount>0)
 									<div class="block">
-										<h2>Cover Note <a href="#" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+										<h2>Cover Note <a href="{{url('update/objective?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
-											<p>Donec posuere luctus lectus, sit amet scelerisque risus accumsan nec.
-												Quisque
-												urna
-												erat, semper quis eros nec, tempor
-												scelerisque nulla. Maecenas gravida tellus dapibus eros imperdiet eleifend.
-												Ut
-												malesuada dolor ac augue dignissim bibendum.
-												Suspendisse iaculis arcu quis feugiat rhoncus. Vestibulum iaculis erat vel
-												eros
-												placerat, tempus accumsan dui efficitur.
-												Nunc eleifend vehicula nisi vel mollis.</p>
+                                        <p>{{$objectiveInfo->objective }}</p>
 										</div>
-									</div>
+                                    </div>
+                                    @endif
 								</div>
 							</div>
 						</div>

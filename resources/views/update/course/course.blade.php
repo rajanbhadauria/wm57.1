@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="courseInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="courseData" name"courseData" @if($resumeAccess && $resumeAccess->courseData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="courseData" name"courseData" @if(($resumeAccess && $resumeAccess->courseData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="courseData"></label>
                                             </div>
                                             <div class="fl">
@@ -27,9 +27,9 @@
                                                         <div class = "switch">
                                                             <label>
                                                                 @if($course['private'])
-                                                                    <input type="checkbox" data-value="<?php echo $course['id']?>" class="PPCheck" data-id="course" checked>
-                                                                @else
                                                                     <input type="checkbox" data-value="<?php echo $course['id']?>" class="PPCheck" data-id="course">
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $course['id']?>" class="PPCheck" data-id="course" checked>
                                                                 @endif
                                                                 <span class = "lever"></span>
                                                             </label>
@@ -65,3 +65,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="course"]').on('change', function() {
+                                                if($('.PPCheck[data-id="course"]:checked').length == 0) {
+                                                    $("#courseData").prop('checked',false);
+                                                } else {
+                                                    $("#courseData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

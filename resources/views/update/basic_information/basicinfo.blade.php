@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="basicInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="basicInfoData" name"basicInfoData"  @if($resumeAccess && $resumeAccess->basicInfoData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="basicInfoData" name"basicInfoData"  @if(($resumeAccess && $resumeAccess->basicInfoData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="basicInfoData"></label>
                                             </div>
                                             <div class="fl">
@@ -14,6 +14,7 @@
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
                                         <ul class="collection with-header">
+                                                @if($basicInfoCount > 0)
                                             <li class="collection-header">
                                                 <div>
                                                 Hide / Show
@@ -22,15 +23,16 @@
                                                         <div class = "switch">
                                                             <label>
                                                                 @if(@$basicInfo->private)
-                                                                    <input type="checkbox" class="PPCheck" data-id="basic_info" checked>
-                                                                @else
                                                                     <input type="checkbox" class="PPCheck" data-id="basic_info">
+                                                                @else
+                                                                    <input type="checkbox" class="PPCheck" data-id="basic_info" checked>
                                                                 @endif
                                                                 <span class = "lever"></span>
                                                             </label>
                                                         </div>
                                                     </div>
                                             </li>
+                                            @endif
 
                                             @if($basicInfoCount > 0)
                                                 <li class="collection-item">
@@ -65,3 +67,15 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="basic_info"]').on('change', function() {
+                                                if($('.PPCheck[data-id="basic_info"]:checked').length == 0) {
+                                                    $("#basicInfoData").prop('checked',false);
+                                                } else {
+                                                    $("#basicInfoData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>
+

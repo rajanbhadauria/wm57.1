@@ -34,28 +34,25 @@ if( isset($redirectBack) ) {
                             {{ csrf_field() }}
 
                             <div class="input-field custom-form">
-                                <input id="resume_title" name="resume_title" class="" data-length="50"
-                                    required
+                                <input id="resume_title" name="resume_title"
+                                    value="{{isset($resume_title['resume_title'])?$resume_title['resume_title']:''}}"
+                                    data-length="50"
                                     ng-model="resume_title"
                                     ng-maxlength="50"
-                                    ng-pattern="/^[A-Za-z,]+$/"
-                                    value="{{isset($resume_title['resume_title'])?$resume_title['resume_title']:''}}"
-                                    type="text"
-                                >
+                                    type="text">
 
                                 <label for="resume_title" ng-class="{ active:  resume_title }" >Resume title <span>*</span></label>
                             </div>
                                 <div class="input-field custom-form">
-                                    <textarea id="resume_brand" name="resume_brand" class="" data-length="200"
-                                        required
-                                        ng-model="resume_brand"
-                                        ng-minlength="50"
-                                        ng-maxlength="200"
+                                    <textarea id="resume_brand" name="resume_brand"
                                         value="{{isset($resume_title['resume_brand'])?$resume_title['resume_brand']:''}}"
+                                        data-length="200"
 
+                                        ng-model="resume_brand"
+
+                                        ng-maxlength="200"
                                     ></textarea>
-
-                                    <label for="resume_brand" ng-class="{ active:  resume_brand }" >Brand yourself, what are you passionate about your skills <span>*</span></label>
+                                    <label for="resume_brand" ng-class="{ active:  resume_brand }" >Brand yourself and your work, what work skills you are good and passionate about</label>
                                 </div>
 
                                 <div class="input-field custom-form">
@@ -65,7 +62,7 @@ if( isset($redirectBack) ) {
                                     data-length="200"
                                     ng-model="resume_message"
                                     ></textarea>
-                                    <label for="resume_message" ng-class="{ active:  resume_message }">Why do you fit for the role, job you are applying</label>
+                                    <label for="resume_message" ng-class="{ active:  resume_message }">Why do you fit for the job you are appling for</label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <textarea id="thanks_note" name="thanks_note"
@@ -74,7 +71,7 @@ if( isset($redirectBack) ) {
                                     data-length="200"
                                     ng-model="thanks_note"
                                     ></textarea>
-                                    <label for="thanks_note" ng-class="{ active:  thanks_note }">Thanking employer for the opportunity</label>
+                                    <label for="thanks_note" ng-class="{ active:  thanks_note }">Closing message and thank employer for the job opportunity</label>
                                 </div>
 
                                 <div class="row">
@@ -121,7 +118,7 @@ if( isset($redirectBack) ) {
         $( "#resumeTitleForm" ).validate({
             rules: {
                 resume_title: {required: true, maxlength:50},
-                resume_brand: {required: true, maxlength:200, minlength:50},
+                resume_brand: { maxlength:200, minlength:50},
                 resume_message: {maxlength:200},
                 thanks_note: {maxlength:200},
 
@@ -132,11 +129,11 @@ if( isset($redirectBack) ) {
                     maxlength: "Max length should be 50 characters",
                     //minlength: "Minimum length should be 25 characters"
                 },
-                resume_brand: {
-                    required: "Required",
-                    maxlength: "Max length should be 200 characters",
-                    minlength: "Minimum length should be 50 characters"
-                },
+                // resume_brand: {
+                //     required: "Required",
+                //     maxlength: "Max length should be 200 characters",
+                //     minlength: "Minimum length should be 50 characters"
+                // },
                 resume_message: {
                     maxlength: "Max length should be 200 characters",
                 },

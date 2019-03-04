@@ -23,7 +23,7 @@ if( isset($redirectBack) ) {
         </div>
     </div>
 </section>
-<div class="section wrappit" ng-app="ProjectFromApp" ng-controller="myCtrl">
+<div class="section wrappit" ng-controller="myCtrl">
     <div class="container">
         <div class="center-wrapper" id="heightSet">
             <div class="center-container">
@@ -35,13 +35,13 @@ if( isset($redirectBack) ) {
                                     novalidate>
                                     {{ csrf_field() }}
                                     <div class="input-field custom-form">
-                                        <input id="project" name="project" type="text" class="fourlength validate"
+                                        <input id="project" name="project" type="text" class="validate"
                                             value="{{isset($project['project'])?$project['project']:''}}" required>
                                         <label for="project" ng-class="{ active:  project }">Name of assignment /
                                             project <span>*</span></label>
                                     </div>
                                     <div class="input-field custom-form">
-                                        <input id="school" name="school" type="text" class="fourlength alphanumeric validate"
+                                        <input id="school" name="school" type="text" class="alphanumeric validate"
                                             value="{{isset($project['school'])?$project['school']:''}}" required>
                                         <label for="school" ng-class="{ active:  school }">School / College / Company
                                             <span>*</span></label>
@@ -160,11 +160,11 @@ if( isset($redirectBack) ) {
             rules: {
                 project: {
                     required: true,
-                    alphanumeric: true
+                    //alphanumeric: true
                 },
                 school: {
                     required: true,
-                    alphanumeric: true
+                    //alphanumeric: true
                 },
                 mm: {
                     required: function (element) {
@@ -173,25 +173,25 @@ if( isset($redirectBack) ) {
                 },
                 yyyy: {
                     required: function (element) {
-                        return ($("#mm").val() != "" || $("#yyyy").val() != "");
+                        return ($("#yyyy").val() == "yyyy" || $("#yyyy").val() == "");
                     }
                 }
 
             },
             messages: {
                 project: {
-                    required: "Project required",
+                    required: "Required",
                     alphanumeric: "Please enter alpha numeric value only."
                 },
                 school: {
-                    required: "School required",
+                    required: "Required",
                     alphanumeric: "Please enter alpha numeric value only."
                 },
                 mm: {
-                    required: "required"
+                    required: "Required"
                 },
                 yyyy: {
-                    required: "required"
+                    required: "Required"
                 }
             },
             errorClass: 'validationError',

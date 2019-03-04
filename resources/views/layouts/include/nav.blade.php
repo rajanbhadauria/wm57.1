@@ -92,33 +92,13 @@
         <div class="menu-scroll">
             <div class="menu-top">
                 <div class="menu-top-img brand">
-                    @if(Auth::user()->avatar != "")
-                    @if(strpos(Auth::user()->avatar,"ttp"))
-                    <img alt="" src="{{Auth::user()->avatar}}">
-                    @elseif(file_exists(public_path("/uploads/images/user/".Auth::user()->avatar)))
-                    <img alt="" src="{{uploads_url('images/user/')}}/{{Auth::user()->avatar}}">
-                    @else
-                    <img alt="" src="{{ uploads_url('images/user/user-img-white.jpg') }}">
-                    @endif
-                    @else
-                    <img alt="" src="{{ uploads_url('uploads/images/user/user-img-white.jpg') }}">
-                    @endif
+                    <img alt="" src="{{get_user_image(Auth::user()->avatar)}}">
                 </div>
                 @if(!count($resumeDetails))
                 <div class="menu-top-info">
                     <a class="menu-top-user bold flow-text" href="javascript:void(0);">
                         <span class="avatar avatar-lg avatar-inline margin-right border-fade">
-                                @if(Auth::user()->avatar != "")
-                            @if(strpos(Auth::user()->avatar,"ttp"))
-                            <img alt="" src="{{Auth::user()->avatar}}">
-                            @elseif(file_exists(public_path("/uploads/images/user/".Auth::user()->avatar)))
-                            <img alt="" src="{{uploads_url('images/user/')}}/{{Auth::user()->avatar}}">
-                            @else
-                            <img alt="" src="{{uploads_url('images/user/user-img-white.jpg')}}">
-                            @endif
-                            @else
-                            <img alt="" src="{{uploads_url('images/user/user-img-white.jpg')}}">
-                            @endif
+                            <img alt="" src="{{get_user_image(Auth::user()->avatar)}}">
                           </span>
                         {{Auth::user()->name}}
                     </a>
@@ -127,17 +107,7 @@
                 <div class="menu-top-info">
                     <a class="menu-top-user bold flow-text" href="{{ url('/resume/'.$resumeDetails[0]->id) }}">
                         <span class="avatar avatar-lg avatar-inline margin-right border-fade">
-                            @if(Auth::user()->avatar != "")
-                            @if(strpos(Auth::user()->avatar,"ttp:"))
-                            <img alt="" src="{{Auth::user()->avatar}}">
-                            @elseif(file_exists(public_path("/uploads/images/user/".Auth::user()->avatar)))
-                            <img alt="" src="/uploads/images/user/{{Auth::user()->avatar}}">
-                            @else
-                            <img alt="" src="/uploads/images/user/user-img-white.jpg">
-                            @endif
-                            @else
-                            <img alt="" src="/uploads/images/user/user-img-white.jpg">
-                            @endif
+                            <img alt="" src="{{get_user_image(Auth::user()->avatar)}}">
                         </span>
                         {{Auth::user()->name}}
                     </a>

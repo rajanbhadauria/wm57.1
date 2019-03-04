@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="skillInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="skillData" name"skillData" @if($resumeAccess && $resumeAccess->skillData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="skillData" name"skillData" @if(($resumeAccess && $resumeAccess->skillData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="skillData"></label>
                                             </div>
                                             <div class="fl">
@@ -14,6 +14,7 @@
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
                                         <ul class="collection with-header">
+                                            @if($skillCount > 0)
                                             <li class="collection-header">
                                                 <div>
                                                 Hide / Show
@@ -22,15 +23,16 @@
                                                     <div class = "switch">
                                                         <label>
                                                             @if($skillCount > 0 && $skillInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="skill" checked>
-                                                            @else
                                                                 <input type="checkbox" class="PPCheck" data-id="skill">
+                                                            @else
+                                                                <input type="checkbox" class="PPCheck" data-id="skill" checked>
                                                             @endif
                                                             <span class = "lever"></span>
                                                         </label>
                                                     </div>
                                                 </div>
                                             </li>
+                                            @endif
                                              @if($skillCount > 0)
 
                                                 <li class="collection-item">
@@ -67,3 +69,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="skill"]').on('change', function() {
+                                                if($('.PPCheck[data-id="skill"]:checked').length == 0) {
+                                                   $("#skillData").prop('checked',false);
+                                                } else {
+                                                    $("#skillData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

@@ -17,7 +17,7 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Add/Update Personal management skills</h1>
+                    <h1>Add / Update Personal management skills</h1>
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@ if( isset($redirectBack) ) {
                     "_token": "{{ csrf_token()}}"
                 },
                 success: function(response){
-                    window.location.href = "{{$redirectBack}}";
+                    window.location.href = "{{url($returnUrl)}}";
                 }
             });
         });
@@ -101,7 +101,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         if(response.error == 0){
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{url($returnUrl)}}";
                         }
                     }
                 });

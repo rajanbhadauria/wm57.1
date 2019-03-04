@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="profileimage">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox"  id="profileData" name="profileData" @if($resumeAccess && $resumeAccess->profileData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox"  id="profileData" name="profileData" @if(($resumeAccess && $resumeAccess->profileData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="profileData"></label>
                                             </div>
                                             <div class="fl">
@@ -13,6 +13,7 @@
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
                                         <ul class="collection with-header">
+                                            @if($profileImageData['avatar']!="")
                                             <li class="collection-header">
                                                 <div>
                                                 Hide / Show
@@ -21,15 +22,16 @@
                                                     <div class = "switch">
                                                         <label>
                                                             @if($profileImageData['profilePrivate'])
-                                                                <input type="checkbox" class="PPCheck" data-id="profilePrivate" checked>
-                                                            @else
                                                                 <input type="checkbox" class="PPCheck" data-id="profilePrivate">
+                                                            @else
+                                                                <input type="checkbox" class="PPCheck" data-id="profilePrivate" checked>
                                                             @endif
                                                             <span class = "lever"></span>
                                                         </label>
                                                     </div>
                                                 </div>
                                             </li>
+                                            @endif
                                             <li class="collection-item">
                                                 <a href="{{URL::to('user/profile-image?ref_url=update?sectionid=profileimage')}}" class="collapsible-body-inner">
                                                 <div class="update-desc">
@@ -50,3 +52,14 @@
                                         </ul>
                                     </div>
                                 </li>
+<script>
+    $(document).ready(function(){
+        $('.PPCheck[data-id="profilePrivate"]').on('change', function() {
+            if(!$('.PPCheck[data-id="profilePrivate"]:checked').length) {
+               $("#profileData").prop('checked',false);
+            } else {
+                $("#profileData").prop('checked',true);
+            }
+        });
+    });
+</script>

@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="projectInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="projectData" name"projectData" @if($resumeAccess && $resumeAccess->projectData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="projectData" name"projectData" @if(($resumeAccess && $resumeAccess->projectData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="projectData"></label>
                                             </div>
                                             <div class="fl">
@@ -28,9 +28,9 @@
                                                             <div class = "switch">
                                                                     <label>
                                                                         @if($project['private'])
-                                                                            <input type="checkbox" class="PPCheck" data-value="<?php echo $project['id']?>" data-id="project" checked>
-                                                                        @else
                                                                             <input type="checkbox" class="PPCheck" data-value="<?php echo $project['id']?>" data-id="project">
+                                                                        @else
+                                                                            <input type="checkbox" class="PPCheck" data-value="<?php echo $project['id']?>" data-id="project" checked>
                                                                         @endif
                                                                         <span class = "lever"></span>
                                                                     </label>
@@ -65,3 +65,22 @@
                                         </ul>
                                     </div>
                                 </li>
+<script>
+        $(document).ready(function(){
+            $('.PPCheck[data-id="project"]').on('change', function() {
+                if($('.PPCheck[data-id="project"]:checked').length == 0) {
+                    $("#projectData").prop('checked',false);
+                } else {
+                    $("#projectData").prop('checked',true);
+                }
+            });
+
+            $("#projectData").on('change', function(){
+                                                if($('#projectData:checked').length == 0) {
+                                                   $(".PPCheck[data-id='project']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='project']").prop('checked',true);
+                                                }
+                                            });
+        });
+    </script>

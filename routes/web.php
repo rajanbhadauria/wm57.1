@@ -33,9 +33,9 @@ Route::post('closed-activate', 'Auth\LoginController@closedActivate');
 Route::get('/logout', 'HomeController@logout')->name('logout')->middleware('auth');
 Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'))->middleware('auth');
 Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'))->middleware('auth');
+Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'))->middleware('auth');
 
 Route::group(['middleware' => ['auth','isactive']], function(){
-    Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'));
     Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
     Route::get('/change-password-save', array('as' => 'change-password-save', 'uses' => 'UserController@changePasswordSave'));
     Route::get('/home', 'HomeController@index')->name('home');
@@ -100,7 +100,6 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
     Route::post('/get-work-details', ['as' => 'update.get-work-details', 'uses' => 'Resume\UpdateController@getWorkDetails']);
     Route::post('/work-save', ['as' => 'update.work-save', 'uses' => 'Resume\UpdateController@workSave']);
     Route::post('/work/remove/{id}', ['as' => 'update.work.remove', 'uses' => 'Resume\UpdateController@workRemove']);
-
 
 	Route::get('/education', ['as' => 'update.education', 'uses' => 'Resume\UpdateController@education']);
 	Route::get('/education/{id}', ['as' => 'update.education', 'uses' => 'Resume\UpdateController@education']);

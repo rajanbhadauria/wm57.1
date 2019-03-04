@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="travelInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="travelData" name"travelData" @if($resumeAccess && $resumeAccess->travelData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="travelData" name"travelData" @if(($resumeAccess && $resumeAccess->travelData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="travelData"></label>
                                             </div>
                                             <div class="fl">
@@ -14,23 +14,6 @@
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
                                         <ul class="collection with-header">
-                                            <li class="collection-header">
-                                                <div>
-                                                Hide / Show
-                                                </div>
-                                                <div class="button-content top10">
-                                                    <div class = "switch">
-                                                        <label>
-                                                            @if($travelCount > 0 && $travelInfo[0]['private'])
-                                                                <input type="checkbox" class="PPCheck" data-id="travel" checked>
-                                                            @else
-                                                                <input type="checkbox" class="PPCheck" data-id="travel">
-                                                            @endif
-                                                            <span class = "lever"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </li>
 
                                             @if($travelCount > 0)
                                                 @foreach($travelInfo as $travel)
@@ -39,9 +22,9 @@
                                                             <div class = "switch">
                                                                     <label>
                                                                         @if($travel['private'])
-                                                                            <input type="checkbox" data-value="<?php echo $travel['id']?>" class="PPCheck" data-id="travel" checked>
-                                                                        @else
                                                                             <input type="checkbox" data-value="<?php echo $travel['id']?>" class="PPCheck" data-id="travel">
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $travel['id']?>" class="PPCheck" data-id="travel" checked>
                                                                         @endif
                                                                         <span class = "lever"></span>
                                                                     </label>
@@ -76,3 +59,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="travel"]').on('change', function() {
+                                                if($('.PPCheck[data-id="travel"]:checked').length == 0) {
+                                                    $("#travelData").prop('checked',false);
+                                                } else {
+                                                    $("#travelData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="educationInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="educationData" name"educationData" @if($resumeAccess && $resumeAccess->educationData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="educationData" name"educationData" @if(($resumeAccess && $resumeAccess->educationData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="educationData"></label>
                                             </div>
                                             <div class="fl">
@@ -27,16 +27,16 @@
                                                         <div class = "switch">
                                                             <label>
                                                                 @if($education['private'])
-                                                                    <input type="checkbox" data-value="<?php echo $education['id']?>" class="PPCheck" data-id="education" checked>
-                                                                @else
                                                                     <input type="checkbox" data-value="<?php echo $education['id']?>" class="PPCheck" data-id="education">
+                                                                @else
+                                                                    <input type="checkbox" data-value="<?php echo $education['id']?>" class="PPCheck" data-id="education" checked>
                                                                 @endif
                                                                 <span class = "lever"></span>
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="col s9 p0">
-                                                        <a href="{{URL::to('update/education')}}/{{$education['id']}}" class="collapsible-body-inner">
+                                                        <a href="{{URL::to('update/education')}}/{{$education['id']}}?url=update?sectionid=educationInfo" class="collapsible-body-inner">
                                                         <div class="update-desc">
                                                             <span class="bold">{{$education->educationName}}</span>
                                                             <span class="normal">- {{$education->school}} - {{$education->city}}</span>
@@ -63,3 +63,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="education"]').on('change', function() {
+                                                if($('.PPCheck[data-id="education"]:checked').length == 0) {
+                                                    $("#educationData").prop('checked',false);
+                                                } else {
+                                                    $("#educationData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

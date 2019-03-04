@@ -84,7 +84,7 @@
 											<label for="gender" class="active block-label">Gender</label>
                                         </div>
 		                                    <div class="display-inline">
-		                                        <input class="with-gap" value="Male" name="gender" type="radio" id="gender-male" checked>
+		                                        <input class="with-gap" value="Male" name="gender" type="radio" id="gender-male"  {{@$basic_info->gender == 'Male' ? 'checked' : ''}}>
 		                                        <label for="gender-male">Male</label>
 		                                    </div>
 		                                    <div class="display-inline">
@@ -137,7 +137,7 @@ $(document).ready(function(){
                     },
                     number:true
                     },
-                gender: {required: true }
+               // gender: {required: true }
 
             },
             messages: {

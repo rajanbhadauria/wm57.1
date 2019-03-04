@@ -40,8 +40,9 @@ if( isset($redirectBack) ) {
                             <div class="">
                                 <form action="{{URL::to('update/work-save')}}" method="POST" id="workForm" name="workForm">
                                 {{ csrf_field() }}
+                                <input type="hidden" name="returnUrl" value="{{$returnUrl}}">
                                     <div class="input-field custom-form">
-                                        <input id="company" name="company" type="text" class="sixlength companyname check_condition validate"
+                                        <input id="company" name="company" type="text" class="tenlength companyname check_condition validate"
                                             value="{{isset($work['company'])?$work['company']:''}}" required data-msg="Company name required">
 
                                         <label for="company" ng-class="{ active:  company }">Company name <span>*</span>
@@ -93,18 +94,18 @@ if( isset($redirectBack) ) {
                                         <label for="level" ng-class="{ active: level }">Level band</label>
                                     </div>
                                     <div class="input-field custom-form">
-                                        <input id="designation" name="designation" type="text" class="alpha fourlength check_condition"
+                                        <input id="designation" name="designation" type="text" class="alpha tenlength check_condition"
                                             value="{{isset($work['designation'])?$work['designation']:''}}" required>
                                         <label for="designation" ng-class="{ active:designation }">Official designation
                                             <span>*</span></label>
                                     </div>
                                     <div class="input-field custom-form ">
-                                        <input id="department" name="department" type="text" class="alpha fourlength check_condition"
+                                        <input id="department" name="department" type="text" class="alpha tenlength check_condition"
                                             value="{{isset($work['department'])?$work['department']:''}}">
-                                        <label for="department" ng-class="{ active:department }">Department / Function</label>
+                                        <label for="department" ng-class="{ active:department }">Department / Function <span>*</span></label>
                                     </div>
                                     <div class="input-field custom-form ">
-                                        <input id="role" name="role" type="text" class="sixlength check_condition"
+                                        <input id="role" name="role" type="text" class="check_condition"
                                             value="{{isset($work['role'])?$work['role']:''}}" ng-model="role">
                                         <label for="role" ng-class="{ active: role}">Role title</label>
                                     </div>
@@ -346,7 +347,8 @@ if( isset($redirectBack) ) {
                     alphanumeric: true
                 },
                 department: {
-                    alphanumeric: true
+                    alphanumeric: true,
+                    required: true
                 },
                 fixSalary: {
                     number: true
@@ -355,7 +357,7 @@ if( isset($redirectBack) ) {
                     number: true
                 },
                 ctc: {
-                    number: true
+                   // number: true
                 },
                 designation: {
                     required: true,
@@ -418,6 +420,7 @@ if( isset($redirectBack) ) {
                     alphanumeric: "Please enter alpha numeric value only."
                 },
                 department: {
+                    required: "Required",
                     alphanumeric: "Please enter alpha numeric value only."
                 },
                 fixSalary: {
@@ -455,8 +458,7 @@ if( isset($redirectBack) ) {
                     url: $("#workForm").attr("action"),
                     data: $("#workForm").serialize(),
                     success: function (response) {
-                        console.log(response);
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{$returnUrl}}";
                     }
                 });
             }
@@ -471,10 +473,10 @@ if( isset($redirectBack) ) {
                     type: "POST",
                     dataType: "JSON",
                     url: "{{URL::to('update/work/remove')}}/" + $("#id").val(),
-                    data: $(this).serialize(),
+                    data: $("#workForm").serialize(),
                     success: function (response) {
                         if (response.error == 0) {
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{$returnUrl}}";
                         }
                     }
                 });
@@ -599,6 +601,13 @@ if( isset($redirectBack) ) {
             var varTotal =  parseInt($('#variableSalary').val().replace(/,/g , ''))*varmulti;
             var fixTotal = parseInt($('#fixSalary').val().replace(/,/g , ''))*fixmulti;
             console.log(varTotal, fixTotal);
+            if(isNaN(varTotal)) {
+                varTotal = 0;
+            }
+
+            if(isNaN(fixTotal)) {
+                fixTotal = 0;
+            }
             var totalCtc = varTotal+fixTotal;
             if(!isNaN(totalCtc)) {
                 totalCtc = formatNumber(totalCtc);

@@ -138,7 +138,7 @@ if( isset($redirectBack) ) {
                 },
                 email: {
                     required: "Required",
-                    email: "Please enter valid email."
+                    email: "Enter valid email."
                 }
             },
             errorClass: 'validationError',
@@ -162,7 +162,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         console.log(response);
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{url($returnUrl)}}";
                     }
                 });
             }
@@ -182,7 +182,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         if(response.error == 0){
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{url($returnUrl)}}";
                         }
                     }
                 });

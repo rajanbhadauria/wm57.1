@@ -43,21 +43,21 @@ if( isset($redirectBack) ) {
                                     	required
                                     	ng-model="houseNumber"
                                     >
-                                    <label for="houseNumber" ng-class="{ active:  houseNumber }">Room / Flat / House number</label>
+                                    <label for="houseNumber" ng-class="{ active:  houseNumber }">Room / Flat / House number <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="blockSector" name="blockSector" type="text" class="alphanumeric fourlength validate" value="{{isset($permanentAddress['blockSector'])?$permanentAddress['blockSector']:''}}"
                                     	required
                                     	ng-model="blockSector"
                                     >
-                                    <label for="blockSector" ng-class="{ active:  blockSector }">Block / Sector</label>
+                                    <label for="blockSector" ng-class="{ active:  blockSector }">Block / Sector <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="societyName" name="societyName" type="text" class="alphanumeric fourlength validate" value="{{isset($permanentAddress['societyName'])?$permanentAddress['societyName']:''}}"
                                     	required
                                     	ng-model="societyName"
                                     >
-                                    <label for="societyName" ng-class="{ active:  societyName }">Building / Locality / Society name</label>
+                                    <label for="societyName" ng-class="{ active:  societyName }">Building / Locality / Society name  <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="landmark" name="landmark" type="text" class="alphanumeric fourlength validate" value="{{isset($permanentAddress['landmark'])?$permanentAddress['landmark']:''}}"
@@ -70,27 +70,27 @@ if( isset($redirectBack) ) {
                                     	required
                                     	ng-model="area"
                                     >
-                                    <label for="area" ng-class="{ active:  area }">Area name</label>
+                                    <label for="area" ng-class="{ active:  area }">Area name <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="pincode" name="pincode" type="text" class="alphanumeric validate"  value="{{isset($permanentAddress['pincode'])?$permanentAddress['pincode']:''}}"
                                     	ng-model="pincode"
                                     >
-                                    <label for="pincode" ng-class="{ active:  pincode }">Area pin code</label>
+                                    <label for="pincode" ng-class="{ active:  pincode }">Area pin code <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="city" name="city" type="text" class="alphanu fourlength validate"  value="{{isset($permanentAddress['city'])?$permanentAddress['city']:''}}"
                                     	required
                                     	ng-model="city"
                                     >
-                                    <label for="city" ng-class="{ active:  city }">City</label>
+                                    <label for="city" ng-class="{ active:  city }">City <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="country" name="country" type="text" class="alpha fourlength validate"  value="{{isset($permanentAddress['country'])?$permanentAddress['country']:''}}"
                                     	required
                                     	ng-model="country"
                                     >
-                                    <label for="country" ng-class="{ active:  country }">Country</label>
+                                    <label for="country" ng-class="{ active:  country }">Country <span>*</span></label>
                                 </div>
 
                                 <div class="row">

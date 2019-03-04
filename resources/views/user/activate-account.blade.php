@@ -25,7 +25,7 @@
 					</svg>
 				  </div>
 				  <div class="text-center">
-                  <h2>Thank You!</h2>
+                  <h2>Account activation required</h2>
                   <p>Please check your email box an activation link has been sent to you</p>
                   <h4>Or</h4>
                   <h6><a href="javascript:void(0)" id="resend">Click here</a> to resend activation link</h6>

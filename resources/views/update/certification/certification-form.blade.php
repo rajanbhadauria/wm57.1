@@ -33,7 +33,7 @@ if( isset($redirectBack) ) {
                             <form action="{{URL::to('update/certification-save')}}" method="POST" id="certificationForm" name="certificationForm" >
 
                                 <div class="input-field custom-form">
-                                    <input id="certification" name="certification" type="text" class="fourlength validate" value="{{isset($certification['certification'])?$certification['certification']:''}}"
+                                    <input id="certification" name="certification" type="text" class=" validate" value="{{isset($certification['certification'])?$certification['certification']:''}}"
                                         required
                                     >
                                     <label for="certification" ng-class="{ active:  certification }" >Name of certification <span>*</span></label>
@@ -100,7 +100,7 @@ if( isset($redirectBack) ) {
                                 </div>
                                 <div class=" custom-form mb20 custm-lbl" >
                                     <div class="display-inline">
-                                        <input class="alpha fourlength with-gap" name="best" type="checkbox" id="best" value="1" {{(isset($certification['best']) && $certification['best']=='1')?'checked=checked':''}} />
+                                        <input class="alpha with-gap" name="best" type="checkbox" id="best" value="1" {{(isset($certification['best']) && $certification['best']=='1')?'checked=checked':''}} />
                                         <label for="best">Highlight above as Key achievement</label>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@ if( isset($redirectBack) ) {
                 },
                 yyyy: {
                     required: function(element){
-                        return ($("#mm").val()!="" || $("#yyyy").val()!="");
+                        return ($("#yyyy").val()=="yyyy" || $("#yyyy").val()=="");
                     }
                 }
 
@@ -194,7 +194,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         console.log(response);
-                        window.location.href = "{{$redirectBack}}";
+                        window.location.href = "{{url($returnUrl)}}";
                     }
                 });
             }
@@ -214,7 +214,7 @@ if( isset($redirectBack) ) {
                     data:formData,
                     success: function(response){
                         if(response.error == 0){
-                            window.location.href = "{{$redirectBack}}";
+                            window.location.href = "{{url($returnUrl)}}";
                         }
                     }
                 });

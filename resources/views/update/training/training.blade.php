@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="trainingInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="trainingData" name"trainingData" @if($resumeAccess && $resumeAccess->trainingData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="trainingData" name"trainingData" @if(($resumeAccess && $resumeAccess->trainingData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="trainingData"></label>
                                             </div>
                                             <div class="fl">
@@ -18,7 +18,6 @@
                                                 <div>
                                                 Hide / Show
                                                 </div>
-
                                             </li>
                                             @if($trainingCount > 0)
                                                 @foreach($trainingInfo as $training)
@@ -27,9 +26,9 @@
                                                             <div class = "switch">
                                                                     <label>
                                                                         @if($training['private'])
-                                                                            <input type="checkbox" data-value="<?php echo $training['id']?>" class="PPCheck" data-id="training" checked>
-                                                                        @else
                                                                             <input type="checkbox" data-value="<?php echo $training['id']?>" class="PPCheck" data-id="training">
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $training['id']?>" class="PPCheck" data-id="training" checked>
                                                                         @endif
                                                                         <span class = "lever"></span>
                                                                     </label>
@@ -65,3 +64,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="training"]').on('change', function() {
+                                                if($('.PPCheck[data-id="training"]:checked').length == 0) {
+                                                    $("#trainingData").prop('checked',false);
+                                                } else {
+                                                    $("#trainingData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="referenceInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="referenceData" name"referenceData" @if($resumeAccess && $resumeAccess->referenceData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="referenceData" name"referenceData" @if(($resumeAccess && $resumeAccess->referenceData=='1') || !$resumeAccess) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="referenceData"></label>
                                             </div>
                                             <div class="fl">
@@ -27,9 +27,9 @@
                                                             <div class = "switch">
                                                                     <label>
                                                                         @if($reference['private'])
-                                                                            <input type="checkbox" data-value="<?php echo $reference['id']?>" class="PPCheck" data-id="reference" checked>
-                                                                        @else
                                                                             <input type="checkbox" data-value="<?php echo $reference['id']?>" class="PPCheck" data-id="reference">
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $reference['id']?>" class="PPCheck" data-id="reference" checked>
                                                                         @endif
                                                                         <span class = "lever"></span>
                                                                     </label>
@@ -65,3 +65,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="reference"]').on('change', function() {
+                                                if($('.PPCheck[data-id="reference"]:checked').length == 0) {
+                                                    $("#referenceData").prop('checked',false);
+                                                } else {
+                                                    $("#referenceData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>

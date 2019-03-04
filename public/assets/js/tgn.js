@@ -4,9 +4,9 @@ $(document).ready(function(){
 	$(".alphainput").on("keypress", function (evt) {
 		var keyCode = (evt.which) ? evt.which : evt.keyCode
 	    if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 8){
-			return false;							   
+			return false;
 		}else{
-			return true;	
+			return true;
 		}
 	});
 
@@ -37,8 +37,6 @@ $(document).ready(function(){
 		var keyCode=e.charCode? e.charCode : e.keyCode
 
 		if (keyCode && keyCode!=8 && keyCode!=9){
-
-			console.log(keyCode);
 			if (((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32) && (keyCode<48||keyCode>57) && keyCode!=44 && keyCode!=45 && keyCode!=46 && keyCode!=47)
 				return false
 		}
@@ -57,7 +55,7 @@ $(document).ready(function(){
 		var keyCode=e.charCode? e.charCode : e.keyCode
 
 		if (keyCode && keyCode!=8 && keyCode!=9){
-			
+
 			if (((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32) && (keyCode<48||keyCode>57) && keyCode!=43 && keyCode!=45 && keyCode!=46 && keyCode!=37)
 				return false
 		}
@@ -91,25 +89,25 @@ $(document).ready(function(){
 	});
 
 
-	$('.check_condition').on("keypress",function(event) {	
-//		if(event.which==44 || event.which==47 || event.which==45 || event.which==92 || event.which==37 || event.which==38 || event.which==33 || event.which==126 || event.which==64 || event.which==35 || event.which==36 || event.which==42 || event.which==123 || event.which==125 || event.which==91 || event.which==93 || event.which==40 || event.which==41 || event.which==60 || event.which==62 || event.which==59 || event.which==58 || event.which==39 || event.which==34 || event.which==43 || event.which==95 || event.which==94 || event.which==92 || event.which==63 || event.which==46){ 
+	$('.check_condition').on("keypress",function(event) {
+//		if(event.which==44 || event.which==47 || event.which==45 || event.which==92 || event.which==37 || event.which==38 || event.which==33 || event.which==126 || event.which==64 || event.which==35 || event.which==36 || event.which==42 || event.which==123 || event.which==125 || event.which==91 || event.which==93 || event.which==40 || event.which==41 || event.which==60 || event.which==62 || event.which==59 || event.which==58 || event.which==39 || event.which==34 || event.which==43 || event.which==95 || event.which==94 || event.which==92 || event.which==63 || event.which==46){
 //			return false;
 //		}
-		
-	});			   
+
+	});
 	$(".check_condition").bind("paste", function(e) {
-		return false;											
-	});	   
+		return false;
+	});
 	$(".nopaste").bind("paste", function(e) {
-		return false;											
+		return false;
 	});
 	$(".numeric").bind("paste", function(e) {
-		return false;											
+		return false;
 	});
 
 
-	$('.onelength').on("keypress",function(event) {									   
-		if(event.which){  
+	$('.onelength').on("keypress",function(event) {
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>1 && event.which!=8){
 				return false;
@@ -117,8 +115,8 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.twolength').on("keypress",function(event) {									   
-		if(event.which){  
+	$('.twolength').on("keypress",function(event) {
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>2 && event.which!=8){
 				return false;
@@ -126,8 +124,8 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.threelength').on("keypress",function(event) {									   
-		if(event.which){  
+	$('.threelength').on("keypress",function(event) {
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>3 && event.which!=8){
 				return false;
@@ -135,7 +133,7 @@ $(document).ready(function(){
 		}
 	});
 	$('.fourlength').on("keypress",function(event) {
-		if(event.which){  
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>4 && event.which!=8){
 				return false;
@@ -144,7 +142,7 @@ $(document).ready(function(){
 	});
 
 	$('.fivelength').on("keypress",function(event) {
-		if(event.which){  
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>5 && event.which!=8){
 				return false;
@@ -153,9 +151,18 @@ $(document).ready(function(){
 	});
 
 	$('.sixlength').on("keypress",function(event) {
-		if(event.which){  
+		if(event.which){
 			var skillarr = $(this).val().split(" ");
 			if(skillarr.length>6 && event.which!=8){
+				return false;
+			}
+		}
+    });
+
+    $('.tenlength').on("keypress",function(event) {
+		if(event.which){
+			var skillarr = $(this).val().split(" ");
+			if(skillarr.length>10 && event.which!=8){
 				return false;
 			}
 		}

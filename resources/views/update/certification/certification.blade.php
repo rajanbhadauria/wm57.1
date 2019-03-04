@@ -2,7 +2,7 @@
                                     <div class="collapsible-header" id="certificationInfo">
                                         <div class="custom-collapsible-header-inner">
                                             <div class="fl disable-bubble">
-                                                <input type="checkbox" class="shareCheckbox" id="certificationData" name"certificationData"  @if($resumeAccess && $resumeAccess->certificationData=='1') value="1" checked="checked" @else value="0" @endif />
+                                                <input type="checkbox" class="shareCheckbox" id="certificationData" name"certificationData"  @if(($resumeAccess && $resumeAccess->certificationData=='1') || !$resumeAccess ) value="1" checked="checked" @else value="0" @endif />
                                                 <label for="certificationData"></label>
                                             </div>
                                             <div class="fl">
@@ -14,13 +14,14 @@
                                     </div>
                                     <div class="collapsible-body custom-collapsible-body">
                                         <ul class="collection with-header">
+                                            @if($certificationCount > 0)
                                             <li class="collection-header">
                                                 <div>
                                                 Hide / Show
                                                 </div>
 
                                             </li>
-
+                                            @endif
                                             @if($certificationCount > 0)
                                                 @foreach($certificationInfo as $certification)
                                                 <li class="collection-item row">
@@ -28,9 +29,9 @@
                                                             <div class = "switch">
                                                                     <label>
                                                                         @if($certification['private'])
-                                                                            <input type="checkbox" data-value="<?php echo $certification['id']?>" class="PPCheck" data-id="certification" checked>
-                                                                        @else
                                                                             <input type="checkbox" data-value="<?php echo $certification['id']?>" class="PPCheck" data-id="certification">
+                                                                        @else
+                                                                            <input type="checkbox" data-value="<?php echo $certification['id']?>" class="PPCheck" data-id="certification" checked>
                                                                         @endif
                                                                         <span class = "lever"></span>
                                                                     </label>
@@ -68,3 +69,14 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <script>
+                                        $(document).ready(function(){
+                                            $('.PPCheck[data-id="certification"]').on('change', function() {
+                                                if($('.PPCheck[data-id="certification"]:checked').length == 0) {
+                                                    $("#certificationData").prop('checked',false);
+                                                } else {
+                                                    $("#certificationData").prop('checked',true);
+                                                }
+                                            });
+                                        });
+                                    </script>
