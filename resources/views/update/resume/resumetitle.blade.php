@@ -60,8 +60,16 @@
             $('.PPCheck[data-id="resumetitle"]').on('change', function() {
                 if($('.PPCheck[data-id="resumetitle"]:checked').length == 0) {
                    $("#resumetitleData").prop('checked',false);
+                   $("#resumetitleData").trigger('change');
                 } else {
                     $("#resumetitleData").prop('checked',true);
+                }
+            });
+            $("#resumetitleData").on('change', function(){
+                if($('#resumetitleData:checked').length == 0) {
+                    $(".PPCheck[data-id='resumetitle']").prop('checked',false);
+                } else {
+                    $(".PPCheck[data-id='resumetitle']").prop('checked',true);
                 }
             });
         });

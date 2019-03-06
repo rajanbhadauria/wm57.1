@@ -26,6 +26,11 @@ if( isset($redirectBack) ) {
                 @else
                 <h1>Add work</h1>
                 @endif
+                <ul class="panel-actions resumebox-actions pull-right">
+                        <li>
+                            <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                        </li>
+                    </ul>
             </div>
         </div>
     </div>

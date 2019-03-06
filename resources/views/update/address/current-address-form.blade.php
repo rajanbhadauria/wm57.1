@@ -24,6 +24,11 @@ if( isset($redirectBack) ) {
                         @endif
                         current address
                     </h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                            <li>
+                                <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                            </li>
+                        </ul>
                 </div>
             </div>
         </div>
@@ -137,7 +142,7 @@ if( isset($redirectBack) ) {
                 houseNumber: { required: true, alphanumeric:true },
                 blockSector: { required: true, alphanumeric:true },
                 societyName: { required: true, alphanumeric:true },
-                //area: { required: true},
+                area: { required: true},
                 level: { alphanumeric:true },
                 pincode: { required:true,alphanumeric:true },
                 city: { required:true, alphanumeric:true  },
@@ -158,9 +163,9 @@ if( isset($redirectBack) ) {
                     required: "Required",
                     alphanumeric: "Please enter alpha numeric value only."
                 },
-                //area: {
-                //    required: "Required"
-                //},
+                area: {
+                    required: "Required"
+                },
                 pincode: {
                     required: "Required",
                     number: "Please enter alpha numeric value only."

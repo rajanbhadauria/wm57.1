@@ -74,8 +74,16 @@
                                             $('.PPCheck[data-id="skill"]').on('change', function() {
                                                 if($('.PPCheck[data-id="skill"]:checked').length == 0) {
                                                    $("#skillData").prop('checked',false);
+                                                   $("#skillData").trigger('change');
                                                 } else {
                                                     $("#skillData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#skillData").on('change', function(){
+                                                if($('#skillData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='skill']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='skill']").prop('checked',true);
                                                 }
                                             });
                                         });

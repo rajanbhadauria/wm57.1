@@ -14,6 +14,11 @@ if(isset($sectionid)) {
             <div class="row mb0">
                 <div class="col s12 pr">
                     <h1>Resume update</h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                        <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
+                    </ul>
+
+
                 </div>
             </div>
         </div>
@@ -98,14 +103,14 @@ function PPCheck(section, value, id=0){
             }
         }, 1000);
 
-        $(".PPCheck").on("click", function(){
+        $(".PPCheck").on("change", function(){
             var section = $(this).attr("data-id");
             var value = $(this).prop("checked");
             var id = $(this).attr("data-value");
             PPCheck(section,value, id);
         })
 
-        $(".shareCheckbox").on("click", function(){
+        $(".shareCheckbox").on("change", function(){
             if($(this).is(":checked")){
                 $(this).val("1");
             } else {
@@ -137,7 +142,6 @@ function PPCheck(section, value, id=0){
             });
 
             var url = $(this).attr("href");
-            console.log(shareData);
 
             $.ajax({
                 type:"POST",

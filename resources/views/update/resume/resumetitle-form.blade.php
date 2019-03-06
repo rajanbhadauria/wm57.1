@@ -17,7 +17,12 @@ if( isset($redirectBack) ) {
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1> @if(isset($resume_title['id'])) Update @else Add @endif cover note</h1>
+                    <h1> @if(isset($resume_title['id'])) Update @else Add @endif Resume title and cover note</h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                            <li>
+                                <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                            </li>
+                        </ul>
                 </div>
             </div>
         </div>
@@ -52,7 +57,7 @@ if( isset($redirectBack) ) {
 
                                         ng-maxlength="200"
                                     ></textarea>
-                                    <label for="resume_brand" ng-class="{ active:  resume_brand }" >Brand yourself and your work, what work skills you are good and passionate about</label>
+                                    <label for="resume_brand" ng-class="{ active:  resume_brand }" >Brand yourself , mention what are you passionate about</label>
                                 </div>
 
                                 <div class="input-field custom-form">

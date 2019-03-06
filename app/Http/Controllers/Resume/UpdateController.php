@@ -9,6 +9,7 @@ use App\Http\Requests;
 use Auth,View;
 use App\User;
 use DateTime;
+use DB;
 
 use App\Model\Resumetitle;
 use App\Model\Contact;
@@ -558,12 +559,31 @@ class UpdateController extends Controller
 
     public function updateNewSkill(Request $request){
         $input = $request->all();
-        //echo $input["name"];
 
-        $newSkill = new SkillList();
-        $newSkill->head = $input["name"];
-        $newSkill->name = $input["name"];
-        $newSkill->save();
+        $path = explode("/", $input["path"]);
+        if(end($path) == 'skill') {
+            $count = SkillList::where('name', '=', $input["name"])->where('skill_type' , '=', 'functional')->count();
+            if($count == 0) {
+                $newSkill = new SkillList();
+                $newSkill->head = $input["name"];
+                $newSkill->name = $input["name"];
+                $newSkill->skill_type = 'functional';
+                $newSkill->save();
+            }
+        }
+
+        if(end($path) == 'soft-skill') {
+            $count = SkillList::where('name', '=', $input["name"])->where('skill_type' , '=', 'soft')->count();
+            if($count == 0) {
+                $newSkill = new SkillList();
+                $newSkill->head = $input["name"];
+                $newSkill->name = $input["name"];
+                $newSkill->skill_type = 'soft';
+                $newSkill->save();
+            }
+        }
+
+
     }
 
     /* soft skills */
@@ -1159,7 +1179,7 @@ class UpdateController extends Controller
         $work->mmStart              = isset($input['mmStart'])?$input['mmStart']:"01";
         $work->yyyyStart            = isset($input['yyyyStart'])?$input['yyyyStart']:"";
 
-        if(isset($input['ddStart']) && $input['ddStart'] !="" ){
+        if(isset($input['ddStart']) && $input['mmStart'] !="" ){
             $work->workStartDate        = $this->createDate($input['ddStart'],$input['mmStart'],$input['yyyyStart']);
         } else{
             $work->workStartDate        = $this->createDate("01",$input['mmStart'],$input['yyyyStart']);
@@ -1226,74 +1246,121 @@ class UpdateController extends Controller
     public function PPCheck(Request $request){
         $input = $request->all();
         $user_id = Auth::id();
-        $value="0";
+        $value="1";
         if($input['value']=="true"){
-            $value="1";
+            $value="0";
         }
-        //echo $value;
         switch ($input['section']) {
             case 'profilePrivate':
                 User::where("id","=",$user_id)->update(['profilePrivate' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['profileData'=>'1']);
+                }
                 break;
 
             case 'basic_info':
                 UserBasicInformations::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['basicInfoData'=>'1']);
+                }
             break;
 
             case 'contact':
                 Contact::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['contactData'=>'1']);
+                }
             break;
 
             case 'resumetitle':
                 Resumetitle::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['resumetitleData'=>'1']);
+                }
                 break;
 
             case 'objective':
                 Objective::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['objectiveData'=>'1']);
+                }
                 break;
 
             case 'currentAddress':
                 Address::where("user_id","=",$user_id)->where("type","=","0")->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['currentAddressData'=>'1']);
+                }
                 break;
 
             case 'permanentAddress':
                 Address::where("user_id","=",$user_id)->where("type","=","1")->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['permanentAddressData'=>'1']);
+                }
                 break;
 
             case 'education':
                 Education::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['educationData'=>'1']);
+                }
                 break;
 
             case 'project':
                 Project::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['projectData'=>'1']);
+                }
                 break;
 
             case 'skill':
                 Skill::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['skillData'=>'1']);
+                }
                 break;
 
             case 'softskill':
                 Skill::where("user_id","=",$user_id)->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['softskillData'=>'1']);
+                }
                 break;
 
             case 'certification':
                 Certification::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['certificationData'=>'1']);
+                }
                 break;
 
             case 'training':
                 Training::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['trainingData'=>'1']);
+                }
                 break;
 
             case 'course':
                 Course::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['courseData'=>'1']);
+                }
                 break;
 
             case 'travel':
                 Travel::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['travelData'=>'1']);
+                }
                 break;
 
             case 'award':
                 Award::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['awardData'=>'1']);
+                }
                 break;
 
             case 'patent':
@@ -1302,15 +1369,31 @@ class UpdateController extends Controller
 
             case 'language':
                 Language::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['languageData'=>'1']);
+                }
                 break;
 
             case 'reference':
                 Reference::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['referenceData'=>'1']);
+                }
                 break;
 
             case 'work':
                 Work::where("user_id","=",$user_id)->where('id', "=", $input['id'])->update(['private' => $value]);
+                if($value == '0'){
+                    DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['workData'=>'1']);
+                }
                 break;
+
+            case 'interests':
+            Interests::where("user_id","=",$user_id)->update(['private' => $value]);
+            if($value == '0'){
+                DB::table('resumes')->where('ownerEmail',Auth::user()->email)->update(['interestData'=>'1']);
+            }
+            break;
 
             default:
                 # code...

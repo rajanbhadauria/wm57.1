@@ -68,8 +68,18 @@
                                             $('.PPCheck[data-id="education"]').on('change', function() {
                                                 if($('.PPCheck[data-id="education"]:checked').length == 0) {
                                                     $("#educationData").prop('checked',false);
+                                                    $("#educationData").trigger('change');
                                                 } else {
                                                     $("#educationData").prop('checked',true);
+                                                }
+                                            });
+
+                                            $("#educationData").on('change', function(){
+                                                if($('#educationData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='education']").prop('checked',false);
+
+                                                } else {
+                                                    $(".PPCheck[data-id='education']").prop('checked',true);
                                                 }
                                             });
                                         });

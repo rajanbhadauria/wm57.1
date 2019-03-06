@@ -70,8 +70,18 @@
                                             $('.PPCheck[data-id="course"]').on('change', function() {
                                                 if($('.PPCheck[data-id="course"]:checked').length == 0) {
                                                     $("#courseData").prop('checked',false);
+                                                    $("#courseData").trigger('change');
                                                 } else {
                                                     $("#courseData").prop('checked',true);
+                                                }
+
+                                            });
+                                            $("#courseData").on('change', function(){
+                                                if($('#courseData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='course']").prop('checked',false);
+
+                                                } else {
+                                                    $(".PPCheck[data-id='course']").prop('checked',true);
                                                 }
                                             });
                                         });

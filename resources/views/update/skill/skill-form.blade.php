@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<style>
-.select3-no-results, .select3-results-container{ visibility: hidden !important;}
-</style>
+
 <?php
 // This section is for redirect back
 
@@ -20,6 +18,11 @@ if( isset($redirectBack) ) {
             <div class="row mb0">
                 <div class="col s12 pr">
                     <h1>Add / Update Functional domain skills</h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                            <li>
+                                <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                            </li>
+                        </ul>
                 </div>
             </div>
         </div>
@@ -33,9 +36,9 @@ if( isset($redirectBack) ) {
                     <div class="row mb20">
                         <div class="">
                             <form action="{{URL::to('update/skill-save')}}" method="POST" id="skillForm" name="skillForm" novalidate>
-
+                                {{ csrf_field() }}
                                 <div class="input-field custom-form">
-                                    <p><span id="multiple-input" class="select3-input" name="skills"></span></p>
+                                    <p><span id="multiple-input" class="select3-input fourlength" name="skills"></span></p>
                                     <label class="active">Functional skills <span>*</span></label>
                                 </div>
 
@@ -99,7 +102,7 @@ if( isset($redirectBack) ) {
                     type:"POST",
                     dataType : "JSON",
                     url:"{{URL::to('update/skill/remove')}}/"+$("#id").val(),
-                    data:$(this).serialize(),
+                    data:$('#skillForm').serialize(),
                     success: function(response){
                         if(response.error == 0){
                             window.location.href = "{{$redirectBack}}";
@@ -179,9 +182,6 @@ function getSkillDetails(){
                 transformText = $.fn.select3.transformText;
 
             }
-
-
-            console.log(response.data)
         });
     });
 }

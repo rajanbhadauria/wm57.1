@@ -72,8 +72,16 @@
                                             $('.PPCheck[data-id="currentAddress"]').on('change', function() {
                                                 if($('.PPCheck[data-id="currentAddress"]:checked').length == 0) {
                                                     $("#currentAddressData").prop('checked',false);
+                                                    $("#currentAddressData").trigger('change');
                                                 } else {
                                                     $("#currentAddressData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#currentAddressData").on('change', function(){
+                                                if($('#currentAddressData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='currentAddress']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='currentAddress']").prop('checked',true);
                                                 }
                                             });
                                         });

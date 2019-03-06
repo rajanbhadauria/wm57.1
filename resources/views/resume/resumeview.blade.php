@@ -92,6 +92,16 @@ function showLanguages($language){
          echo "";
     }
 }
+function getSkillFromJson($skill) {
+    $skill_list = json_decode($skill);
+    $skill_array = [];
+    if(count($skill_list)>0) {
+         foreach($skill_list as $skills) {
+            $skill_array[] = $skills->text;
+         }
+    }
+    return implode(" | ", $skill_array);
+}
 ?>
 
 <link href="{{my_asset('css/mainresume.css')}}" rel="stylesheet" media="all" />
@@ -196,12 +206,15 @@ function showLanguages($language){
 									<div class="block hightlightFeture">
                                     @if($coverNoteCount>0)
                                     <h2>{{$coverNote->resume_title}} <a href="{{url('update/resume-title-cover-note?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-
+                                    @endif
+                                        @if($skillCount > 0)
 										<div class="exp-details hightlightFSkils">
-											<p>{{$coverNote->resume_brand}}</p>
-										</div>
+											<p>{{getSkillFromJson($skillInfo->skill)}}</p>
+                                        </div>
+                                        @endif
+                                        @if($objectiveCount)
 										<div class="exp-details">
-											<p>{{$coverNote->resume_message}}</p>
+											<p>{{$objectiveInfo->objective}}</p>
                                         </div>
                                         @endif
                                     </div>
@@ -211,7 +224,8 @@ function showLanguages($language){
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>
                                             <span class="highlight1">{{$totalWorkDuration}}</span>
                                             <a href="{{url('update/work?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeAddicon"><i class="material-icons medium">add</i></a>
-										</h2>
+                                        </h2>
+
                                         <?php foreach($workInfo as $work) {?>
 										<div class="ak-exp-details-editable ak-editcol">
 										<div class="exp-details">
@@ -237,8 +251,8 @@ function showLanguages($language){
 										</div>
                                         @if($work->roleDesc)
 										<div class="exp-details">
-											<ul class="list">
-                                            <li>{{$work->roleDesc}}</li>
+											<ul class='list'>
+                                            <li style="list-style-type: none !important"><?php echo nl2br(str_replace('•	', '<br/>', $work->roleDesc)); ?></li>
 											</ul>
                                         </div>
                                         @endif

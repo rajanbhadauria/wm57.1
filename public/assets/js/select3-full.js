@@ -2182,6 +2182,7 @@ $.extend(Select3Dropdown.prototype, {
      * Shows a loading indicator in the dropdown.
      */
     showLoading: function() {
+        return false;
 
         var select3 = this.select3;
         this.$('.select3-results-container').html(select3.template('loading'));
@@ -2217,7 +2218,7 @@ $.extend(Select3Dropdown.prototype, {
 
         if (this.loadMoreHighlighted) {
             this._highlightFirstItem(results);
-        }        
+        }
     },
 
     /**
@@ -2646,8 +2647,8 @@ Select3.Locale = {
 
     loading: 'Loading...',
     loadMore: 'Load more...',
-    noResults: 'No results found',
-    noResultsForTerm: function(term) { return 'No results for <b>' + escape(term) + '</b>'; }
+    noResults: '',
+    noResultsForTerm: function(term) { return '<b>' + escape(term) + '</b>'; }
 
 };
 
@@ -2690,7 +2691,7 @@ $.extend(MultipleSelect3.prototype, {
      *
      * @param item The item to add. May be an item with 'id' and 'text' properties or just an ID.
      */
-    add: function(item) { 
+    add: function(item) {
 
         if (Select3.isValidId(item)) {
             if (this._value.indexOf(item) === -1) {
@@ -2942,7 +2943,7 @@ $.extend(MultipleSelect3.prototype, {
     /**
      * @private
      */
-    _createToken: function() { 
+    _createToken: function() {
 
         var term = this._$input.val();
 
@@ -3026,33 +3027,38 @@ $.extend(MultipleSelect3.prototype, {
         var dropdown = this.dropdown, inputHadText = !!this._originalValue;
 
         if (event.keyCode === Select3.Keys.ENTER && !event.ctrlKey) {
-            if (dropdown) { 
-                //Added by subrata 11-02-2017
+
+            if (dropdown) {
                 if($('.select3-no-results').is(':visible')){
                     var item={
                         id : this._$input.val(),
                         text: this._$input.val()
                     };
                     this.add(item);
+                    $.ajaxSetup({
+                        headers: {
+                          'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+                        }
+                      });
                     $.ajax({
                       method: "POST",
-                      url: "/update/update-new-skill",
-                      data: { name: item.text }
+                      url:  BASE_URL+"/update/update-new-skill",
+                      data: { name: item.text, path: window.location.pathname }
                     })
                     .done(function( msg ) {
-                        //alert( "Data Saved: " + msg );
+                        $('.select3-no-results').hide();
                     });
                 }
                 //END
-                dropdown.clickHighlight();  
+                dropdown.clickHighlight();
                 this._$input.val('');
-                
+
             } else if (this.options.showDropdown !== false) {
-                this.open(); 
-            } else if (this.options.createTokenItem) { 
-                this._createToken();  
+                this.open();
+            } else if (this.options.createTokenItem) {
+                this._createToken();
             }
-            
+
         } else if (event.keyCode === Select3.Keys.BACKSPACE && !inputHadText) {
             this._backspacePressed();
         } else if (event.keyCode === Select3.Keys.DELETE && !inputHadText) {
@@ -3093,17 +3099,17 @@ $.extend(MultipleSelect3.prototype, {
 
         event = event || {};
 
-        var $input = this._$input; 
+        var $input = this._$input;
         if (event.added) {  //console.log(event.added);
             $input.before(this.template('multipleSelectedItem', $.extend({
                 highlighted: (event.added.id === this._highlightedItemId)
             }, event.added)));
 
             this._scrollToBottom();
-        } else if (event.removed) { 
+        } else if (event.removed) {
             var quotedId = Select3.quoteCssAttr(event.removed.id);
             this.$('.select3-multiple-selected-item[data-item-id=' + quotedId + ']').remove();
-        } else { 
+        } else {
             this.$('.select3-multiple-selected-item').remove();
 
             this._data.forEach(function(item) {
@@ -3115,7 +3121,7 @@ $.extend(MultipleSelect3.prototype, {
             this._updateInputWidth();
         }
 
-        if (event.added || event.removed) { 
+        if (event.added || event.removed) {
             if (this.dropdown) {
                 this.dropdown.showResults(this.filterResults(this.results), {
                     hasMore: this.dropdown.hasMore
@@ -3490,7 +3496,7 @@ Select3.Templates = {
      *                id - Identifier for the item.
      *                text - Text label which the user sees.
      */
-    multipleSelectedItem: function(options) { 
+    multipleSelectedItem: function(options) {
         var extraClass = (options.highlighted ? ' highlighted' : '');
         return (
             '<span class="select3-multiple-selected-item' + extraClass + '" ' +
@@ -3509,13 +3515,15 @@ Select3.Templates = {
      * @param options Options object containing the following property:
      *                term - Search term the user is searching for.
      */
-    noResults: function(options) { 
+    noResults: function(options) {
         var Locale = Select3.Locale;
-        return (
-            '<div class="select3-no-results">' +
-                (options.term ? Locale.noResultsForTerm(options.term) : Locale.noResults) +
-            '</div>'
-        );
+
+            if(options.term != '') {
+                return (  '<div class="select3-no-results">' +
+                    (options.term ? options.term : Locale.noResults) +
+                    '</div>'
+             );
+            }
     },
 
     /**

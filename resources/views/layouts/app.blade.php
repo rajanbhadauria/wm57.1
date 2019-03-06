@@ -8,7 +8,9 @@
   <link rel="shortcut icon" href="images/favicon.png?v=1.0">
   <meta name="_token" content="{!! csrf_token() !!}" />
   <!-- Fonts  -->
-
+    <script>
+        var BASE_URL = "{{url('/')}}";
+    </script>
   <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
@@ -70,17 +72,18 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        z-index: 1;
+        z-index: 100;
         width: 150px;
         height: 150px;
         margin: -75px 0 0 -75px;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
-        border-top: 16px solid #3498db;
+        border-top: 16px solid #CFCFCF;
         width: 120px;
         height: 120px;
         -webkit-animation: spin 2s linear infinite;
         animation: spin 2s linear infinite;
+        opacity: .5;
         }
 
         @-webkit-keyframes spin {
@@ -120,8 +123,9 @@
 </head>
 
 
-<body id="app-layout" onload=" $('#loading').hide();">
+<body id="app-layout">
 <div id="loading"></div>
+<div id="mask-div" style="display: none">
 <!-- <img src="{{my_asset('images/loader.gif')}}" alt="Loading ....."> -->
     @include("layouts.include.header")
     @include("layouts.include.nav")
@@ -134,14 +138,19 @@
     @endif
 
     @yield('content')
-
+</div>
       <script type="text/javascript" src="{{ my_asset('js/materialize.min.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/menu-backdrop.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/init.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/main.js') }}"></script>
 
       <?php $resize = true; ?>
-
+<script>
+$(document).ready(function(){
+    $('#loading').hide();
+    $('#mask-div').show();
+});
+</script>
 
 </body>
 </html>

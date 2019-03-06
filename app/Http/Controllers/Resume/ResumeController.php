@@ -56,7 +56,6 @@ class ResumeController extends Controller
             $data['sectionid'] = $input['sectionid'];
         }
 
-
         $ownerEmail = Auth::user()->email;
         $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
         $user_id = Auth::id();
@@ -74,7 +73,7 @@ class ResumeController extends Controller
         $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("type","1")->get()->first();
         $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("type","1")->count();
 
-        $data['workInfo']  = Work::where("user_id","=", Auth::id())->orderBy('workStartDate', 'desc')->get();
+        $data['workInfo']  = Work::where("user_id","=", Auth::id())->orderBy('workStartDate', 'desc')->orderBy('employementType', 'asc')->get();
         $data['workCount'] = Work::where("user_id","=", Auth::id())->count();
 
         $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("employementStatus","=","1")->get()->first();
@@ -87,6 +86,9 @@ class ResumeController extends Controller
             }else{
                 $data['workEnding'] = date('Y-m-d H:i:s');
             }
+            $ending = array();
+            $current = 0;
+            $start = array();
             foreach ($data['workInfo'] as $key => $work) {
                 if($work->workEndDate!='0000-00-00 00:00:00'){
                     $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
@@ -94,8 +96,20 @@ class ResumeController extends Controller
                     $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
                 }
                 $data['workStarting'] = $work->workStartDate;
+                $start[$key] = $work->workStartDate;
+                $ending[$key] = $work->workEndDate;
+                if($work->employementStatus == "1") {
+                    $current++;
+                }
+
             }
-            //echo $data['workStarting'].",".$data['workEnding']."<br />";
+            $data['workStarting']  = min($start);
+            if($current) {
+                $data['workEnding'] = date('Y-m-d H:i:s');
+            } else {
+                $data['workEnding'] =  max($ending);
+            }
+
             $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
         }
         $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
@@ -106,7 +120,7 @@ class ResumeController extends Controller
         $data['projectInfo'] = Project::where("user_id","=", Auth::id())->get();
         $data['projectCount'] = Project::where("user_id","=", Auth::id())->count();
 
-        $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get();
+        $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->first();
         $data['skillCount'] = Skill::where("user_id","=", Auth::id())->count();
 
         $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->first();
@@ -155,7 +169,7 @@ class ResumeController extends Controller
         return view('resume.resumeview',$data);
 
     }
-
+    /*
 	public function view_old(Request $request){
         $input = $request->all();
 
@@ -246,6 +260,7 @@ class ResumeController extends Controller
         return view('resume.view',$data);
 
     }
+    */
 
     public function dateDiffrence($date1,$date2){
 
@@ -253,7 +268,18 @@ class ResumeController extends Controller
         $date1 = new DateTime($date1);
         $date2 = new DateTime($date2);
         $interval = $date2->diff($date1);
-        return $interval->format('%Y years, %m months');
+        $date = "";
+        if($interval->format('%y')>1)
+            $date .= $interval->format('%y years');
+        else
+            $date .= $interval->format('%y year');
+
+        if($interval->format('%m')>1)
+            $date .= $interval->format(', %m months');
+        else
+            $date .= $interval->format(', %m month');
+
+        return $date;
 
     }
 
@@ -268,6 +294,114 @@ class ResumeController extends Controller
             $resume = new Resume();
             $input['shareData']["ownerEmail"] = $ownerEmail;
             $resume->insert($input['shareData']);
+        }
+        foreach($input['shareData'] as $key => $data) {
+            if($data == '1')
+                    $data = '0';
+                else
+                    $data = '1';
+            if('workData' == $key) {
+                DB::table('work')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('projectData' == $key) {
+                DB::table('projects')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('certificationData' == $key) {
+                DB::table('certifications')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('trainingData' == $key) {
+                DB::table('trainings')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            //
+            if('travelData' == $key) {
+                DB::table('travels')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('courseData' == $key) {
+                DB::table('courses')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('educationData' == $key) {
+                    DB::table('education')->where('user_id',Auth::id())->update(array(
+                        'private'=>$data,
+                        ));
+            }
+            if('awardData' == $key) {
+                DB::table('awards')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            //
+            if('languageData' == $key) {
+                DB::table('languages')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+            if('referenceData' == $key) {
+                DB::table('references')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+
+            if('basicInfoData' == $key) {
+                DB::table('user_basic_informations')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+
+            if('contactData' == $key) {
+                DB::table('contacts')->where('user_id',Auth::id())->update(array(
+                    'private'=>$data,
+                    ));
+            }
+
+            if('currentAddressData' == $key) {
+                DB::table('addresses')->where('user_id',Auth::id())->where('type', '0')->update(array(
+                    'private'=>$data,
+                    ));
+            }
+
+            if('permanentAddressData' == $key) {
+                DB::table('addresses')->where('user_id',Auth::id())->where('type', '1')->update(array(
+                    'private'=>$data,
+                    ));
+            }
+
+            if('interestData' == $key) {
+                DB::table('interests')->where('user_id',Auth::id())->update(['private'=>$data]);
+            }
+
+            if('softskillData' == $key) {
+                DB::table('softskills')->where('user_id',Auth::id())->update(['private'=>$data]);
+            }
+
+            if('skillData' == $key) {
+                DB::table('skills')->where('user_id',Auth::id())->update(['private'=>$data]);
+            }
+
+            if('resumetitleData' == $key) {
+                DB::table('resume_titles')->where('user_id',Auth::id())->update(['private'=>$data]);
+            }
+
+            if('profileData' == $key) {
+                DB::table('users')->where('id',Auth::id())->update(['profilePrivate'=>$data]);
+            }
+
+            if('objectiveData' == $key) {
+                DB::table('objective')->where('user_id',Auth::id())->update(['private'=>$data]);
+            }
+
+
         }
     }
 

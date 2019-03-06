@@ -69,8 +69,16 @@
                                             $('.PPCheck[data-id="training"]').on('change', function() {
                                                 if($('.PPCheck[data-id="training"]:checked').length == 0) {
                                                     $("#trainingData").prop('checked',false);
+                                                    $("#trainingData").trigger('change');
                                                 } else {
                                                     $("#trainingData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#trainingData").on('change', function(){
+                                                if($('#trainingData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='training']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='training']").prop('checked',true);
                                                 }
                                             });
                                         });

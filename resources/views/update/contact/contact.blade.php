@@ -83,8 +83,16 @@
             $('.PPCheck[data-id="contact"]').on('change', function() {
                 if($('.PPCheck[data-id="contact"]:checked').length == 0) {
                     $("#contactData").prop('checked',false);
+                    $("#contactData").trigger('change');
                 } else {
                     $("#contactData").prop('checked',true);
+                }
+            });
+            $("#contactData").on('change', function(){
+                if($('#contactData:checked').length == 0) {
+                    $(".PPCheck[data-id='contact']").prop('checked',false);
+                } else {
+                    $(".PPCheck[data-id='contact']").prop('checked',true);
                 }
             });
         });

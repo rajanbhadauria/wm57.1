@@ -64,8 +64,16 @@
                                             $('.PPCheck[data-id="travel"]').on('change', function() {
                                                 if($('.PPCheck[data-id="travel"]:checked').length == 0) {
                                                     $("#travelData").prop('checked',false);
+                                                    $("#travelData").trigger('change');
                                                 } else {
                                                     $("#travelData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#travelData").on('change', function(){
+                                                if($('#travelData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='travel']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='travel']").prop('checked',true);
                                                 }
                                             });
                                         });

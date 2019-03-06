@@ -21,12 +21,12 @@
                                                 <div class="button-content top10">
                                                     <div class = "switch">
                                                         <label>
-                                                            @if($profileImageData['profilePrivate'])
+                                                            @if($profileImageData['profilePrivate'] == '1')
                                                                 <input type="checkbox" class="PPCheck" data-id="profilePrivate">
                                                             @else
                                                                 <input type="checkbox" class="PPCheck" data-id="profilePrivate" checked>
                                                             @endif
-                                                            <span class = "lever"></span>
+                                                        <span class = "lever"></span>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -57,9 +57,17 @@
         $('.PPCheck[data-id="profilePrivate"]').on('change', function() {
             if(!$('.PPCheck[data-id="profilePrivate"]:checked').length) {
                $("#profileData").prop('checked',false);
+               $("#profileData").trigger('change');
             } else {
                 $("#profileData").prop('checked',true);
             }
         });
+        $("#profileData").on('change', function(){
+                if($('#profileData:checked').length == 0) {
+                    $(".PPCheck[data-id='profilePrivate']").prop('checked',false);
+                } else {
+                    $(".PPCheck[data-id='profilePrivate']").prop('checked',true);
+                }
+            });
     });
 </script>

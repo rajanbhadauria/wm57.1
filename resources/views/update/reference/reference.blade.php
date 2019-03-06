@@ -70,8 +70,16 @@
                                             $('.PPCheck[data-id="reference"]').on('change', function() {
                                                 if($('.PPCheck[data-id="reference"]:checked').length == 0) {
                                                     $("#referenceData").prop('checked',false);
+                                                    $("#referenceData").trigger('change');
                                                 } else {
                                                     $("#referenceData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#referenceData").on('change', function(){
+                                                if($('#referenceData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='reference']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='reference']").prop('checked',true);
                                                 }
                                             });
                                         });

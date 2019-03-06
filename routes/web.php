@@ -121,6 +121,7 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
     Route::post('/get-skill-details', ['as' => 'update.get-skill-details', 'uses' => 'Resume\UpdateController@getSkillDetails']);
     Route::post('/skill-save', ['as' => 'update.skill-save', 'uses' => 'Resume\UpdateController@skillSave']);
     Route::post('/skill/remove/{id}', ['as' => 'update.skill-save', 'uses' => 'Resume\UpdateController@skillRemove']);
+
     Route::post('/update-new-skill', ['as' => 'update.update-new-skill', 'uses' => 'Resume\UpdateController@updateNewSkill']);
 
     Route::get('/soft-skill', ['as' => 'update.softskill', 'uses' => 'Resume\UpdateController@softskill']);

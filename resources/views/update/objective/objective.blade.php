@@ -6,7 +6,7 @@
                                                 <label for="objectiveData"></label>
                                             </div>
                                             <div class="fl">
-                                                Professional summary
+                                                Professional summary and objective
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                         </div>
@@ -21,7 +21,7 @@
                                                 <div class="button-content top10">
                                                     <div class = "switch">
                                                         <label>
-                                                            @if($contactInfo['private'])
+                                                            @if($objectiveInfo['private'])
                                                                 <input type="checkbox" class="PPCheck" data-id="objective">
                                                             @else
                                                                 <input type="checkbox" class="PPCheck" data-id="objective" checked>
@@ -60,8 +60,16 @@
                                             $('.PPCheck[data-id="objective"]').on('change', function() {
                                                 if($('.PPCheck[data-id="objective"]:checked').length == 0) {
                                                    $("#objectiveData").prop('checked',false);
+                                                   $("#objectiveData").trigger('change');
                                                 } else {
                                                     $("#objectiveData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#objectiveData").on('change', function(){
+                                                if($('#objectiveData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='objective']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='objective']").prop('checked',true);
                                                 }
                                             });
                                         });

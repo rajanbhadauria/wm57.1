@@ -65,8 +65,16 @@
                                             $('.PPCheck[data-id="award"]').on('change', function() {
                                                 if($('.PPCheck[data-id="award"]:checked').length == 0) {
                                                     $("#awardData").prop('checked',false);
+                                                    $("#awardData").trigger('change');
                                                 } else {
                                                     $("#awardData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#awardData").on('change', function(){
+                                                if($('#awardData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='award']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='award']").prop('checked',true);
                                                 }
                                             });
                                         });

@@ -18,6 +18,11 @@ if( isset($redirectBack) ) {
             <div class="row mb0">
                 <div class="col s12 pr">
                     <h1>Add / Update Personal management skills</h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                            <li>
+                                <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                            </li>
+                        </ul>
                 </div>
             </div>
         </div>
@@ -31,7 +36,7 @@ if( isset($redirectBack) ) {
                     <div class="row mb20">
                         <div class="">
                             <form action="{{URL::to('update/soft-skill-save')}}" method="POST" id="skillForm" name="skillForm" novalidate>
-
+                                {{ csrf_field() }}
                                 <div class="input-field custom-form">
                                     <p><span id="multiple-input" class="select3-input" name="skills"></span></p>
                                     <label class="active">Soft management skills <span>*</span></label>

@@ -70,6 +70,7 @@
             $('.PPCheck[data-id="project"]').on('change', function() {
                 if($('.PPCheck[data-id="project"]:checked').length == 0) {
                     $("#projectData").prop('checked',false);
+                    $("#projectData").trigger('change');
                 } else {
                     $("#projectData").prop('checked',true);
                 }

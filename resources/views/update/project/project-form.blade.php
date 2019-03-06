@@ -19,6 +19,11 @@ if( isset($redirectBack) ) {
         <div class="row mb0">
             <div class="col s12 pr">
                 <h1>{{isset($project['id'])?'Update':'Add'}} key assignment / project</h1>
+                <ul class="panel-actions resumebox-actions pull-right">
+                        <li>
+                            <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                        </li>
+                    </ul>
             </div>
         </div>
     </div>

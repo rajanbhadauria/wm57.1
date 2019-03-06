@@ -74,8 +74,16 @@
                                             $('.PPCheck[data-id="language"]').on('change', function() {
                                                 if($('.PPCheck[data-id="language"]:checked').length == 0) {
                                                     $("#languageData").prop('checked',false);
+                                                    $("#languageData").trigger('change');
                                                 } else {
                                                     $("#languageData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#languageData").on('change', function(){
+                                                if($('#languageData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='language']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='language']").prop('checked',true);
                                                 }
                                             });
                                         });

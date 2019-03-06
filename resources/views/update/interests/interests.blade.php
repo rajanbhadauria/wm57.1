@@ -6,7 +6,7 @@
                                                 <label for="interestData"></label>
                                             </div>
                                             <div class="fl">
-                                                Interests
+                                                Interests and hobbies
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                             <a href="{{URL::to('update/interests')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
@@ -73,8 +73,16 @@
                                             $('.PPCheck[data-id="interests"]').on('change', function() {
                                                 if($('.PPCheck[data-id="interests"]:checked').length == 0) {
                                                     $("#interestData").prop('checked',false);
+                                                    $("#interestData").trigger('change');
                                                 } else {
                                                     $("#interestData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#interestData").on('change', function(){
+                                                if($('#interestData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='interests']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='interests']").prop('checked',true);
                                                 }
                                             });
                                         });

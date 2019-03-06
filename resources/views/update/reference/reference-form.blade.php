@@ -18,6 +18,12 @@ if( isset($redirectBack) ) {
             <div class="row mb0">
                 <div class="col s12 pr">
                     <h1>{{isset($reference['id'])?'Update':'Add'}} reference</h1>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                        <li>
+                            <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </div>
@@ -40,7 +46,7 @@ if( isset($redirectBack) ) {
                                     <label for="reference" ng-class="{ active:  reference }">Name <span>*</span></label>
                                 </div>
                                 <div class="input-field custom-form">
-                                    <input id="school" name="school" type="text" class="alphanumeric fourlength" value="{{isset($reference['school'])?$reference['school']:''}}" ng-model="school">
+                                    <input id="school" name="school" type="text" class="alphanumeric tenlength" value="{{isset($reference['school'])?$reference['school']:''}}" ng-model="school">
                                     <label for="school" ng-class="{ active:  school }" >College / University / Company</label>
                                 </div>
 

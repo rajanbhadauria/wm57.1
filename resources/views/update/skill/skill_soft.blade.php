@@ -74,8 +74,16 @@
                                             $('.PPCheck[data-id="softskill"]').on('change', function() {
                                                 if($('.PPCheck[data-id="softskill"]:checked').length == 0) {
                                                    $("#softskillData").prop('checked',false);
+                                                   $("#softskillData").trigger('change');
                                                 } else {
                                                     $("#softskillData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#softskillData").on('change', function(){
+                                                if($('#softskillData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='softskill']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='softskill']").prop('checked',true);
                                                 }
                                             });
                                         });

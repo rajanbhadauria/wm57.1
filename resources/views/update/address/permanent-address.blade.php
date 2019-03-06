@@ -63,8 +63,16 @@
                                             $('.PPCheck[data-id="permanentAddress"]').on('change', function() {
                                                 if($('.PPCheck[data-id="permanentAddress"]:checked').length == 0) {
                                                     $("#permanentAddressData").prop('checked',false);
+                                                    $("#permanentAddressData").trigger('change');
                                                 } else {
                                                     $("#permanentAddressData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#permanentAddressData").on('change', function(){
+                                                if($('#permanentAddressData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='permanentAddress']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='permanentAddress']").prop('checked',true);
                                                 }
                                             });
                                         });

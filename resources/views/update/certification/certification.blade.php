@@ -6,7 +6,7 @@
                                                 <label for="certificationData"></label>
                                             </div>
                                             <div class="fl">
-                                                Certifications / Training @if($certificationCount > 0) ({{$certificationCount}}) @endif
+                                                Certifications @if($certificationCount > 0) ({{$certificationCount}}) @endif
                                             </div>
                                             <span class="fr"><i class="material-icons mr0">expand_more</i></span>
                                             <a href="{{URL::to('update/certification')}}" class="fr addnewform"><i class="material-icons">add_circle_outline</i></a>
@@ -74,8 +74,16 @@
                                             $('.PPCheck[data-id="certification"]').on('change', function() {
                                                 if($('.PPCheck[data-id="certification"]:checked').length == 0) {
                                                     $("#certificationData").prop('checked',false);
+                                                    $("#certificationData").trigger('change');
                                                 } else {
                                                     $("#certificationData").prop('checked',true);
+                                                }
+                                            });
+                                            $("#certificationData").on('change', function(){
+                                                if($('#certificationData:checked').length == 0) {
+                                                    $(".PPCheck[data-id='certification']").prop('checked',false);
+                                                } else {
+                                                    $(".PPCheck[data-id='certification']").prop('checked',true);
                                                 }
                                             });
                                         });
