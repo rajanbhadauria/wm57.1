@@ -28,6 +28,7 @@ if( isset($redirectBack) ) {
                             <li>
                                 <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                             </li>
+                            <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                         </ul>
                 </div>
             </div>

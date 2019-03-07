@@ -22,6 +22,7 @@ if( isset($redirectBack) ) {
                         <li>
                             <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                         </li>
+                        <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                     </ul>
 
                 </div>
@@ -47,7 +48,7 @@ if( isset($redirectBack) ) {
                                 </div>
                                 <div class="input-field custom-form">
                                     <input id="school" name="school" type="text" class="alphanumeric tenlength" value="{{isset($reference['school'])?$reference['school']:''}}" ng-model="school">
-                                    <label for="school" ng-class="{ active:  school }" >College / University / Company</label>
+                                    <label for="school" ng-class="{ active:  school }" >College / University / Company  <span>*</span></label>
                                 </div>
 
 
@@ -135,8 +136,8 @@ if( isset($redirectBack) ) {
         $( "#referenceForm" ).validate({
             rules: {
                 reference: {required: true},
-                email: {required: true,email:true }
-
+                email: {required: true,email:true },
+                school: {required: true},
             },
             messages: {
                 reference: {
@@ -145,6 +146,9 @@ if( isset($redirectBack) ) {
                 email: {
                     required: "Required",
                     email: "Enter valid email."
+                },
+                school: {
+                    required: "Required"
                 }
             },
             errorClass: 'validationError',

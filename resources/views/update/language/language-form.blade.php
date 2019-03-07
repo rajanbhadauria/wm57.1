@@ -22,6 +22,7 @@ if( isset($redirectBack) ) {
                             <li>
                                 <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                             </li>
+                            <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                         </ul>
                 </div>
             </div>
@@ -38,7 +39,7 @@ if( isset($redirectBack) ) {
                             <form action="{{URL::to('update/language-save')}}" method="POST" id="languageForm" name="languageForm">
 
                                 <div class="input-field custom-form">
-                                    <input id="language" name="language" type="text" class="validate" value="{{isset($language['language'])?$language['language']:''}}"
+                                    <input id="language" name="language" type="text" class="twolength validate" value="{{isset($language['language'])?$language['language']:''}}"
                                         required
                                     >
                                     <label for="language" ng-class="{ active:  language }">Language <span>*</span></label>
@@ -93,6 +94,11 @@ if( isset($redirectBack) ) {
         $.validator.addMethod("alphanumeric", function(value, element) {
             return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
         }, "Please enter alpha numeric value only.");
+
+        $.validator.addMethod("alpha", function(value, element) {
+            return this.optional(element) || value == value.match(/^[a-zA-Z\s]+$/);
+        }, "Enter vaild alphabets");
+
         $.validator.setDefaults({
             ignore: [],
             onfocusout: function () { return true; }
@@ -100,7 +106,7 @@ if( isset($redirectBack) ) {
 
         $( "#languageForm" ).validate({
             rules: {
-                language: {required: true}
+                language: {required: true, alpha: true}
             },
             messages: {
                 language: {

@@ -23,4 +23,19 @@ if(!function_exists('get_user_image')) {
         }
     }
 }
+// sorting date array in assending
+if(!function_exists('dateSort')) {
+    function dateSort( $a, $b ) {
+        return strtotime($a) - strtotime($b);
+    }
+}
+
+// return year from date
+if(!function_exists('getYear')) {
+    function getYear($date ) {
+        return date('Y', strtotime($date));
+    }
+}
+
+
 ?>

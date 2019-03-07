@@ -22,6 +22,7 @@ if( isset($redirectBack) ) {
                             <li>
                                 <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                             </li>
+                            <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                         </ul>
                 </div>
             </div>
@@ -38,7 +39,7 @@ if( isset($redirectBack) ) {
                             <form action="{{URL::to('update/award-save')}}" method="POST" id="awardForm" name="awardForm" >
 
                                 <div class="input-field custom-form">
-                                    <input id="award" name="award" type="text" class="validate fourlength" required value="{{isset($award['award'])?$award['award']:''}}"
+                                    <input id="award" name="award" type="text" class="validate" required value="{{isset($award['award'])?$award['award']:''}}"
                                     >
                                     <label for="award" ng-class="{ active:  award }">Name of awards / recognition <span>*</span></label>
                                 </div>

@@ -144,12 +144,12 @@ function getSkillFromJson($skill) {
 								<div class="inner-wrapper resume-inner-wrapper">
 									<div class="user-profile">
 										<div class="col1 details">
-                                            @if($basicInfoCount >0 )
+                                        @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
                                         <h3 class="name">{{$basicInfo->first_name }} {{$basicInfo->middle_name}} {{$basicInfo->last_name}}</h3>
                                             @else
                                                 <h3 class="name">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</h3>
                                             @endif
-                                            @if(isset($workInfo[0]))
+                                            @if(isset($workInfo[0]) && $resumeAccess->workData)
 											<div class="display-flex align-items-center sm-display-block">
 												<strong>{{$workInfo[0]->designation }}</strong>
 												<span class="dot-separator"></span>
@@ -161,7 +161,7 @@ function getSkillFromJson($skill) {
 												<em class="highlight1">{{$workInfo[0]->city}}<span class="dot-separator"></span>{{$workInfo[0]->country}}</em>
                                             </div>
                                             @endif
-                                            @if($educationCount)
+                                            @if($educationCount  && $resumeAccess->educationData)
 											<span class="hr"></span>
 											<div class="display-flex align-items-center sm-display-block">
 												<strong>{{$educationInfo[0]->educationName}}</strong>
@@ -174,7 +174,7 @@ function getSkillFromJson($skill) {
 												<em class="highlight1">{{$educationInfo[0]->city}}<span class="dot-separator"></span>{{$educationInfo[0]->country}}</em>
                                             </div>
                                             @endif
-                                            <?php if($contactCount>0){ ?>
+                                            <?php if($contactCount>0  && $resumeAccess->contactData){ ?>
                                             <span class="hr"></span>
 											<ul class="user-contact-info sm-content-center">
 												<li class="phone">
@@ -196,29 +196,32 @@ function getSkillFromJson($skill) {
                                             <?php } ?>
                                             </ul>
                                         <?php } ?>
-										</div>
+                                        </div>
+
 										<div class="col2 profile-pic">
 											<div class="pic">
-												<img src="{{get_user_image(Auth::user()->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : Auth::user()->first_name." ".Auth::user()->last_name}}' />
+                                                @if(isset($profileData->profilePrivate) && $resumeAccess->profileData)
+                                                <img src="{{get_user_image(Auth::user()->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : Auth::user()->first_name." ".Auth::user()->last_name}}' />
+                                                @endif
 											</div>
 										</div>
 									</div>
 									<div class="block hightlightFeture">
-                                    @if($coverNoteCount>0)
+                                    @if($coverNoteCount>0 && $resumeAccess->resumetitleData)
                                     <h2>{{$coverNote->resume_title}} <a href="{{url('update/resume-title-cover-note?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
                                     @endif
-                                        @if($skillCount > 0)
+                                        @if($skillCount > 0  && $resumeAccess->skillData)
 										<div class="exp-details hightlightFSkils">
 											<p>{{getSkillFromJson($skillInfo->skill)}}</p>
                                         </div>
                                         @endif
-                                        @if($objectiveCount)
+                                        @if($objectiveCount && $resumeAccess->objectiveData)
 										<div class="exp-details">
-											<p>{{$objectiveInfo->objective}}</p>
+											<p><?php echo nl2br($objectiveInfo->objective);?></p>
                                         </div>
                                         @endif
                                     </div>
-                                    <?php if($workCount > 0) {?>
+                                    <?php if($workCount > 0 && $resumeAccess->workData) {?>
 									<div class="block">
 										<h2>Work experience
 											<span class="dot-separator" style="position:relative;top:-1px;"></span>
@@ -240,7 +243,7 @@ function getSkillFromJson($skill) {
 												<p>
 													<strong>{{$work->company}}</strong>
 													<span class="dot-separator"></span>
-													<span class="highlight1">{{$work->city}}
+													<span class="highlight1">{{$work->city}}</span>
                                                     <span class="dot-separator"></span>{{$work->country}}</span>
 												</p>
                                                 <p>{{getMonthName($work->mmStart)}} {{$work->yyyyStart}} – {{($work->yyyyEnd) ? getMonthName($work->mmEnd)." ".$work->yyyyEnd: "Present"}}
@@ -260,25 +263,67 @@ function getSkillFromJson($skill) {
                                     <?php } ?>
                                     </div>
                                 <?php } ?>
-                                @if($miscellaneousCount>0)
+                                @if($projectCount>0  && $resumeAccess->projectData)
+                                <div class="block">
+                                    <h2>Key assignments and projects
+                                        <a href="{{url('update/project?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a>
+                                    </h2>
+
+                                    @foreach($projectInfo as $project)
+                                    <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
+                                            <div class="col1">
+                                                <strong>{{$project->yyyy}}</strong>
+                                            </div>
+                                            <div class="col2">
+                                                <strong>
+                                                    <span class="highlight1">{{$project->project}}</span>
+                                                    <span class="dot-separator"></span>{{$project->school}}
+
+                                                    @if($project->url)
+                                                    <span class="dot-separator"></span><a href="{{$project->url}}">{{$project->url}}</a>
+                                                    @endif
+                                                </strong>
+                                                <a href="{{url('update/project/'.$project->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
+                                            </div>
+                                        </div>
+                                        @if($project->projectDesc != '')
+                                        <div class="exp-details">
+                                            <ul class="list">
+                                                <li>
+                                                    <?php echo nl2br($project->projectDesc); ?>
+
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        @endif
+                                    </div>
+
+                                    @endforeach
+                                </div>
+                                @endif
+                                @if($miscellaneousCount>0  && $resumeAccess->travelData)
 									<div class="block">
-										<h2>Work
-											<span class="dot-separator" style="position:relative;top:-1px;"></span>Projects
-											<span class="dot-separator" style="position:relative;top:-1px;"></span>Achievements
-											<span class="dot-separator" style="position:relative;top:-1px;"></span>highlights
+										<h2>Publications
+											<span class="dot-separator" style="position:relative;top:-1px;"></span>Research
+											<span class="dot-separator" style="position:relative;top:-1px;"></span>Patent
+											<span class="dot-separator" style="position:relative;top:-1px;"></span>etc
                                             <a href="{{url('update/miscellaneous?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
 
                                         @foreach($miscellaneousInfo as $miscellaneous)
                                         <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
                                                 <div class="col1">
-                                                    <strong>{{$miscellaneous->yyyyStart}}</strong>
+                                                    <strong>{{$miscellaneous->yyyyEnd}}</strong>
                                                 </div>
                                                 <div class="col2">
-                                                    <strong>{{$miscellaneous->company}}
-                                                        <span class="dot-separator"></span>{{$miscellaneous->title}}
+                                                    <strong>
+                                                        <span class="highlight1">{{$miscellaneous->project}}</span>
                                                         <span class="dot-separator"></span>
-                                                        <span class="highlight1"></span>
+                                                        {{$miscellaneous->company}}
+                                                        <span class="dot-separator"></span>{{$miscellaneous->title}}
+
+
                                                     </strong>
                                                     <a href="{{url('update/miscellaneous/'.$miscellaneous->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons medium">edit</i></a>
                                                 </div>
@@ -299,7 +344,7 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($softskillCount>0)
+                                    @if($softskillCount>0  && $resumeAccess->softskillData)
 									<div class="block">
                                     <h2>Soft skills <a href="{{url('update/soft-skill?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
@@ -318,7 +363,7 @@ function getSkillFromJson($skill) {
 										</div>
                                     </div>
                                     @endif
-                                    @if($interestCount>0)
+                                    @if($interestCount>0 && $resumeAccess->interestData)
 									<div class="block">
                                     <h2>Interests <a href="{{url('update/interests?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
 										<div class="exp-details">
@@ -336,7 +381,7 @@ function getSkillFromJson($skill) {
 										</div>
                                     </div>
                                     @endif
-                                    @if($awardCount > 0)
+                                    @if($awardCount > 0 && $resumeAccess->awardData)
 									<div class="block">
 										<h2>Awards <a href="{{url('update/award?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         @foreach($awardInfo as $award)
@@ -359,7 +404,7 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($trainingCount>0)
+                                    @if($trainingCount>0 && $resumeAccess->trainingData)
 									<div class="block">
 										<h2>Trained on <a href="{{url('update/training?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         @foreach($trainingInfo as $traning)
@@ -380,7 +425,7 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($certificationCount>0)
+                                    @if($certificationCount>0 && $resumeAccess->certificationData)
 									<div class="block">
 										<h2>Certifications <a href="{{url('update/certification?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         @foreach ($certificationInfo as $certification)
@@ -401,7 +446,7 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($educationCount>0)
+                                    @if($educationCount>0 && $resumeAccess->educationData)
 									<div class="block">
 										<h2>Education <a href="{{url('update/education?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         @foreach($educationInfo as $education)
@@ -415,7 +460,7 @@ function getSkillFromJson($skill) {
 													<span class="dot-separator"></span>{{$education->branch}}
 													<span class="dot-separator"></span>
 													<span class="highlight1">{{$education->school}}
-													<span class="dot-separator"></span>{{$education->gradeValue}}{{$education->grade == 'percentage' ? '%' : ($education->grade == ' GPA' ? 'GPA' : ' Grade') }}</span>
+													<span class="dot-separator"></span>{{str_replace('%', '',$education->gradeValue)}}{{$education->grade == 'percentage' ? '%' : ($education->grade == ' GPA' ? 'GPA' : ' Grade') }}</span>
                                                 </strong>
                                                 <a href="{{url('update/education/'.$education->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
 											</div>
@@ -425,14 +470,14 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($courseCount > 0)
+                                    @if($courseCount > 0 && $resumeAccess->courseData)
 									<div class="block">
 										<h2>Subjects, Courses <a href="{{url('update/course?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         @foreach($courseInfo as $course)
                                         <div class="ak-exp-details-editable ak-editcol">
                                         <div class="exp-details">
 											<p>{{$course->course}}
-												<span class="highlight1">({{$course->gradeValue}}{{$course->grade == 'percentage' ? '%' : ($course->grade == ' GPA' ? 'GPA' : ' grade') }})</span>
+												<span class="highlight1">({{str_replace('%', '',$course->gradeValue)}}{{$course->grade == 'percentage' ? '%' : ($course->grade == ' GPA' ? 'GPA' : ' grade') }})</span>
                                                <a href="{{url('update/course/'.$course->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
                                             </p>
                                         </div>
@@ -441,7 +486,7 @@ function getSkillFromJson($skill) {
                                         @endforeach
                                     </div>
                                     @endif
-                                    @if($languageCount>0)
+                                    @if($languageCount>0 && $resumeAccess->languageData)
 									<div class="block">
 										<h2>Language <a href="{{url('update/language?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
                                         <div class="ak-exp-details-editable ak-editcol">
@@ -457,30 +502,56 @@ function getSkillFromJson($skill) {
                                         </div>
                                     </div>
                                     @endif
-                                    @if($basicInfoCount >0 )
+
+                                    @if($referenceCount > 0 && $resumeAccess->referenceData)
 									<div class="block">
-										<h2>Additional information / Contact details <a href="{{url('postsignup?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+										<h2>References <a href="{{url('update/reference?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">add</i></a></h2>
+                                        @foreach($referenceInfo as $reference1)
+                                        <div class="ak-exp-details-editable ak-editcol">
+                                        <div class="exp-details">
+                                              <strong>
+                                                <span class="highlight1">
+                                                        {{{$reference1->reference}}}
+                                                </span>
+                                                <span class="dot-separator"> {{{$reference1->email}}}</span>
+                                                <span class="dot-separator"> {{$reference1->school}}</span>
+
+                                               <a href="{{url('update/reference/'.$reference1->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
+                                            </strong>
+                                        </div>
+
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
+									<div class="block">
+                                        @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                            <h2>Additional information / Contact details <a href="{{url('postsignup?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
+                                        @endif
 										<div class="exp-details">
 											<ul class="list-table">
 												<li class="col1">
 													<ul>
-														<li>@if($basicInfo->dob != '//')Date of birth @endif</li>
-														<li>@if($basicInfo->marital_status)Marital status @endif</li>
-														<li> @if($contactCount)Contact number @endif</li>
-														<li> @if($contactCount && $contactInfo->altPhone!='')Alternat number @endif</li>
-														<li> @if($contactCount)Email @endif</li>
-														<li>Valid passport</li>
-														<li>@if($currentAddressCount > 0 || $permanentAddressCount>0)Current location @endif</li>
-														<li> @if($referenceCount) References @endif</li>
+														<li> @if($basicInfo->dob != '//')Date of birth @endif</li>
+														<li> @if($basicInfo->marital_status)Marital status @endif</li>
+														<li> @if($contactCount && $resumeAccess->contactData)Contact number @endif</li>
+														<li> @if($contactCount && $resumeAccess->contactData && $contactInfo->altPhone!='')Alternat number @endif</li>
+														<li> @if($contactCount && $resumeAccess->contactData)Email @endif</li>
+														<li> @if($currentAddressCount > 0 || $permanentAddressCount>0)Current location @endif</li>
 													</ul>
 												</li>
 												<li class="col2">
 													<ul>
 														<li>
+                                                            @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
                                                             @if($basicInfo->dob != '//')<span class="highlight1">{{$basicInfo->dob}}</span>@endif
+                                                            @endif
 														</li>
 														<li>
-															@if($basicInfo->marital_status)<span class="highlight1">{{$basicInfo->marital_status}}</span>@endif
+                                                            @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                            @if($basicInfo->marital_status)<span class="highlight1">{{$basicInfo->marital_status}}</span>@endif
+                                                            @endif
 														</li>
 
 														<li>
@@ -494,9 +565,6 @@ function getSkillFromJson($skill) {
 														</li>
 
                                                         <li>
-															<span class="highlight1">Yes</span>
-                                                        </li>
-                                                        <li>
 															<span class="highlight1">
                                                                 @if($currentAddressCount)
                                                                     {{$currentAddressInfo->city}}, {{$currentAddressInfo->country}}
@@ -506,29 +574,17 @@ function getSkillFromJson($skill) {
                                                             @endif
                                                             </span>
                                                         </li>
-														<li>
-                                                            <span class="highlight1">
-                                                                @if($referenceCount)   {{$referenceInfo[0]->email!="" ? $referenceInfo[0]->email: ''}} @endif
-                                                            </span>
-														</li>
+
 													</ul>
 												</li>
 											</ul>
 										</div>
                                     </div>
-                                    @endif
-                                    @if($objectiveCount>0)
-									<div class="block">
-										<h2>Cover Note <a href="{{url('update/objective?url=resume/view')}}" class="ak-resumeEdit-icon"><i class="material-icons">edit</i></a></h2>
-										<div class="exp-details">
-                                        <p>{{$objectiveInfo->objective }}</p>
-										</div>
-                                    </div>
-                                    @endif
+
+
 								</div>
 							</div>
 						</div>
-
 						<div class="inner-half-container">
 							<div class="wrapper resume-wrapper">
 								<div class="inner-wrapper resume-inner-wrapper resume-control-blck">

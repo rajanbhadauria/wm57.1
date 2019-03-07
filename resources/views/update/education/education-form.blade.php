@@ -23,6 +23,7 @@ if( isset($redirectBack) ) {
                         <li>
                             <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                         </li>
+                        <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                     </ul>
             </div>
         </div>
@@ -82,9 +83,9 @@ if( isset($redirectBack) ) {
                                             <span>*</span></label>
                                     </div>
                                     <div class="input-field custom-form">
-                                        <input id="branch" name="branch" type="text" class="alphanumeric fourlength check_condition validate"
+                                        <input id="branch" name="branch" type="text" class="fourlength check_condition validate"
                                             value="{{isset($education['branch'])?$education['branch']:''}}">
-                                        <label for="branch" ng-class="{ active:  branch }">Course / Specialization</label>
+                                        <label for="branch" ng-class="{ active:  branch }">Course / Specialization  <span>*</span><</label>
                                     </div>
 
                                     <ul class="d-flex mb0">
@@ -236,7 +237,7 @@ if( isset($redirectBack) ) {
                         return ($("#yyyy").val() == "yyyy" || $("#yyyy").val() == "");
                     }
                 }
-                //  branch: { required: true, alphanumeric:true }
+               branch: { required: true, }
 
             },
             messages: {
@@ -270,10 +271,10 @@ if( isset($redirectBack) ) {
                 educationName: {
                     required: "Required"
                 },
-                /*branch: {
+                branch: {
                     required: "Required",
-                    alphanumeric: "Please enter alpha numeric value only."
-                },*/
+                   // alphanumeric: "Please enter alpha numeric value only."
+                },
             },
             errorClass: 'validationError',
             errorElement: 'span',

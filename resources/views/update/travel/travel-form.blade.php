@@ -22,7 +22,9 @@ if( isset($redirectBack) ) {
                             <li>
                                 <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                             </li>
+                            <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                         </ul>
+
 				</div>
 			</div>
 		</div>
@@ -57,7 +59,7 @@ if( isset($redirectBack) ) {
                                 </div>
 
                                 <div class="input-field custom-form">
-                                        <input id="url" name="url" type="text" class="fourlength validate" value="{{isset($travel['url'])?$travel['url']:''}}">
+                                        <input id="url" name="url" type="text" class="fourlength validate" value="{{isset($travel['url'])?$travel['url']:'http://'}}">
                                         <label for="url" id="url" ng-class="{ active:  url }">Url</label>
                                 </div>
 
@@ -238,7 +240,10 @@ $(document).ready(function() {
     $( "#travelForm" ).validate({
         rules: {
             project: {required: true},
-            company: {required:true}
+            company: {required:true},
+            url: {
+                url: true
+            }
         },
         messages: {
             project: {

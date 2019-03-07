@@ -3025,8 +3025,7 @@ $.extend(MultipleSelect3.prototype, {
     _keyReleased: function(event) {
 
         var dropdown = this.dropdown, inputHadText = !!this._originalValue;
-
-        if (event.keyCode === Select3.Keys.ENTER && !event.ctrlKey) {
+        if ((event.keyCode === Select3.Keys.ENTER || event.keyCode === 13) && !event.ctrlKey) {
 
             if (dropdown) {
                 if($('.select3-no-results').is(':visible')){

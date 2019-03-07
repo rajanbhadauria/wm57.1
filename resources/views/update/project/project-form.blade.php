@@ -23,6 +23,7 @@ if( isset($redirectBack) ) {
                         <li>
                             <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
                         </li>
+                        <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
                     </ul>
             </div>
         </div>
@@ -56,7 +57,7 @@ if( isset($redirectBack) ) {
                                         <label for="projectDesc" ng-class="{ active:  projectDesc }">Description</label>
                                     </div>
                                     <div class="input-field custom-form">
-                                        <input id="url" name="url" type="text" class="validate" value="{{isset($project['url'])?$project['url']:''}}"
+                                        <input id="url" name="url" type="text" class="validate" value="{{isset($project['url'])?$project['url']:'http://'}}"
                                             ng-model="url">
                                         <label for="url" ng-class="{ active:  url }">URL</label>
                                     </div>
@@ -180,7 +181,11 @@ if( isset($redirectBack) ) {
                     required: function (element) {
                         return ($("#yyyy").val() == "yyyy" || $("#yyyy").val() == "");
                     }
+                },
+                url: {
+                    url: true
                 }
+
 
             },
             messages: {
@@ -197,6 +202,9 @@ if( isset($redirectBack) ) {
                 },
                 yyyy: {
                     required: "Required"
+                },
+                url: {
+                    url: 'Enter vaild url'
                 }
             },
             errorClass: 'validationError',

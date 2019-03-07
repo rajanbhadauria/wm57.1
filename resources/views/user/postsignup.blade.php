@@ -4,7 +4,15 @@
     <div class="container">
         <div class="row mb0">
             <div class="col s12 pr">
-                <h1>Basic user information</h1>
+                <h1>Other information</h1>
+                <?php if(strpos($return_url, 'update')) { ?>
+                    <ul class="panel-actions resumebox-actions pull-right">
+                        <li>
+                            <a href="{{url('/update')}}" class="text-primary"><i class="tiny material-icons">edit</i></a>
+                        </li>
+                        <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
+                    </ul>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -31,6 +39,11 @@
 										<li class="input-field custom-form">
 		                                    <input id="last-name" name="last_name" type="text" class=" " value="{{@$basic_info->last_name}}"  required>
 		                                    <label for="last-name">Last name <span>*</span> </label>
+                                        </li>
+
+                                        <li class="input-field custom-form">
+		                                    <input id="skype_id" name="skype_id" type="text" class=" " value="{{@$basic_info->skype_id}}"  required>
+		                                    <label for="skype_id">Skype Id  </label>
 										</li>
 
 										<li class="input-field custom-form">

@@ -72,15 +72,15 @@ class HomeController extends Controller
 
     public function postsignupSave(Request $request){
         $input = $request->all();
-        if($input['id'] == 0){
+        $basicInfo = UserBasicInformations::where('user_id', Auth::id())->first();
+        if(!isset($basicInfo->id)){
             $basicInfo = new UserBasicInformations();
-        } else{
-           $basicInfo = UserBasicInformations::where('user_id', Auth::id())->first();
         }
         $basicInfo->user_id = Auth::id();
         $basicInfo->first_name = $input['first_name'];
         $basicInfo->middle_name = $input['middle_name'];
         $basicInfo->last_name = $input['last_name'];
+        $basicInfo->skype_id = $input['skype_id'];
         $basicInfo->marital_status = $input['marital_status'];
         $basicInfo->dob = $input['mmStart']."/".$input['ddStart']."/".$input['yyyyStart'];
         $basicInfo->gender = isset($input['gender']) ? $input['gender'] : null;
