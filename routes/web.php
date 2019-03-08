@@ -192,6 +192,9 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::get('/send', ['as' => 'resume.send', 'uses' => 'Resume\ResumeController@send']);
     Route::post('/send-save', ['as' => 'resume.send-save', 'uses' => 'Resume\ResumeController@sendSave']);
     Route::get('/get-share-data', ['as' => 'resume.get-share-data', 'uses' => 'Resume\ResumeController@getShareData']);
+    Route::get('/download', ['as' => 'resume.download', 'uses' => 'Resume\ResumeController@download']);
+    Route::get('/download-doc', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@downloadDoc']);
+    Route::get('/print', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@printPreview']);
 
     Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
 

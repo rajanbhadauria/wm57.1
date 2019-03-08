@@ -10,6 +10,7 @@ use Auth;
 use App\User;
 use Mail,URL;
 use DateTime;
+use PDF;
 
 use App\Model\Contact;
 use App\Model\Objective;
@@ -631,5 +632,368 @@ class ResumeController extends Controller
         return view('resume.profile',$data);
 
     }
+
+        function download() {
+            $data['print_hide'] = 0;
+
+            $ownerEmail = Auth::user()->email;
+            $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
+            $user_id = Auth::id();
+
+            $data['profileData'] = User::where("id","=",$user_id)->where("profilePrivate", '0')->get()->first();
+
+            $data['contactInfo'] = Contact::where("user_id", $user_id)->where("private", '0')->get()->first();
+            $data['contactCount'] = Contact::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->where("private", '0')->get()->first();
+            $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['currentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->get()->first();
+            $data['currentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->count();
+
+            $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->get()->first();
+            $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->count();
+
+            $data['workInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->orderBy('workStartDate', 'desc')->orderBy('employementType', 'asc')->get();
+            $data['workCount'] = Work::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->get()->first();
+            $data['currentWorkCount']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->count();
+
+
+            if($data['workCount'] > 0 ){
+                if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
+                    $data['workEnding'] = $data['workInfo'][0]->workEndDate;
+                }else{
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                }
+                $ending = array();
+                $current = 0;
+                $start = array();
+                foreach ($data['workInfo'] as $key => $work) {
+                    if($work->workEndDate!='0000-00-00 00:00:00'){
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
+                    }else{
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
+                    }
+                    $data['workStarting'] = $work->workStartDate;
+                    $start[$key] = $work->workStartDate;
+                    $ending[$key] = $work->workEndDate;
+                    if($work->employementStatus == "1") {
+                        $current++;
+                    }
+
+                }
+
+                usort($start, 'dateSort');
+                usort($ending, 'dateSort');
+                $data['workStarting']  = $start[0];
+                if($current) {
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                } else {
+                    $data['workEnding'] =  $ending[count($ending)-1];
+                }
+
+                $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
+            }
+            $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
+
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['projectCount'] = Project::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->where("private", '0')->first();
+            $data['skillCount'] = Skill::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
+            $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['courseCount'] = Course::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+
+
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['patentCount'] = Patent::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['languageInfo']  = Language::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['languageCount'] = Language::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['referenceInfo']  = Reference::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['referenceCount'] = Reference::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['basicInfo']  = UserBasicInformations::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['basicInfoCount'] = UserBasicInformations::where("user_id","=", Auth::id())->count();
+
+            $data['coverNote']  = Resumetitle::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['coverNoteCount'] = Resumetitle::where("user_id","=", Auth::id())->count();
+
+            $data['miscellaneousInfo']  = DB::table('travels as TR')
+                                            ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
+                                            ->where("TR.user_id", "=", Auth::id())
+
+                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->get(['*', 'TR.id as id']);
+            $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
+
+            $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
+            $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
+            $pdf = PDF::loadView('resume.download', $data);
+            $file_name = str_replace(' ', '_', Auth::user()->first_name."_".Auth::user()->last_name)."_resume".date('m-d-Y');
+            return $pdf->download($file_name.'.pdf');
+        }
+
+        function downloadDoc() {
+            $data['print_hide'] = 0;
+            $ownerEmail = Auth::user()->email;
+            $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
+            $user_id = Auth::id();
+
+            $data['profileData'] = User::where("id","=",$user_id)->where("profilePrivate", '0')->get()->first();
+
+            $data['contactInfo'] = Contact::where("user_id", $user_id)->where("private", '0')->get()->first();
+            $data['contactCount'] = Contact::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->where("private", '0')->get()->first();
+            $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['currentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->get()->first();
+            $data['currentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->count();
+
+            $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->get()->first();
+            $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->count();
+
+            $data['workInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->orderBy('workStartDate', 'desc')->orderBy('employementType', 'asc')->get();
+            $data['workCount'] = Work::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->get()->first();
+            $data['currentWorkCount']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->count();
+
+
+            if($data['workCount'] > 0 ){
+                if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
+                    $data['workEnding'] = $data['workInfo'][0]->workEndDate;
+                }else{
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                }
+                $ending = array();
+                $current = 0;
+                $start = array();
+                foreach ($data['workInfo'] as $key => $work) {
+                    if($work->workEndDate!='0000-00-00 00:00:00'){
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
+                    }else{
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
+                    }
+                    $data['workStarting'] = $work->workStartDate;
+                    $start[$key] = $work->workStartDate;
+                    $ending[$key] = $work->workEndDate;
+                    if($work->employementStatus == "1") {
+                        $current++;
+                    }
+
+                }
+
+                usort($start, 'dateSort');
+                usort($ending, 'dateSort');
+                $data['workStarting']  = $start[0];
+                if($current) {
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                } else {
+                    $data['workEnding'] =  $ending[count($ending)-1];
+                }
+
+                $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
+            }
+            $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
+
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['projectCount'] = Project::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->where("private", '0')->first();
+            $data['skillCount'] = Skill::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
+            $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['courseCount'] = Course::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+
+
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['patentCount'] = Patent::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['languageInfo']  = Language::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['languageCount'] = Language::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['referenceInfo']  = Reference::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['referenceCount'] = Reference::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['basicInfo']  = UserBasicInformations::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['basicInfoCount'] = UserBasicInformations::where("user_id","=", Auth::id())->count();
+
+            $data['coverNote']  = Resumetitle::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['coverNoteCount'] = Resumetitle::where("user_id","=", Auth::id())->count();
+
+            $data['miscellaneousInfo']  = DB::table('travels as TR')
+                                            ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
+                                            ->where("TR.user_id", "=", Auth::id())
+
+                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->get(['*', 'TR.id as id']);
+            $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
+
+            $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
+            $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
+            header("Content-type: application/vnd.ms-word");
+            header("Content-Disposition: attachment; Filename=yourcoolwordfile.doc");
+            print(html_entity_decode(view('resume.download', $data)));
+            return response()->download('helloWorld.docx');
+
+        }
+
+        function printPreview() {
+            $data['print_hide'] = 1;
+            $ownerEmail = Auth::user()->email;
+            $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
+            $user_id = Auth::id();
+
+            $data['profileData'] = User::where("id","=",$user_id)->where("profilePrivate", '0')->get()->first();
+
+            $data['contactInfo'] = Contact::where("user_id", $user_id)->where("private", '0')->get()->first();
+            $data['contactCount'] = Contact::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->where("private", '0')->get()->first();
+            $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->where("private", '0')->count();
+
+            $data['currentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->get()->first();
+            $data['currentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","0")->count();
+
+            $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->get()->first();
+            $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("private", '0')->where("type","1")->count();
+
+            $data['workInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->orderBy('workStartDate', 'desc')->orderBy('employementType', 'asc')->get();
+            $data['workCount'] = Work::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->get()->first();
+            $data['currentWorkCount']  = Work::where("user_id","=", Auth::id())->where("private", '0')->where("employementStatus","=","1")->count();
+
+            if($data['workCount'] > 0 ){
+                if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
+                    $data['workEnding'] = $data['workInfo'][0]->workEndDate;
+                }else{
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                }
+                $ending = array();
+                $current = 0;
+                $start = array();
+                foreach ($data['workInfo'] as $key => $work) {
+                    if($work->workEndDate!='0000-00-00 00:00:00'){
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
+                    }else{
+                        $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
+                    }
+                    $data['workStarting'] = $work->workStartDate;
+                    $start[$key] = $work->workStartDate;
+                    $ending[$key] = $work->workEndDate;
+                    if($work->employementStatus == "1") {
+                        $current++;
+                    }
+
+                }
+
+                usort($start, 'dateSort');
+                usort($ending, 'dateSort');
+                $data['workStarting']  = $start[0];
+                if($current) {
+                    $data['workEnding'] = date('Y-m-d H:i:s');
+                } else {
+                    $data['workEnding'] =  $ending[count($ending)-1];
+                }
+
+                $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
+            }
+            $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
+
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['projectCount'] = Project::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->where("private", '0')->first();
+            $data['skillCount'] = Skill::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
+            $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['courseCount'] = Course::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+
+
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['patentCount'] = Patent::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['languageInfo']  = Language::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['languageCount'] = Language::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['referenceInfo']  = Reference::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['referenceCount'] = Reference::where("user_id","=", Auth::id())->where("private", '0')->count();
+
+            $data['basicInfo']  = UserBasicInformations::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['basicInfoCount'] = UserBasicInformations::where("user_id","=", Auth::id())->count();
+
+            $data['coverNote']  = Resumetitle::where("user_id","=", Auth::id())->orderBy('updated_at', 'desc')->first();
+            $data['coverNoteCount'] = Resumetitle::where("user_id","=", Auth::id())->count();
+
+            $data['miscellaneousInfo']  = DB::table('travels as TR')
+                                            ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
+                                            ->where("TR.user_id", "=", Auth::id())
+
+                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->get(['*', 'TR.id as id']);
+            $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
+
+            $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
+            $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
+
+            return view('resume.download', $data);
+
+
+        }
 
 }

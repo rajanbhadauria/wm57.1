@@ -1,16 +1,35 @@
-@extends('layouts.app')
-@section('content')
+<html lang="en">
+<head>
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"/>
+  <title>WorkMedian - Build and float your resume</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+<!-- CSS  -->
+  <link href="{{ my_asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ my_asset('css/materialize.min.css') }}" rel="stylesheet">
+
+  <link href="{{ my_asset('css/user-menu.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <!--  <link href="css/chosen.css" rel="stylesheet" type="text/css"/>-->
+  <link href="{{ my_asset('css/select3.css') }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ my_asset('css/custom.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ my_asset('css/main.css') }}" type="text/css" rel="stylesheet"/>
+  <link href="{{ my_asset('css/ak-style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900|Open+Sans:400,600,700,800" rel="stylesheet">
+  <link href="{{ my_asset('notify/notify.css') }}" rel="stylesheet">
+  <!-- File Upload -->
+
+</head>
 
 
-<?php $resize = true; ?>
+<body id="app-layout">
 
 <?php
-if(isset($sectionid)) {
-    $sectionid = $sectionid;
-} else {
-    $sectionid = '';
-}
-
 function showWorkDetails($value){
     if($value!= ""){
         return $value." - ";
@@ -102,46 +121,21 @@ function getSkillFromJson($skill) {
     }
     return implode(" | ", $skill_array);
 }
-$print_url = url("resume/print");
 ?>
-<script>
-    var height = $(document).height() - parseInt(($(document).height()*10)/100);
-    var width = $(document).width() - parseInt(($(document).width()*25)/100);
-    function printPreview() {
-        window.open('{{$print_url}}', 'none', 'width='+width+', height='+height);
+<style>
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
     }
+}
+</style>
+<script>
+    var height = $(document).height() - parseInt(($(document).height()*25)/100);
+    var width = $(document).width() - parseInt(($(document).width()*25)/100);
 </script>
-
 <link href="{{my_asset('css/mainresume.css')}}" rel="stylesheet" media="all" />
-	<section class="title-bar">
-		<div class="container">
-			<div class="row mb0">
-				<div class="col s12 pr">
-					<div class="top-panel">
-						<a href="javascript:void(0);" class="text-primary ak-resuemtit-top"><i class="material-icons">insert_drive_file</i><span class="ak-resuemtit-topbadg">35</span></a>
-						<!--<span class="ak-resume-panelceter">Last updated 12th Dec</span>-->
-						<ul class="panel-actions resumebox-actions">
-							<li><a href="javascript:void(0);"  class="text-primary"><i class="material-icons">lock_outline</i></a></li>
-							<li><a href="{{url('update')}}"  class="text-primary"><i class="material-icons">edit</i></a></li>
-							<li><a href="javascript:void(0);"  class="text-primary ak-resume-moreFetu"><i class="material-icons">more_horiz</i></a></li>
-						</ul>
-						<div class="ak-resume-moreFetuList" style="display: none;">
-							<ul>
-								<li><a href="sendresume.html"><i class="material-icons tiny">send</i> Send</a></li>
-								<li><a href="javascript:void(0);"><i class="material-icons tiny">share</i> Shared</a></li>
-								<li><a href="{{url('resume/download')}}"><i class="material-icons tiny">picture_as_pdf</i> PDF</a></li>
-								<li><a href="javascript:void(0);" onclick="printPreview()"><i class="material-icons tiny">print</i> Print</a></li>
-								<li><a href="{{url('resume/download-doc')}}"><i class="material-icons tiny">file_download</i> Download</a></li>
-								<li><a href="javascript:void(0);"><i class="material-icons tiny">file_upload</i> Upload resume(Doc/PDF)</a></li>
-								<li><a href="javascript:void(0);"><i class="material-icons tiny">visibility</i> Viewed me</a></li>
-								<li><a href="javascript:void(0);"><i class="material-icons tiny">access_time</i> Last updated 12th Dec</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 	<section class="section wrappit ak-resume-sample resume-color-blue resume-fontsize-medium resume-fontfamily-roboto">
 		<div class="container">
 			<div class="center-wrapper" id="heightSet">
@@ -592,107 +586,25 @@ $print_url = url("resume/print");
 													</ul>
 												</li>
 											</ul>
-										</div>
+                                        </div>
+                                        @if($print_hide)
+                <div class="text-center no-print"><button class="btn btn-primary" onClick="window.print();">Print</button></div>
+                @endif
                                     </div>
 
 
 								</div>
 							</div>
 						</div>
-						<div class="inner-half-container">
-							<div class="wrapper resume-wrapper">
-								<div class="inner-wrapper resume-inner-wrapper resume-control-blck">
 
-									<div class="resume-download-row resume-control-row row center-align">
-										<h5 class="ak-upreumedon">Upload resume(Doc/PDF)</h5>
-										<form>
-											<div class="dwnld-blck">
-												<a href="javscript:void(0)" download class="atchmnt-rsume">
-													<div class="icon-attch">
-														<i class="material-icons">attach_file</i>
-													</div>
-
-													<div class="file-name">
-														Anand-Srivastava.doc
-													</div>
-
-													<div class="btn-attchmnt">
-														<i class="material-icons">file_download</i>
-													</div>
-												</a>
-											</div>
-										</form>
-									</div>
-
-								</div>
-							</div>
-						</div>
 					</div>
-				</div>
+                </div>
+
 			</div>
 		</div>
-	</section>
-
-<script>
-    $("document").ready(function($){
-        var nav = $('.title-bar');
-        var header = $('.header');
-
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 62) {
-                nav.addClass("f-nav");
-                header.css({'marginBottom':48+'px'});
-                $('.header-name-panel').show();
-                $('.resume-header').hide();
-            } else {
-                nav.removeClass("f-nav");
-                header.css({'marginBottom':0+'px'});
-                $('.header-name-panel').hide();
-                $('.resume-header').show();
-            }
-        });
-    });
-  </script>
-
-<script>
-    $(document).ready(function(){
-       $('.rm').on('click', function(){
-           $(this).hide();
-           $(this).next().show();
-           $(this).next().next().show();
-       });
-       $('.rl').on('click', function(){
-           $(this).hide();
-           $(this).prev().hide();
-           $(this).prev().prev().show();
-       });
+    </section>
 
 
-        var sectionid = '<?php echo $sectionid; ?>';
-        setTimeout(function(){
-            if(sectionid){
-                $('html, body').animate({
-                    scrollTop: $("#"+sectionid).offset().top - 50
-                }, 2000);
-                $("#"+sectionid).trigger('click');
-            }
-        }, 1000);
-    });
 
-	$('.ak-resume-moreFetu').click( function(e) {
-		e.preventDefault(); // stops link from making page jump to the top
-		e.stopPropagation(); // when you click the button, it stops the page from seeing it as clicking the body too
-		$('.ak-resume-moreFetuList').toggle();
-	});
-	$('.ak-resume-moreFetuList').click( function(e) {
-		e.stopPropagation(); // when you click within the content area, it stops the page from seeing it as clicking the body too
-	});
-	$('body').click( function() {
-		$('.ak-resume-moreFetuList').hide();
-	});
-
-	$(".ak-exp-details-editable").hover(function() {
-	  $(this).addClass('ak-editcol')
-	});
-	</script>
-@endsection
+</body>
+</html>

@@ -1,5 +1,5 @@
 <?php
-
+//use PDF;
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -51,5 +51,9 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+// adding pdf lib
+
+//$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+//$app->configure('dompdf');
 
 return $app;
