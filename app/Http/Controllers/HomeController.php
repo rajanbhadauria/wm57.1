@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\User;
 use App\Model\UserBasicInformations;
+use App\Helpers\Activity;
 
 class HomeController extends Controller
 {
@@ -26,7 +27,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $data['activityCount'] = Activity::countUserActivity(Auth::id(), Auth::user()->email);
+        return view('home', $data);
     }
 
     public function logout() {

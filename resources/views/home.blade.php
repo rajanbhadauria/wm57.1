@@ -43,7 +43,7 @@
 							<h5 class="mptext">Resume</h5>
 							<p>last updated 8 months ago</p>
 						  </div>
-						  <a href="{{URL::to('/update')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
+						  <a href="{{URL::to('/update/options')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
 						  <a href="{{URL::to('/resume/view')}}" class="waves-effect waves-light btn-black ak-btn-half-second">View</a>
 					  </div>
 					</div>
@@ -103,8 +103,8 @@
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx lastChild">
 							  <h5 class="mptext mpactext">Activities</h5>
-							  <p class="ak-active-color">3 New</p>
-							  <a href="resumetrack.html" class="waves-effect waves-light btn-black ak-btn-full">View</a>
+							  <p class="ak-active-color">{{$activityCount}} New</p>
+							  <a href="resume/track" class="waves-effect waves-light btn-black ak-btn-full">View</a>
 					      </div>
 					  </div>
 					</div>

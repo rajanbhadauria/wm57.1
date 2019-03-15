@@ -43,6 +43,9 @@ Route::group(['middleware' => ['auth','isactive']], function(){
     Route::get('/deactivate', array('as' => 'settings', 'uses' => 'HomeController@deactivate'));
     Route::get('/postsignup', array('as' => 'postsignup', 'uses' => 'HomeController@postsignup'));
     Route::post('/postsignup/save', array('as' => 'postsignup', 'uses' => 'HomeController@postsignupSave'));
+    Route::get('/requestresume', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResume']);
+    Route::post('/requestresume', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResumeSave']);
+    Route::post('/updateresumerequest', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResumeUpdate']);
 });
 Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
@@ -62,6 +65,8 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 	Route::get('/', ['as' => 'update.index', 'uses' => 'Resume\UpdateController@index']);
 	Route::post('/pp-check', ['as' => 'update.pp-check', 'uses' => 'Resume\UpdateController@PPCheck']);
 
+    Route::get('/options', ['as' => 'update.update-options', 'uses' => 'Resume\UpdateController@updateOptions']);
+
     Route::get('/resume-title-cover-note', ['as' => 'update.resume-title', 'uses' => 'Resume\UpdateController@resumeTitle']);
     Route::post('/get-resume-title-details', ['as' => 'update.get-resume-title-details', 'uses' => 'Resume\UpdateController@getResumeTitleDetails']);
     Route::post('/resume-title-save', ['as' => 'update.resume-title.save', 'uses' => 'Resume\UpdateController@resumeTitleSave']);
@@ -77,7 +82,7 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 	Route::post('/contact-save', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactSave']);
     Route::post('/contact/remove/{id}', ['as' => 'update.contact-save', 'uses' => 'Resume\UpdateController@contactRemove']);
 
-
+    Route::get('/calculate', ['as' => 'update.calculate', 'uses' => 'Resume\UpdateController@calculateExpTotal']);
 
 	Route::get('/objective', ['as' => 'update.objective', 'uses' => 'Resume\UpdateController@objective']);
 	Route::post('/get-objective-details', ['as' => 'update.get-objective-details', 'uses' => 'Resume\UpdateController@getObjectiveDetails']);
@@ -88,7 +93,6 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 	Route::post('/get-current-address-details', ['as' => 'update.get-current-address-details', 'uses' => 'Resume\UpdateController@getCurrentAddressDetails']);
 	Route::post('/current-address-save', ['as' => 'update.current-address-save', 'uses' => 'Resume\UpdateController@currentAddressSave']);
 	Route::post('/current-address/remove/{id}', ['as' => 'update.current-address', 'uses' => 'Resume\UpdateController@currentAddressRemove']);
-
 
 	Route::get('/permanent-address', ['as' => 'update.permanent-address', 'uses' => 'Resume\UpdateController@permanentAddress']);
 	Route::post('/get-permanent-address-details', ['as' => 'update.get-permanent-address-details', 'uses' => 'Resume\UpdateController@getpermanentAddressDetails']);
@@ -106,8 +110,6 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
     Route::post('/get-education-details', ['as' => 'update.get-education-details', 'uses' => 'Resume\UpdateController@getEducationDetails']);
     Route::post('/education-save', ['as' => 'update.education-save', 'uses' => 'Resume\UpdateController@educationSave']);
     Route::post('/education/remove/{id}', ['as' => 'update.education.remove', 'uses' => 'Resume\UpdateController@educationRemove']);
-
-
 
     Route::get('/project', ['as' => 'update.project', 'uses' => 'Resume\UpdateController@project']);
 	Route::get('/project/{id}', ['as' => 'update.project', 'uses' => 'Resume\UpdateController@project']);
@@ -181,6 +183,10 @@ Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), fu
 
     Route::get('/create-date', ['as' => 'update.create-date', 'uses' => 'Resume\UpdateController@createDate']);
     Route::get('/date-diffrence', ['as' => 'update.date-diffrence', 'uses' => 'Resume\UpdateController@dateDiffrence']);
+
+    Route::get('/passkey', ['as' => 'update.passkey', 'uses' => 'Resume\UpdateController@passkey']);
+    Route::post('/change/passcode', ['as' => 'update.change-passcode', 'uses' => 'Resume\UpdateController@changePasscode']);
+
 });
 
 Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), function(){
@@ -195,7 +201,13 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::get('/download', ['as' => 'resume.download', 'uses' => 'Resume\ResumeController@download']);
     Route::get('/download-doc', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@downloadDoc']);
     Route::get('/print', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@printPreview']);
-
+    Route::get('/track', ['as' => 'resume.track', 'uses' => 'Resume\ResumeController@track']);
     Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
-
+    Route::post('/activity/update', ['as' => 'resume.activity.update', 'uses' => 'Resume\ResumeController@updateActivity']);
+    Route::post('/activity/viewresume', ['as' => 'resume.activity.viewresume', 'uses' => 'Resume\ResumeController@viewResumeActivity']);
+    Route::get('/forwardresume/{id}', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResume']);
+    Route::post('/forwardresume', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResumeSave']);
 });
+//resume view with passcode
+Route::get('wm/{id}/{passcode?}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resumeView']);
+Route::post('resume/verify-passcode', ['as' => 'verify.passcode', 'uses' => 'Resume\ResumeController@verifyPasscode']);

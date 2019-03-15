@@ -1,44 +1,14 @@
-function chooseSendresumeOption() {
-  $(".send-resume-tab").hide();
-  $(".send-resume-tab:first").show();
-  $("#email-option").prop('checked', true);
 
-  //On Click Event
-  $(".send-resume-options li input[type='radio']").click(function () {
-    $(".send-resume-options li input[type='radio']").prop('checked', false);
-    $(this).prop('checked', true);
-    $(".send-resume-tab").hide(); //Hide all tab content
-    var activeTab = $(this).val(); //Find the href attribute value to identify the active tab + content
-    $('#' + activeTab).fadeIn(); //Fade in the active ID content
-  });
-}
-
-function chooseRequestresumeOption() {
-  $(".request-resume-tab").hide();
-  $(".request-resume-tab:first").show();
-  $("#email-option").prop('checked', true);
-
-  //On Click Event
-  $(".request-resume-options li input[type='radio']").click(function () {
-    $(".request-resume-options li input[type='radio']").prop('checked', false);
-    $(this).prop('checked', true);
-    $(".request-resume-tab").hide(); //Hide all tab content
-    var activeTab = $(this).val(); //Find the href attribute value to identify the active tab + content
-    $('#' + activeTab).fadeIn(); //Fade in the active ID content
-  });
-}
 
 function selectLabelColor(select) {
   var selectedVal = select.val();
   var initialVal = select.closest(".select-wrapper").find("ul.select-dropdown li:first-child span").text();
-  console.log(select);
-  console.log("initial val" + initialVal);
-  console.log("selected val" + selectedVal);
+
   if (selectedVal == initialVal || selectedVal == '') {
-    console.log("hi");
+
     select.css("color", "#9e9e9e");
   } else {
-    console.log("hello");
+
     select.css("color", "#000");
   }
 }
@@ -115,7 +85,7 @@ $(document).ready(function () {
   equalheight('.widget-container .col .widget-block');
 
   setTimeout(function () {
-    textAreaAdaptiveHeight();
+    //textAreaAdaptiveHeight();
   }, 1000);
 
   chooseSendresumeOption();
@@ -186,7 +156,7 @@ $(window).on('resize', function () {
 
 	$(window).on('load', function() {
 		handlePreloader();
-		enableMasonry();
+		//enableMasonry();
 	});
 
 

@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row mb0">
             <div class="col s12 pr">
-                <h1>Send my resume</h1>
+                <h1>Forward resume</h1>
             </div>
         </div>
     </div>
@@ -17,22 +17,11 @@
                     <div class="p-0" id="loginDiv">
                         <div class="row m-0 form-wrapper">
                             <div class="">
-                                <div class="ak-comn-title">Choose mail or phone option to send your resume. You may <a class="text-primary"
-                                             href="{{ url('/update') }}">edit</a> or <a class="text-primary" href="{{ url('/update') }}">update</a> or
-                                            <a class="text-primary" href="{{ url('/resume') }}">view</a> your resume before you send</div>
-                                <form class="m-0" method="post" action="{{url('/resume/send-save')}}" id="sendSaveForm">
+                                <div class="ak-comn-title">Forwarding {{$ownerData->first_name}}'s resume </div>
+                                <form class="m-0" method="post" action="{{url('/resume/forwardresume')}}" id="sendSaveForm">
                                         {{ csrf_field() }}
-                                        <div class="custom-from cf-hide mb25">
-                                            <div class="form-control">
-                                                    <input type="radio" class="with-gap" name="is_secure" id="is_secure1" value="0" checked>
-                                                    <label for="is_secure1">Copy link - Secure (User need passkey)</label>
-                                            </div>
-                                            <div class="form-control">
-                                                    <input type="radio" class="with-gap" name="is_secure" id="is_secure2" value="1">
-                                                    <label for="is_secure2">Copy link - Public (User direct access)</label>
-                                            </div>
-                                        </div>
-                                              <div class="clearfix">&nbsp;</div>
+
+                                  <div class="clearfix">&nbsp;</div>
                                     <div class="custom-form cf-hide mb25">
                                         <ul class="send-resume-options resume-options">
                                             <li class="display-inline">
@@ -82,8 +71,8 @@
                                             <a href="resumesample.html" class="waves-effect waves-light btn-black display-block">Cancel</a>
                                         </div>
                                         <div class="col s6 pr0 custom-submit">
-                                        <input type="hidden" name="id" id="id" value="{{$profileData->wmid}}">
-                                            <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Send" />
+                                        <input type="hidden" name="id" id="id" value="{{$resumeAccess->id}}">
+                                            <input type="submit" class="waves-effect waves-light btn-blue input-btn display-block" value="Forward" />
                                         </div>
                                     </div>
                                 </form>
@@ -169,9 +158,8 @@
                     	$.notify({ content:response.error_msg, timeout:3000});
                     } else {
                     	$('#success').css({'visibility': 'visible'});
-                       window.location.href = "{{url('resume/view')}}";
+                        window.location.href = "{{url('home')}}";
                     }
-
                 },
                 error: function(response) {
                     $("#loading").hide();

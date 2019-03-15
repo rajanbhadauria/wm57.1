@@ -71,12 +71,13 @@ if( isset($redirectBack) ) {
                                 <ul class="d-flex mb0 mobile-number-field">
                                     <li class="input-field custom-form country-code">
                                         <div class="input-field">
-                                            <select  id="phoneCode" name="phoneCode" ng-model="phoneCode">
-                                                <option value="" selected>Select</option>
-                                                @foreach($countryCodeList as $key =>$countryCode)
-                                                    <option value="{{$countryCode}}" {{(isset($reference['phoneCode']) && $reference['phoneCode']==$countryCode)?'selected=selected':''}}>{{$countryCodeList[$key]}} (+{{$countryCode}})</option>
-                                                @endforeach
-                                              </select>
+
+                                              <select  ng-required='phoneCode' id="phoneCode" name="phoneCode" ng-model="phoneCode" >
+                                                    <option value=""  selected>Select</option>
+                                                    @foreach($countryCodeList as $key =>$countryCode)
+                                                    <option value="{{$countryCode}}" {{(isset($reference['phoneCode']) && $reference['phoneCode']==$countryCode)?'selected=selected':''}}>{{$countryNameList[$key]}} (+{{$countryCode}})</option>
+                                                    @endforeach
+                                                </select>
                                             <label class="active" for="phoneCode">Country code </label>
                                         </div>
                                     </li>
@@ -137,6 +138,11 @@ if( isset($redirectBack) ) {
             rules: {
                 reference: {required: true},
                 email: {required: true,email:true },
+                phoneCode: {
+                    required: function(element){
+                        return ($("#phone").val()!="" || $("#phone").val()!="");
+                    }
+                },
                 school: {required: true},
             },
             messages: {
@@ -149,7 +155,8 @@ if( isset($redirectBack) ) {
                 },
                 school: {
                     required: "Required"
-                }
+                },
+                phoneCode: {required: "Required"}
             },
             errorClass: 'validationError',
             errorElement : 'span',

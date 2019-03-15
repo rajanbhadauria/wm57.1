@@ -9,6 +9,7 @@ use Socialite;
 use App\User;
 use Auth;
 use Mail;
+use App\Helpers\Activity;
 
 class LoginController extends Controller
 {
@@ -68,6 +69,10 @@ class LoginController extends Controller
         $user->social_type = $provider;
         $authUser = $this->createUser($user);
         Auth::login($authUser,true);
+        $activity['activity'] = "logged_in";
+        $activity['created_at'] = date('Y-m-d H:i:s');
+        $activity['byUser'] = Auth::id();
+        Activity::createActivity($activity);
         return redirect()->route('home');
 
     }

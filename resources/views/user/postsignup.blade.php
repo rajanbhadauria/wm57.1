@@ -42,14 +42,14 @@
                                         </li>
 
                                         <li class="input-field custom-form">
-		                                    <input id="skype_id" name="skype_id" type="text" class=" " value="{{@$basic_info->skype_id}}"  required>
+		                                    <input id="skype_id" name="skype_id" type="text" class=" " value="{{@$basic_info->skype_id}}">
 		                                    <label for="skype_id">Skype Id  </label>
 										</li>
 
 										<li class="input-field custom-form">
 											<label class="active">Marital status</label>
 	                                        <div class="input-field">
-	                                            <select id="marital_status" name="marital_status" required>
+	                                            <select id="marital_status" name="marital_status" ng-required='marital_status' ng-model="marital_status">
 	                                            	<option value="" selected>Marital status</option>
 	                                                <option value="Single" {{@$basic_info->marital_status == 'Single' ? 'Selected' : ''}}> Single</option>
 	                                                <option value="Married" {{@$basic_info->marital_status == 'Married' ? 'Selected' : ''}}>Married</option>
@@ -130,25 +130,21 @@ $(document).ready(function(){
             rules: {
                 first_name: {required: true },
                 last_name: {required:true },
-                martial_status:{required: true},
+                marital_status:{required: true},
                 ddStart: {
-                    required: function (element) {
-                        console.log($("#ddStart").val());
-                        return ($("#ddStart").val() == "");
-                    },
-                    //number:true
+                    required:true
                 },
                 mmStart: {
                             required: function (element) {
-                                return ($("#mmStart").val() == "");
+                                return ($("#yyyyStart").val() != "" || $("#ddStart").val() != "");
                             },
-                            number:true
+                           // number:true
                         },
                 yyyyStart: {
                     required: function (element) {
-                        return ($("#yyyyStart").val() == "");
+                        return ($("#mmStart").val() != "" || $("#ddStart").val() != "");
                     },
-                    number:true
+                   // number:true
                     },
                // gender: {required: true }
 
@@ -158,7 +154,7 @@ $(document).ready(function(){
                     required: "Required",
                 },
                 last_name: {
-                    required: "Enter valid email"
+                    required: "Required"
                 },
                 martial_status: {
                     required: "Required"
@@ -193,15 +189,16 @@ $(document).ready(function(){
             },
             submitHandler: function(form) {
                 var formData = $("#basicInfoFrom").serializeArray();
-                $.ajax({
-                    type:"POST",
-                    url:$("#basicInfoFrom").attr("action"),
-                    data:formData,
-                    success: function(response){
-                               window.location.href = "{{$return_url}}";
+               // console.log(formData);
+                 $.ajax({
+                     type:"POST",
+                     url:$("#basicInfoFrom").attr("action"),
+                     data:formData,
+                     success: function(response){
+                                window.location.href = "{{$return_url}}";
 
-                    }
-                });
+                     }
+                 });
             }
         });
 });

@@ -394,14 +394,14 @@ if( isset($redirectBack) ) {
                 mmEnd: {
                     required: {
                         depends: function(element) {
-                            return $("#employementStatus").val() === "2";
+                            return ($("#employementStatus").val() === "2" || $("#yyyyEnd").val() != "");
                         }
                     }
                 },
                 yyyyEnd: {
                     required: {
                         depends: function(element) {
-                            return $("#employementStatus").val() === "2";
+                            return ($("#employementStatus").val() === "2" || $("#mmEnd").val() != "");
                         }
                     }
                 },

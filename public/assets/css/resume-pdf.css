@@ -1,5 +1,3 @@
-@import 'normalize.css';
-
 body {
 	background: #fff;
 	font-size: 13px;
@@ -22,14 +20,16 @@ a {
 a:hover {
 	color: rgba(0, 0, 0, .9);
 }
+b, strong {
+    font-weight: bolder;
+}
 
 .wrapper {
 	max-width: 800px;
 	margin: 20px auto;
 	background: #fff;
-	padding:60px;
-	box-shadow: 0px 0px 70px 10px #f0f0f8;
-	border: 1px solid #eee; 
+	/*padding:60px;
+	border: 1px solid #ddd; */
 
 }
 
@@ -132,7 +132,7 @@ h2 {
 	color: #263136;
 	font-weight: 400;
 	text-transform: uppercase;
-	margin-bottom:0px;
+	margin-bottom:10px;
 	font-weight:700!important;
 	padding-left:10px;
 	padding-right:10px;
@@ -618,112 +618,5 @@ input#files {
 @media only screen and (min-width:768px) {
 	.inner-wrapper.resume-inner-wrapper {
 		border: 0px solid #eee;
-	}
-}
-
-
-@media all and (max-width: 700px) {
-	.user-profile {
-		justify-content:flex-start;
-		align-items: flex-start;
-		/* text-align: center; */
-		font-size:11px;
-	}
-
-	.user-profile .details {
-		flex-basis: auto;
-	}
-
-	.user-profile .profile-pic {
-		margin-bottom: 10px;
-		flex-basis: auto;
-		padding-right: 10px;
-	}
-	
-	.user-profile .profile-pic .pic {
-		width: 36px;
-		height: 36px;
-	}
-
-	.block,
-	.user-profile {
-		border-left: 0;
-		border-right: 0;
-	}
-
-	.wrapper {
-		margin: 0px;
-		padding: 0;
-	}
-
-	.sm-display-col {
-		flex-direction: column;
-	}
-
-	.sm-display-block {
-		display: block;
-	}
-
-	.sm-content-center {
-		justify-content: center;
-		display: flex;
-	}
-	.user-contact-info{
-		justify-content: flex-start;
-	}
-	.resume-fontsize-medium .user-profile .name {
-		font-size:17px;
-	}
-	.resume-fontsize-medium .user-profile strong, .resume-fontsize-medium .highlight1, .resume-fontsize-medium .user-contact-info li a, .resume-fontsize-medium .dot-separator, .resume-fontsize-medium .exp-details .col1 strong, .resume-fontsize-medium .exp-details .col2 strong, .resume-fontsize-medium .exp-details .col2 p, .resume-fontsize-medium .exp-details p, .resume-fontsize-medium .list-table>li>ul {
-		font-size: 11px;
-	}
-	.resume-fontsize-medium h2 .highlight1, .resume-fontsize-medium .block h2 {
-		font-size: 15px;
-	}
-	.resume-fontsize-medium .block .list {
-		font-size: 10px;
-	}
-}
-
-
-@media only screen and (max-width:480px) {
-	.num-col.col.s2 {
-		max-width: 43px;
-	}
-	.num-col input {
-		max-width: 37px;
-	}
-	.exp-details .col1 strong,
-	.exp-details .col2 strong,
-	.exp-details .col2 p,
-	.exp-details p {
-		font-size: 11px;
-		line-height:15px;
-	}
-	.block .list {
-		font-size: 11px;
-		line-height:15px;
-	}
-	.list-table>li>ul {
-		font-size: 11px;
-		line-height:17px;
-	}
-	.exp-details .col1 strong,
-	.exp-details .col2 strong,
-	.exp-details .col2 p,
-	.exp-details p {
-		font-size: 11px;
-	}
-	.block .list {
-		font-size: 11px;
-	}
-}
-
-@media only screen and (max-width:320px) {
-	.g-recaptcha {
-		transform: scale(0.9079);
-		-webkit-transform: scale(0.9079);
-		transform-origin: 0 center;
-		-webkit-transform-origin: 0 center;
 	}
 }

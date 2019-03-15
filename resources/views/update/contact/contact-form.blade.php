@@ -37,8 +37,6 @@ if( isset($redirectBack) ) {
                     <div class="row mb0">
                         <div class="">
 
-<!--<label for="ctrl.foo" ng-class="{ active: ctrl.foo }">Foo title</label>
-<input type="text" ng-model="ctrl.foo" class="form-control" id="foo" />-->
 
                             <form action="{{URL::to('update/contact-save')}}" method="POST" id="contactForm" name="contactForm" >
                             {{ csrf_field() }}

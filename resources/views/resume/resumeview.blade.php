@@ -121,13 +121,14 @@ $print_url = url("resume/print");
 						<a href="javascript:void(0);" class="text-primary ak-resuemtit-top"><i class="material-icons">insert_drive_file</i><span class="ak-resuemtit-topbadg">35</span></a>
 						<!--<span class="ak-resume-panelceter">Last updated 12th Dec</span>-->
 						<ul class="panel-actions resumebox-actions">
-							<li><a href="javascript:void(0);"  class="text-primary"><i class="material-icons">lock_outline</i></a></li>
+                            <li><a href="javascript:void(0);"  class="text-primary"><i class="material-icons">lock_outline</i></a></li>
+                            <li><a href="{{url('update/passkey')}}"  class="text-primary"><i class="material-icons">vpn_key</i></a></li>
 							<li><a href="{{url('update')}}"  class="text-primary"><i class="material-icons">edit</i></a></li>
 							<li><a href="javascript:void(0);"  class="text-primary ak-resume-moreFetu"><i class="material-icons">more_horiz</i></a></li>
 						</ul>
 						<div class="ak-resume-moreFetuList" style="display: none;">
 							<ul>
-								<li><a href="sendresume.html"><i class="material-icons tiny">send</i> Send</a></li>
+								<li><a href="{{url('resume/send')}}"><i class="material-icons tiny">send</i> Send</a></li>
 								<li><a href="javascript:void(0);"><i class="material-icons tiny">share</i> Shared</a></li>
 								<li><a href="{{url('resume/download')}}"><i class="material-icons tiny">picture_as_pdf</i> PDF</a></li>
 								<li><a href="javascript:void(0);" onclick="printPreview()"><i class="material-icons tiny">print</i> Print</a></li>
@@ -208,7 +209,7 @@ $print_url = url("resume/print");
 
 										<div class="col2 profile-pic">
 											<div class="pic">
-                                                @if(isset($profileData->profilePrivate) && $resumeAccess->profileData)
+                                                @if($profileData->profilePrivate && $resumeAccess->profileData)
                                                 <img src="{{get_user_image(Auth::user()->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : Auth::user()->first_name." ".Auth::user()->last_name}}' />
                                                 @endif
 											</div>
@@ -517,15 +518,23 @@ $print_url = url("resume/print");
                                         @foreach($referenceInfo as $reference1)
                                         <div class="ak-exp-details-editable ak-editcol">
                                         <div class="exp-details">
-                                              <strong>
-                                                <span class="highlight1">
-                                                        {{{$reference1->reference}}}
-                                                </span>
-                                                <span class="dot-separator"> {{{$reference1->email}}}</span>
-                                                <span class="dot-separator"> {{$reference1->school}}</span>
 
-                                               <a href="{{url('update/reference/'.$reference1->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
-                                            </strong>
+
+                                                <div class="col2">
+                                                <strong><span>{{$reference1->reference}}</span>
+                                                    <span class="dot-separator"></span>
+                                                    <span class="highlight1">{{$reference1->email}}</span>
+                                                    <span class="dot-separator"></span>
+                                                    <span class="highlight1">{{$reference1->school}}</span>
+                                                    @if($reference1->phone !='')
+                                                    <span class="dot-separator"></span>
+                                                    <span class="highlight1">+{{$reference1->phoneCode}}{{$reference1->phone}}</span>
+                                                    @endif
+                                                </strong>
+                                                </div>
+                                                <div class="col1">
+                                                        <a href="{{url('update/reference/'.$reference1->id.'?url=resume/view')}}" class="ak-resumeEdit-icon ak-resumeEditSub-icon"><i class="material-icons">edit</i></a>
+                                                </div>
                                         </div>
 
                                         </div>
@@ -551,8 +560,9 @@ $print_url = url("resume/print");
                                                         </li>
 														<li> @if($contactCount && $resumeAccess->contactData)Contact number @endif</li>
 														<li> @if($contactCount && $resumeAccess->contactData && $contactInfo->altPhone!='')Alternat number @endif</li>
-														<li> @if($contactCount && $resumeAccess->contactData)Email @endif</li>
-														<li> @if($currentAddressCount > 0 || $permanentAddressCount>0)Current location @endif</li>
+                                                        <li> @if($contactCount && $resumeAccess->contactData)Email @endif</li>
+                                                        <li> @if($contactCount && $resumeAccess->contactData && $contactInfo->altEmail!='')Alternat Email @endif</li>
+														<li> @if(($currentAddressCount > 0 || $permanentAddressCount>0) && $resumeAccess->currentAddressData)Current location @endif</li>
 													</ul>
 												</li>
 												<li class="col2">
@@ -572,12 +582,14 @@ $print_url = url("resume/print");
                                                             @if($contactCount)<a href="tel:+{{$contactInfo->primaryPhoneCode }} {{$contactInfo->primaryPhone}}">+{{$contactInfo->primaryPhoneCode}} {{$contactInfo->primaryPhone}}</a>@endif
                                                         </li>
                                                         <li>
-                                                            @if($contactCount && $contactInfo->altPhone!='')<a href="+tel:{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}">+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}</a>@endif
+                                                            @if($contactCount && $contactInfo->altPhone!='')<a href="tel:+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}">+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}} ({{$contactInfo->altRelation}})</a>@endif
                                                         </li>
 														<li>
                                                             @if($contactCount)<a href="emailto: {{Auth::user()->email}}">{{Auth::user()->email}}</a>@endif
 														</li>
-
+                                                        <li>
+                                                                @if($contactCount && $contactInfo->altEmail!='')<a href="emailto:{{$contactInfo->altEmail}} {{$contactInfo->altPhone}}">{{$contactInfo->altEmail }}</a>@endif
+                                                            </li>
                                                         <li>
 															<span class="highlight1">
                                                                 @if($currentAddressCount)

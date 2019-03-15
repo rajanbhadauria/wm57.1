@@ -37,7 +37,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col s9">
-                                                    <a href="{{URL::to('update/work')}}/{{$work->id}}" class="collapsible-body-inner">
+                                                       <a href="{{URL::to('update/work')}}/{{$work->id}}" class="collapsible-body-inner">
                                                     <div class="update-desc">
                                                         <span class="bold">{{$work->company}}</span>
                                                         <span class="normal">- {{$work->department}} - {{$work->city}}</span>

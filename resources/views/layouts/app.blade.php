@@ -132,7 +132,15 @@
     @if(session('success'))
     <div class="container">
     <script>
-    $.notify({ content:" {{session('success')}}", timeout:0});
+        $.notify({ content:" {{session('success')}}", timeout:3000});
+    </script>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="container text-error">
+    <script>
+        $.notify({ content:" {{session('error')}}", timeout:3000});
     </script>
     </div>
     @endif
