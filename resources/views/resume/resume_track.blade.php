@@ -23,11 +23,12 @@
                                     $user3Obj = App\Helpers\Activity::getUserDetails($activity->toUser);
 
                                     $user1 = ($user1Obj) ? $user1Obj->first_name." ".$user1Obj->last_name : $activity->email;
-                                    $user2 = ($user1Obj) ? $user2Obj->first_name." ".$user2Obj->last_name : $activity->email;
+                                    $user2 = ($user2Obj) ? $user2Obj->first_name." ".$user2Obj->last_name : $activity->email;
                                     $user3 = ($user3Obj) ? $user3Obj->first_name." ".$user3Obj->last_name : $activity->email;
 
                                     $activity_message = str_replace(["{%user1%}", "{%user2%}", "{%user3%}"], [$user1, $user2, $user3], $activity->activity_text);
                                     ?>
+                                    @if($activity->is_visible == '1')
 								<li class="container-card">
 									<div class="resume-user__list-img">
 										<img src="{{get_user_image($user1Obj->avatar)}}" alt="{{$user1}}" class="circle"/>
@@ -36,7 +37,9 @@
 										<div class="resume-user__list-content-in">
                                         <p>{{$user1}}
                                             <span>
-                                                {{date('dS F Y', strtotime($activity->updated_at))}}</span></p>
+                                                <!--{{date('dS F Y', strtotime($activity->updated_at))}}-->
+                                               {{Carbon\Carbon::parse($activity->created_at)->diffForHumans()}}
+                                            </span></p>
 
                                             <span class="resume-user__list-subtext">{{$activity_message}}</span>
                                             @if($activity->activity == 'resume_request' && $activity->request_status == 'pending' && $activity->forUser==Auth::id())
@@ -45,7 +48,22 @@
 												<i class="waves-effect waves-light btn-black input-btn waves-input-wrapper" style=""><input type="submit" onclick="updateRequest('rejected', {{$activity->id}})" class="waves-button-input" value="Decline"></i>
                                             </div>
                                             @endif
-                                            @if($activity->activity == 'resume_request' && $activity->request_status == 'accepted' && $activity->forUser!=Auth::id())
+                                            @if($activity->activity == 'resume_request' && $activity->request_status == 'pending' && $activity->byUser==Auth::id())
+                                            <div class="resume-user__list-action">
+												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="updateRequest('cancel', {{$activity->id}})" class="waves-button-input" value="Cancel"></i>
+                                            </div>
+                                            @endif
+                                            @if($activity->activity == 'resume_accepted' && $activity->request_status == 'accepted' && $activity->forUser==Auth::id())
+                                            <div class="resume-user__list-action">
+												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$activity->id}})" class="waves-button-input" value="View"></i>
+                                            </div>
+                                            @endif
+                                            @if($activity->activity == 'resume_forwarded' && ($activity->toUser==Auth::id() || $activity->email== Auth::user()->email))
+                                            <div class="resume-user__list-action">
+												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$activity->id}})" class="waves-button-input" value="View"></i>
+                                            </div>
+                                            @endif
+                                            @if($activity->activity == 'resume_sent' && ($activity->email==Auth::user()->email))
                                             <div class="resume-user__list-action">
 												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$activity->id}})" class="waves-button-input" value="View"></i>
                                             </div>
@@ -53,6 +71,7 @@
 										</div>
 									</div>
                                 </li>
+                                @endif
                             <?php } ?>
 							</ul>
 						</div>

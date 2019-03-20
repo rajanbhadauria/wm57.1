@@ -127,6 +127,7 @@ class UpdateController extends Controller
         echo "</pre>";
     }
 
+
 	public function index(Request $request){
         $input = $request->all();
         if(isset($input['sectionid'])){
@@ -235,7 +236,8 @@ class UpdateController extends Controller
         $resumetitle->resume_brand = $input['resume_brand'];
         $resumetitle->resume_message = $input['resume_message'];
         $resumetitle->thanks_note = $input['thanks_note'];
-    	$resumetitle->save();
+        $resumetitle->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect()->back();//->with('success', 'Resume Title details updated successfully.');
     }
 
@@ -291,6 +293,7 @@ class UpdateController extends Controller
     	$contact->altPhone = $input['altPhone'];
     	$contact->altRelation = isset($input['altRelation'])?$input['altRelation']:"";
         $contact->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect()->back();//->with('success', 'Contact details updated successfully.');
     }
 
@@ -334,6 +337,7 @@ class UpdateController extends Controller
         $objective->user_id = Auth::id();
         $objective->objective = $input['objective'];
         $objective->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect()->back();//->with('success', 'Objective updated successfully.');
     }
 
@@ -382,6 +386,7 @@ class UpdateController extends Controller
         $currentAddress->city         = $input['city'];
         $currentAddress->country      = $input['country'];
         $currentAddress->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect()->back();//->with('success', 'Current Address updated successfully.');
 
     }
@@ -431,6 +436,7 @@ class UpdateController extends Controller
         $permanentAddress->city         = $input['city'];
         $permanentAddress->country      = $input['country'];
         $permanentAddress->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect()->back();//->with('success', 'Permanent address updated successfully.');
 
     }
@@ -494,6 +500,7 @@ class UpdateController extends Controller
 
         $education->best                 =isset($input['best'])?$input['best']:"0";
         $education->save();
+        Resume::recordResumeUpdate(Auth::id());
         $returnUrl = ($input['returnUrl']) ? $input['returnUrl'] : 'update?sectionid=educationInfo';
         return redirect('/'.$returnUrl);//->with('success', 'Education details updated successfully.');
     }
@@ -555,6 +562,7 @@ class UpdateController extends Controller
 
         $project->best              = isset($input['best'])?$input['best']:"0";
         $project->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect('/update');//->with('success', 'Projects details updated successfully.');
     }
 
@@ -609,6 +617,7 @@ class UpdateController extends Controller
         }
         $skill->user_id = Auth::id();
         $skill->skill = $skills;
+        Resume::recordResumeUpdate(Auth::id());
         $skill->save();
 
     }
@@ -692,6 +701,7 @@ class UpdateController extends Controller
         }
         $skill->user_id = Auth::id();
         $skill->soft_skill  = $skills;
+        Resume::recordResumeUpdate(Auth::id());
         $skill->save();
 
     }
@@ -749,6 +759,7 @@ class UpdateController extends Controller
         }
         $skill->user_id = Auth::id();
         $skill->interest  = $skills;
+        Resume::recordResumeUpdate(Auth::id());
         $skill->save();
 
     }
@@ -807,8 +818,10 @@ class UpdateController extends Controller
         $certification->city                    = $input['city'];
         $certification->country                 = $input['country'];
 
-        $certification->best              = isset($input['best'])?$input['best']:"0";
+        $certification->best                    = isset($input['best'])?$input['best']:"0";
+
         $certification->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function certificationRemove($id){
@@ -864,6 +877,7 @@ class UpdateController extends Controller
 
         $training->best              = isset($input['best'])?$input['best']:"0";
         $training->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function trainingRemove($id){
@@ -918,6 +932,7 @@ class UpdateController extends Controller
 
         $course->best       = isset($input['best'])?$input['best']:"0";
         $course->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function courseRemove($id){
@@ -986,6 +1001,7 @@ class UpdateController extends Controller
 
         $travel->best       = isset($input['best'])?$input['best']:"0";
         $travel->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function travelRemove($id){
@@ -1040,6 +1056,7 @@ class UpdateController extends Controller
 
         $award->best       = isset($input['best'])?$input['best']:"0";
         $award->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function awardRemove($id){
@@ -1086,6 +1103,7 @@ class UpdateController extends Controller
 
         $patent->best       = isset($input['best'])?$input['best']:"0";
         $patent->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function patentRemove($id){
@@ -1132,6 +1150,7 @@ class UpdateController extends Controller
         $language->write         = isset($input['write'])?$input['write']:"0";
         $language->speak         = isset($input['speak'])?$input['speak']:"0";
         $language->save();
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function languageRemove($id){
@@ -1182,9 +1201,8 @@ class UpdateController extends Controller
         $reference->phone         = $input['phone'];
         $reference->email         = $input['email'];
         $reference->phoneCode         = $input['phoneCode'];
-
         $reference->save();
-
+        Resume::recordResumeUpdate(Auth::id());
     }
 
     public function referenceRemove($id){
@@ -1278,6 +1296,7 @@ class UpdateController extends Controller
         $work->ctc                  =$input['ctc'];
         $work->best                 =isset($input['best'])?$input['best']:"0";
         $work->save();
+        Resume::recordResumeUpdate(Auth::id());
         return redirect($data['returnUrl']);//->with('success', 'Work details updated successfully.');
     }
 

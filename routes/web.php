@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth','isactive']], function(){
 });
 Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
+    Route::get('/contactlist', ['as' => 'resume.request.resume', 'uses' => 'UserController@contactlist']);
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth','isactive']], function(){
@@ -207,6 +208,8 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::post('/activity/viewresume', ['as' => 'resume.activity.viewresume', 'uses' => 'Resume\ResumeController@viewResumeActivity']);
     Route::get('/forwardresume/{id}', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResume']);
     Route::post('/forwardresume', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResumeSave']);
+    Route::post('/invite', ['as' => 'resume.invite', 'uses' => 'Resume\ResumeController@inviteUser']);
+
 });
 //resume view with passcode
 Route::get('wm/{id}/{passcode?}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resumeView']);

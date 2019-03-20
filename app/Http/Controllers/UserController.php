@@ -161,4 +161,9 @@ class UserController extends Controller
         Auth::logout();
         return redirect('login')->with('success',$message);
     }
+
+    public function contactlist() {
+        $data['users'] = User::getMyContacts(Auth::id());
+        return view('user.contactlist', $data);
+    }
 }

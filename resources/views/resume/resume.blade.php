@@ -8,14 +8,12 @@
                         <h1 class="resume-header">View resume</h1>
                         <div class="header-name-panel">
                             <div class="chip viewresume-clip">
-                                @if($profileData->avatar != "" && $resumeAccess->profileData != "0")
+                                @if($profileData->profilePrivate == '0' && $profileData->avatar != "" && $resumeAccess->profileData != "0")
                                         <img alt="{{$profileData->first_name}} {{$profileData->last_name}}" src="{{get_user_image($profileData->avatar)}}">
                                 @endif
                                 {{$profileData->first_name}} {{$profileData->last_name}}
                               </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>

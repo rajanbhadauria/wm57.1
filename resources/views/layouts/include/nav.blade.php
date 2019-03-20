@@ -28,7 +28,7 @@
                                 class="material-icons grey-text margin-right">public</i> View resume (Public)</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/postsignup') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Post signup</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/sendresume') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/send') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Send resume</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/requestresume') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Request resume</a></li>

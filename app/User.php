@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use DB;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -54,5 +54,34 @@ class User extends Authenticatable
                     ->where('account_status', 'active')
                     ->inRandomOrder()
                     ->get();
+    }
+    // create contact list afteruser gets signup
+    public static function contactListInit($email, $userId) {
+        $invitations = DB::table('user_invitations')->where('invited_email', $email)->get();
+        if($invitations) {
+            foreach($invitations as $invitaion) {
+                $insert['requested_by'] = $invitaion->invited_by;
+                $insert['requested_to'] = $userId;
+                DB::table('user_relations')->insert($insert);
+            }
+        }
+    }
+
+    //get users contact list users
+    public static function getMyContacts($userId) {
+       $sql = "SELECT U.* FROM `user_relations` as UR
+                                    JOIN users as U ON U.id = UR.requested_by
+                                    JOIN users U2 ON U2.id = UR.requested_to
+                                    WHERE (UR.requested_by = ".$userId." OR UR.requested_to = ".$userId.")
+                                    AND U.id != ".$userId." GROUP BY U.id";
+        $result = DB::select($sql);
+        if($result) {
+            return $result;
+        }
+        return $result;
+    }
+    // check if user exists by email
+    public function getuserByEmail($email) {
+        return this::where('email', $email)->first();
     }
 }

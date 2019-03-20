@@ -47,7 +47,7 @@
 										</li>
 
 										<li class="input-field custom-form">
-											<label class="active">Marital status</label>
+											<label class="active">Marital status <span>*</span></label>
 	                                        <div class="input-field">
 	                                            <select id="marital_status" name="marital_status" ng-required='marital_status' ng-model="marital_status">
 	                                            	<option value="" selected>Marital status</option>
@@ -127,80 +127,83 @@
 <script>
 $(document).ready(function(){
     $( "#basicInfoFrom" ).validate({
-            rules: {
-                first_name: {required: true },
-                last_name: {required:true },
-                marital_status:{required: true},
-                ddStart: {
-                    required:true
-                },
-                mmStart: {
-                            required: function (element) {
-                                return ($("#yyyyStart").val() != "" || $("#ddStart").val() != "");
-                            },
-                           // number:true
+        ignore: [],
+        rules: {
+            first_name: {required: true },
+            last_name: {required:true },
+            marital_status:{required: true},
+            ddStart: {
+                required: function (element) {
+                            return ($("#yyyyStart").val() != "" || $("#mmStart").val() != "");
                         },
-                yyyyStart: {
-                    required: function (element) {
-                        return ($("#mmStart").val() != "" || $("#ddStart").val() != "");
+            },
+            mmStart: {
+                        required: function (element) {
+                            return ($("#yyyyStart").val() != "" || $("#ddStart").val() != "");
+                        },
+                        // number:true
                     },
-                   // number:true
-                    },
-               // gender: {required: true }
+            yyyyStart: {
+                required: function (element) {
+                    return ($("#mmStart").val() != "" || $("#ddStart").val() != "");
+                },
+                // number:true
+                },
+            // gender: {required: true }
 
+        },
+        messages: {
+            first_name: {
+                required: "Required",
             },
-            messages: {
-                first_name: {
-                    required: "Required",
-                },
-                last_name: {
-                    required: "Required"
-                },
-                martial_status: {
-                    required: "Required"
-                },
-                ddStart: {
-                    required: "Required",
-                    number: "Enter valid number"
-                },
-                mmStart: {
-                    required: "Required",
-                    number: "Enter valid number"
-                },
-                yyyyStart: {
-                    required: "Required",
-                    number: "Enter valid number"
-                },
-                gender: {
-                    required: "Required"
-                }
+            last_name: {
+                required: "Required"
             },
-            errorClass: 'validationError',
-            errorElement : 'span',
-            //errorLabelContainer: '.validationError',
-            errorPlacement: function( error, element ) {
-                error.insertAfter( element);
+            marital_status: {
+                required: "Required"
             },
-            highlight: function (element, errorClass, validClass) {
-                $(element).parents("span").addClass(errorClass);
+            ddStart: {
+                required: "Required",
+                number: "Enter valid number"
             },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).parents("span").removeClass(errorClass);
+            mmStart: {
+                required: "Required",
+                number: "Enter valid number"
             },
-            submitHandler: function(form) {
-                var formData = $("#basicInfoFrom").serializeArray();
-               // console.log(formData);
-                 $.ajax({
-                     type:"POST",
-                     url:$("#basicInfoFrom").attr("action"),
-                     data:formData,
-                     success: function(response){
-                                window.location.href = "{{$return_url}}";
-
-                     }
-                 });
+            yyyyStart: {
+                required: "Required",
+                number: "Enter valid number"
+            },
+            gender: {
+                required: "Required"
             }
-        });
+        },
+        errorClass: 'validationError',
+        errorElement : 'span',
+        //errorLabelContainer: '.validationError',
+        errorPlacement: function( error, element ) {
+            error.insertAfter( element);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).parents("span").addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).parents("span").removeClass(errorClass);
+        },
+        submitHandler: function(form) {
+            var formData = $("#basicInfoFrom").serializeArray();
+            // console.log(formData);
+                $.ajax({
+                    type:"POST",
+                    url:$("#basicInfoFrom").attr("action"),
+                    data:formData,
+                    success: function(response){
+                            window.location.href = "{{$return_url}}";
+
+                    }
+                });
+        }
+    });
 });
 </script>
 @endsection

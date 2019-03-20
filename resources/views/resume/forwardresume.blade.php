@@ -68,7 +68,7 @@
 
                                     <div class="row mb0">
                                         <div class="col s6 pl0" id="skip">
-                                            <a href="resumesample.html" class="waves-effect waves-light btn-black display-block">Cancel</a>
+                                            <a href="{{url('home')}}" class="waves-effect waves-light btn-black display-block">Cancel</a>
                                         </div>
                                         <div class="col s6 pr0 custom-submit">
                                         <input type="hidden" name="id" id="id" value="{{$resumeAccess->id}}">

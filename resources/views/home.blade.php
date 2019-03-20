@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<style>
+.ak-user-face{ display: inline-block !important;}
+</style>
 <section class="title-bar">
 	  <div class="container">
 		<div class="row mb0">
@@ -40,8 +43,8 @@
 					<div class="col s6 m4">
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
-							<h5 class="mptext">Resume</h5>
-							<p>last updated 8 months ago</p>
+                            <h5 class="mptext">Resume</h5>
+							<p>{{(Auth::user()->resume_updated_at!='' && Auth::user()->resume_updated_at!='0000-00-00 00:00:00')  ? Carbon\Carbon::parse(Auth::user()->resume_updated_at)->diffForHumans(): "Resume not updated"}}</p>
 						  </div>
 						  <a href="{{URL::to('/update/options')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
 						  <a href="{{URL::to('/resume/view')}}" class="waves-effect waves-light btn-black ak-btn-half-second">View</a>
@@ -63,15 +66,15 @@
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
 							  <h5 class="mpitext">Members</h5>
-							  <p>2,125</p>
+							  <p>{{count($members)}}</p>
 							  <ul class="ak-user-face">
-								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
-								<li><img src="http://wm.dainidev.com/uploads/images/user/1541950929.png" alt="" /></li>
+                                <?php
+                                $limit = count($members) > 5 ? $limit = 5 : count($members);
+                                for($i=0; $i<$limit; $i++) { ?>
+                                <li><img src="{{get_user_image($members[$i]->avatar)}}" /></li>
+                               <?php } ?>
 							  </ul>
-							  <a href="{{URL::to('/home')}}" class="waves-effect waves-light btn-black ak-btn-half-first">My network</a>
+							  <a href="{{URL::to('/contactlist')}}" class="waves-effect waves-light btn-black ak-btn-half-first">My network</a>
 							  <a href="{{URL::to('/memberlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Find WM members</a>
 						  </div>
 					  </div>
@@ -81,7 +84,7 @@
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
 							  <h5 class="mptext">Resume access</h5>
-							  <p>554</p>
+                          <p>{{$viewCount}}</p>
 							  <a href="http://wm.dainidev.com/update" class="waves-effect waves-light btn-black ak-btn-half-first">Who viewed me ?</a>
 							  <a href="http://wm.dainidev.com/update" class="waves-effect waves-light btn-black ak-btn-half-second">Access request</a>
 						</div>

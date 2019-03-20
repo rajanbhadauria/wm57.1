@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use App\Model\Resume;
 use App\Model\UserBasicInformations;
 use App\Helpers\Activity;
 
@@ -28,6 +29,8 @@ class HomeController extends Controller
     public function index()
     {
         $data['activityCount'] = Activity::countUserActivity(Auth::id(), Auth::user()->email);
+        $data['members'] = User::getMyContacts(Auth::id());
+        $data['viewCount'] = Resume::getResumeCount(Auth::id());
         return view('home', $data);
     }
 
@@ -86,8 +89,15 @@ class HomeController extends Controller
         $basicInfo->marital_status = $input['marital_status'];
         $basicInfo->dob = $input['mmStart']."/".$input['ddStart']."/".$input['yyyyStart'];
         $basicInfo->gender = isset($input['gender']) ? $input['gender'] : null;
-
         $basicInfo->save();
-        return redirect()->back()->with('success', 'Basic information updated successfully.');
+        // updating user table too
+        $user = User::find(Auth::id());
+        $user->name = $input['first_name'];
+        $user->first_name = $input['first_name'];
+        $user->last_name = $input['last_name'];
+        $user->save();
+
+
+        //return redirect()->back()->with('success', 'Basic information updated successfully.');
     }
 }

@@ -9,6 +9,7 @@ use Socialite;
 use App\User;
 use Auth;
 use Mail;
+use App\Model\Resume;
 use App\Helpers\Activity;
 
 class LoginController extends Controller
@@ -45,6 +46,27 @@ class LoginController extends Controller
         }
 
         $this->middleware('guest')->except('logout');
+    }
+
+    function updateresumeViewOnUpdate($email) {
+
+        $resume = Resume::where('ownerEmail', $email)->count();
+        if($resume>0) {
+
+        } else {
+            $resume = new Resume();
+            $resume->ownerEmail = $email;
+            $resume->currentAddressData = "1"; $resume->permanentAddressData = "1";
+            $resume->awardData = "1"; $resume->certificationData = "1";
+            $resume->contactData = "1"; $resume->courseData = "1";
+            $resume->educationData = "1"; $resume->languageData = "1";
+            $resume->objectiveData = "1"; $resume->patentData = "1";
+            $resume->profileData = "1"; $resume->projectData = "1";
+            $resume->referenceData = "1"; $resume->skillData = "1";
+            $resume->workData = "1";
+            $resume->save();
+        }
+
     }
 
     public function redirectToProvider($provider)
@@ -102,6 +124,7 @@ class LoginController extends Controller
             $authUser->activate_token = $user->token;
             $authUser->google_id    = $user->id;
             $authUser->save();
+           // $this->updateresumeViewOnUpdate($user->email);
             return $authUser;
         } else {
             $wmid = $this->generateRandomString();
@@ -116,6 +139,8 @@ class LoginController extends Controller
             $authUser->wmid = $wmid;
             $authUser->social_type = $user->social_type;
             $authUser->save();
+            $this->updateresumeViewOnUpdate($user->email);
+            User::contactListInit($user->email, $authUser->id);
             return $authUser;
         }
     }
@@ -134,7 +159,8 @@ class LoginController extends Controller
         }
         if($user->status == '0') {
              return redirect('/activate-account');
-         }
+        }
+        $this->updateresumeViewOnUpdate($user->email);
         return redirect('/home');
     }
 

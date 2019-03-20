@@ -67,7 +67,7 @@
 
                                     </div>
                                     <div class="input-field custom-form">
-                                        <textarea id="request-resume-message"  class=" " ></textarea>
+                                        <textarea id="request-resume-message" name="message"  class=" " ></textarea>
                                         <label for="request-resume-message">Enter message</label>
                                     </div>
 
@@ -89,7 +89,44 @@
         </div>
     </div>
 </section>
+
+    <div id="modelBox" class="modal">
+    <div class="modal-content">
+        <h4>Invite User</h4>
+        <p>User is not existing in our network. Do you want to invite him to join our network?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text waves-green btn-flat" onclick="refreshPage()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect waves-green btn-flat" onclick="invite()">Yes</a>
+      </div>
+</div>
+<a data-target="modelBox" id="modelTigger" class="btn modal-trigger hide"></a>
 <script>
+function refreshPage() {
+    window.location.reload();
+    }
+    // inviting user to view his resume
+    function invite() {
+        $.ajax({
+                type:"POST",
+               	dataType: "JSON",
+                url:"{{url('resume/invite')}}",
+                data:$("#sendRequestForm").serialize(),
+                beforeSend: function(){$("#loading").show();},
+                success: function(response){
+                    $("#loading").hide();
+                    if(response.error == 1){
+                    	$.notify({ content:response.error_msg, timeout:3000});
+                    } else {
+                        window.location.reload();
+                    }
+
+                },
+                error: function(response) {
+                    $("#loading").hide();
+                }
+            });
+    }
 
 $(document).ready(()=>{
 
@@ -183,8 +220,12 @@ $(document).ready(()=>{
                 if(response.error == true){
                     $.notify({ content:response.errorMsg, timeout:3000});
                 } else {
-
-                    window.location.reload();// = "{{url('resume/view')}}";
+                    if(response.invite_user == '1') {
+                       // $("#modelTigger").trigger('click');
+                       $('.modal').modal('open');
+                    } else {
+                        window.location.reload();
+                    }
                 }
 
             },
@@ -206,6 +247,8 @@ $(document).ready(()=>{
             $("#wmid-option-content").show();
         }
     });
+    // init model
+    $('.modal').modal();
 });
 
 </script>

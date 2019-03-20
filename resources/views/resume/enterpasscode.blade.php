@@ -148,7 +148,7 @@
                             $.notify({ content:response.errorMsg, timeout:3000});
                         } else {
 
-                           window.location.href = "{{url('rv')}}/"+response.passcode+"/"+$("#url").val();
+                           window.location.href = "{{url('wm')}}/"+$("#url").val()+"/"+response.passcode;
                         }
 
                     },

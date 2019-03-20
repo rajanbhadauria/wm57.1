@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Auth;
 use URL;
 use Mail;
-
+use App\Model\Resume;
 class RegisterController extends Controller
 {
     /*
@@ -95,6 +95,26 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
+    function updateresumeViewOnUpdate($email) {
+        $resume = Resume::where('ownerEmail', $email);
+        if($resume) {
+
+        } else {
+            $resume = new Resume();
+            $resume->ownerEmail = $email;
+            $resume->currentAddressData = "1"; $resume->permanentAddressData = "1";
+            $resume->awardData = "1"; $resume->certificationData = "1";
+            $resume->contactData = "1"; $resume->courseData = "1";
+            $resume->educationData = "1"; $resume->languageData = "1";
+            $resume->objectiveData = "1"; $resume->patentData = "1";
+            $resume->profileData = "1"; $resume->projectData = "1";
+            $resume->referenceData = "1"; $resume->skillData = "1";
+            $resume->workData = "1";
+            $resume->save();
+        }
+
+    }
+
     protected function create(array $data)
     {
         $activate_token = str_random(64);
@@ -110,7 +130,8 @@ class RegisterController extends Controller
             'activate_token' => $activate_token,
             'password' => bcrypt($data['password']),
         ]);
-
+        User::contactListInit($data['email'], $user->id);
+        $this->updateresumeViewOnUpdate($user->email);
         $this->sendActivationEmail($user->id, $user->email, $user->first_name, $activate_token);
 
         return $user;

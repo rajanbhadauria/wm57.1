@@ -19,7 +19,16 @@ class Activity {
 
     // users new activity count
     public static function countUserActivity($user_id, $email) {
-       return DB::table('notifications')->select("*")->orWhere('forUser', $user_id)->orWhere('email', $email)->Where('readStatus', '0')->get()->count();
+        $sql = "SELECT COUNT(id) as total FROM  notifications WHERE activity != 'resume_received' AND
+                                                           activity != 'resume_viewed' AND
+                                                           (email = '".$email."'  OR forUser = '".$user_id."')
+                                                           AND readStatus = '0'";
+       $result = DB::select($sql);
+       if(isset($result[0])) {
+           return $result[0]->total;
+       } else {
+           return 0;
+       }
 
     }
 
@@ -28,8 +37,9 @@ class Activity {
         $sql = "SELECT *,N.email as email
                         FROM notifications as N
                         JOIN activity_list AL ON N.activity = AL.identifier
-                        WHERE (N.byUser = $user_id AND AL.identifier != 'resume_received')
+                        WHERE (is_visible = '1' AND 1=1) AND (N.byUser = $user_id AND AL.identifier != 'resume_received' AND AL.identifier != 'resume_viewed')
                         OR N.forUser = $user_id OR N.email = '".$email."'
+
                         ORDER BY created_at desc";
         return DB::select($sql);
     }
@@ -38,7 +48,7 @@ class Activity {
        $sql = "SELECT * FROM users
         WHERE (id = $user_id OR email = '".$user_id."') AND 1 = 1";
         $data = DB::select($sql);
-        if($data)
+        if(count($data)>0)
             return $data[0];
         else
             return false;

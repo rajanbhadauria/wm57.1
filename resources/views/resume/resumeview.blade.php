@@ -209,7 +209,7 @@ $print_url = url("resume/print");
 
 										<div class="col2 profile-pic">
 											<div class="pic">
-                                                @if($profileData->profilePrivate && $resumeAccess->profileData)
+                                                @if($profileData && $profileData->profilePrivate && $resumeAccess->profileData)
                                                 <img src="{{get_user_image(Auth::user()->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : Auth::user()->first_name." ".Auth::user()->last_name}}' />
                                                 @endif
 											</div>

@@ -7,16 +7,19 @@ if(isset($sectionid)) {
     $sectionid = '';
 }
 ?>
-
-
     <section class="title-bar">
         <div class="container">
             <div class="row mb0">
                 <div class="col s12 pr">
-                    <h1>Resume update</h1>
+                    <h1>
+                        Resume update ({{(Auth::user()->resume_updated_at!='' && Auth::user()->resume_updated_at!='0000-00-00 00:00:00')  ? Carbon\Carbon::parse(Auth::user()->resume_updated_at)->diffForHumans(): "Resume not updated"}})
+
+                    </h1>
                     <ul class="panel-actions resumebox-actions pull-right">
                         <li><a href="{{url('resume/view')}}" class="text-primary"><i class="small-text material-icons">picture_in_picture</i></a></li>
+
                     </ul>
+
 
 
                 </div>

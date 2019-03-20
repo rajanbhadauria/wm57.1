@@ -95,34 +95,69 @@
         </div>
     </div>
 </section>
+<div id="modelBox" class="modal">
+    <div class="modal-content">
+        <h4>Invite User</h4>
+        <p>User is not existing in our network. Do you want to invite him to join our network?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text waves-green btn-flat" onclick="refreshPage()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect waves-green btn-flat" onclick="invite()">Yes</a>
+      </div>
+</div>
+<a data-target="modelBox" id="modelTigger" class="btn modal-trigger hide"></a>
 <script>
-    $(document).ready(function(){
+    function refreshPage() {
+        window.location.href = "{{url('resume/view')}}";
+    }
+    // inviting user to view his resume
+    function invite() {
+        $.ajax({
+                type:"POST",
+               	dataType: "JSON",
+                url:"{{url('resume/invite')}}",
+                data:$("#sendSaveForm").serialize(),
+                beforeSend: function(){$("#loading").show();},
+                success: function(response){
+                    $("#loading").hide();
+                    if(response.error == 1){
+                    	$.notify({ content:response.error_msg, timeout:3000});
+                    } else {
+                        window.location.href = "{{url('resume/view')}}";
+                    }
 
+                },
+                error: function(response) {
+                    $("#loading").hide();
+                }
+            });
+    }
+    $(document).ready(function(){
     $( "#sendSaveForm" ).validate({
-            //debug: true,
+            ignore: [],
             rules: {
                 option: {required: true},
                 email: {
-                    depends: function(){
-                        if($("radio[name='option']:checked").val() === 'email') {
+                    required: function(){
+                        if($("input[name='option']:checked").val() === 'email') {
                             return true
-                        }
+                        } else { return false;}
                     },
                     email: true
                 },
                 mobile_number: {
-                    depends: function(){
-                        if($("radio[name='option']:checked").val() === 'phone') {
+                    required: function(){
+                        if($("input[name='option']:checked").val() === 'phone') {
                             return true;
-                        }
+                        } else { return false;}
                     },
-                    number: true
+
                 },
                 country_code: {
-                    depends: function(){
-                        if($("#mobile_number").val()!="") {
+                    required: function(){
+                        if($("input[name='option']:checked").val() === 'phone') {
                             return true;
-                        }
+                        } else { return false;}
                     }
                 },
 
@@ -169,7 +204,13 @@
                     	$.notify({ content:response.error_msg, timeout:3000});
                     } else {
                     	$('#success').css({'visibility': 'visible'});
-                       window.location.href = "{{url('resume/view')}}";
+                    if(response.invite_user == '1') {
+                       // $("#modelTigger").trigger('click');
+                       $('.modal').modal('open');
+                    } else {
+                        window.location.href = "{{url('resume/view')}}";
+                    }
+
                     }
 
                 },
@@ -179,10 +220,6 @@
             });
             }
         });
-
-
-
-
 
        $(".with-gap").on('click', function(){
 
@@ -195,6 +232,8 @@
             $("#phonenumber_options").show();
         }
        });
+       // init model
+       $('.modal').modal();
     });
 </script>
 @endsection

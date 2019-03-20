@@ -177,98 +177,7 @@ class ResumeController extends Controller
         return view('resume.resumeview',$data);
 
     }
-    /*
-	public function view_old(Request $request){
-        $input = $request->all();
 
-        $input = $request->all();
-        if(isset($input['sectionid'])){
-            $data['sectionid'] = $input['sectionid'];
-        }
-
-
-        $ownerEmail = Auth::user()->email;
-        $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
-        $user_id = Auth::id();
-
-        $data['profileData'] = User::where("id","=",$user_id)->get()->first();
-        $data['contactInfo'] = Contact::where("user_id","=",$user_id)->get()->first();
-        $data['contactCount'] = Contact::where("user_id","=",$user_id)->count();
-
-        $data['objectiveInfo'] = Objective::where("user_id","=",$user_id)->get()->first();
-        $data['objectiveCount'] = Objective::where("user_id","=",$user_id)->count();
-
-        $data['currentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("type","0")->get()->first();
-        $data['currentAddressCount'] = Address::where("user_id","=", Auth::id())->where("type","0")->count();
-
-        $data['permanentAddressInfo'] = Address::where("user_id","=", Auth::id())->where("type","1")->get()->first();
-        $data['permanentAddressCount'] = Address::where("user_id","=", Auth::id())->where("type","1")->count();
-
-        $data['workInfo']  = Work::where("user_id","=", Auth::id())->orderBy('workStartDate', 'desc')->get();
-        $data['workCount'] = Work::where("user_id","=", Auth::id())->count();
-
-        $data['currentWorkInfo']  = Work::where("user_id","=", Auth::id())->where("employementStatus","=","1")->get()->first();
-        $data['currentWorkCount']  = Work::where("user_id","=", Auth::id())->where("employementStatus","=","1")->count();
-
-
-        if($data['workCount'] > 0 ){
-
-            if($data['workInfo'][0]->workEndDate!='0000-00-00 00:00:00'){
-                $data['workEnding'] = $data['workInfo'][0]->workEndDate;
-            }else{
-                $data['workEnding'] = date('Y-m-d H:i:s');
-            }
-            foreach ($data['workInfo'] as $key => $work) {
-                if($work->workEndDate!='0000-00-00 00:00:00'){
-                    $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,$work->workEndDate);
-                }else{
-                    $data['workInfo'][$key]['duration'] = $this->dateDiffrence($work->workStartDate,date('Y-m-d H:i:s'));
-                }
-                $data['workStarting'] = $work->workStartDate;
-            }
-            //echo $data['workStarting'].",".$data['workEnding']."<br />";
-            $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
-        }
-
-        $data['educationInfo'] = Education::where("user_id","=", Auth::id())->orderBy('educationDate', 'desc')->get();
-        $data['educationCount'] = Education::where("user_id","=", Auth::id())->count();
-
-        $data['projectInfo'] = Project::where("user_id","=", Auth::id())->get();
-        $data['projectCount'] = Project::where("user_id","=", Auth::id())->count();
-
-        $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get();
-        $data['skillCount'] = Skill::where("user_id","=", Auth::id())->count();
-
-        $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->get();
-        $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->count();
-
-        $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->get();
-        $data['trainingCount'] = Training::where("user_id","=", Auth::id())->count();
-
-        $data['courseInfo'] = Course::where("user_id","=", Auth::id())->get();
-        $data['courseCount'] = Course::where("user_id","=", Auth::id())->count();
-
-        $data['travelInfo']  = Travel::where("user_id","=", Auth::id())->get();
-        $data['travelCount'] = Travel::where("user_id","=", Auth::id())->count();
-
-        $data['awardInfo']  = Award::where("user_id","=", Auth::id())->get();
-        $data['awardCount'] = Award::where("user_id","=", Auth::id())->count();
-
-        $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->get();
-        $data['patentCount'] = Patent::where("user_id","=", Auth::id())->count();
-
-        $data['languageInfo']  = Language::where("user_id","=", Auth::id())->get();
-        $data['languageCount'] = Language::where("user_id","=", Auth::id())->count();
-
-        $data['referenceInfo']  = Reference::where("user_id","=", Auth::id())->get();
-        $data['referenceCount'] = Reference::where("user_id","=", Auth::id())->count();
-
-
-
-        return view('resume.view',$data);
-
-    }
-    */
 
     public function dateDiffrence($date1,$date2){
 
@@ -443,10 +352,51 @@ class ResumeController extends Controller
         $user->save();
         return $rand;
     }
+    // inviting user to join
+    public function inviteUser(Request $request){
+        $input = $request->all();
+        $json['error'] = 0;
+        $json['error_msg'] = "";
+        $user = DB::table('user_invitations')->where('invited_by', Auth::id())->where('invited_email', $input['email'])->count();
+        if($user>0) {
+            $json['error'] = 1;
+            $json['error_msg'] = "User is already invited.";
+        } else {
+            $inv_count = DB::table('user_invitations')->where('invited_email', $input['email'])->count();
+            $users = $inv_count > 1 ? 'users' : 'user';
+            if($inv_count>0)
+                $input['subject'] = Auth::user()->name." invited to join WorkMedian with ".$inv_count. " other ".$users;
+            else
+            $input['subject'] = Auth::user()->name." invited to join WorkMedian to access his resume";
+            $message = nl2br($input['message']);
+            $insertData['invited_by'] = Auth::id();
+            $insertData['invited_email'] = $input['email'];
+            $invitation = DB::table('user_invitations')->insert($insertData);
+            Email::sendInvite($input['email'],Auth::user()->name,$input['subject'],0, $message);
+        }
+        return response()->json($json);
+
+    }
 
     public function sendSave(Request $request){
         $input = $request->all();
-        $input['subject'] = Auth::user()->first_name." ".Auth::user()->last_name. " shared his resume to you";
+        $json['invite_user'] = "0";
+        // checking if user is send resume to him self
+        if($input['email'] === Auth::user()->email) {
+            $json['error'] = 1;
+            $json['error_msg'] = "You can not send resume to your self";
+            return response()->json($json);
+        }
+
+        // check if you already sent the resume
+        $user = DB::table('notifications')->where('byUser', Auth::id())->where('email', $input['email'])->first();
+        if($user) {
+            $json['error'] = 1;
+            $json['error_msg'] = "You already sent the resume to this user";
+            return response()->json($json);
+        }
+
+        $input['subject'] = Auth::user()->first_name."'s resume received ";
         $updateFlag = 0;
         $ownerEmail = Auth::user()->email;
         $userEmail = $input['email'];
@@ -465,6 +415,7 @@ class ResumeController extends Controller
         }
         $activity['byUser'] = Auth::id();
         $shareData['shareData']['is_secure'] = $input['is_secure'];
+        $shareData['shareData']['coverLetter'] = $input['message'];
         $checkExistingResume = Resume::where("ownerEmail","=",$ownerEmail)->where("userEmail","=",$userEmail)->get()->count();
         if($checkExistingResume <= 0){
             $updateFlag = 0;
@@ -473,7 +424,7 @@ class ResumeController extends Controller
             $resume->userEmail = $userEmail;
             $resume->subject = $input['subject'];
             $resume->save();
-
+            $activity['resume_id'] = $resume->id;
             Resume::where("id","=", $resume->id)->update($shareData['shareData']);
         } else {
             $updateFlag = 1;
@@ -482,6 +433,7 @@ class ResumeController extends Controller
             $resume->save();
             //$shareData = session('shareData');
             Resume::where("id","=", $resume->id)->update($shareData['shareData']);
+            $activity['resume_id'] = $resume->id;
         }
 
 
@@ -498,24 +450,24 @@ class ResumeController extends Controller
         $message .=  "<br/>Click <a heref='".URL::to('wm').'/'.$url."'>here</a> to view resume or <br> copy paste url " . URL::to('wm')."/".$url;
         if($getUser){
             $activity['forUser'] = $getUser->id;
-            $data['error'] = "0";
+            $json['error'] = "0";
             Email::shareResume($userEmail,$ownerData->name,$input['subject'],$updateFlag, $message);
         } else {
-            $data['error'] = "0";
-            Email::sendInvite($userEmail,$ownerData->name,$input['subject'],$updateFlag, $message);
+            $json['error'] = "0";
+            //Email::sendInvite($userEmail,$ownerData->name,$input['subject'],$updateFlag, $message);
+            $json['invite_user'] = "1";
         }
         Resume::where("id","=", $resume->id)->update(['resume_url'=>$url]);
         $activity['email'] = $userEmail;
         $activity['activity'] = "resume_sent";
         $activity['created_at'] = date('Y-m-d H:i:s');
+        $activity['resume_id'] = $resume->id;
+        $activity['request_status'] = 'accepted';
         // sent activity
         Activity::createActivity($activity);
-        // received activity
-        // $activity['activity'] = "resume_received";
-        // $activity['resume_id']  = $resume->id;
-        // Activity::createActivity($activity);
+
         $request->session()->flash('success', 'Request has been sent successfully!');
-        return response()->json($data);
+        return response()->json($json);
     }
 
     public function resume($id){
@@ -530,7 +482,6 @@ class ResumeController extends Controller
         $user_id = $ownerData->id;
 
         $data['profileData'] = User::where("id","=",$user_id)->where("profilePrivate", '0')->get()->first();
-
         $data['contactInfo'] = Contact::where("user_id", $user_id)->where("private", '0')->get()->first();
         $data['contactCount'] = Contact::where("user_id","=",$user_id)->where("private", '0')->count();
 
@@ -657,10 +608,36 @@ class ResumeController extends Controller
             return view('resume.enterpasscode', array('user' => $ownerData,  'id'=> $user_url));
         }
         $ownerData = User::where("email","=",$resumeAccess['ownerEmail'])->get()->first();
+        $notification = DB::table('notifications')
+        ->where('resume_id', $id)
+        ->where('resume_viewed', '0')
+        ->first();
+        if($notification) {
+            $resumeAccess->resume_viewed = "1";
+            $resumeAccess->save();
+            DB::table('notifications')
+                ->where('resume_id', $id)->update(['resume_viewed' => '1']);
+
+            $activity['byUser'] = Auth::id();
+            $activity['forUser'] = $notification->byUser;
+            //$activity['email'] = $userEmail;
+            $activity['activity'] = "resume_viewed";
+            $activity['created_at'] = date('Y-m-d H:i:s');
+            $activity['resume_id'] = $notification->resume_id;
+            $activity['request_status'] = 'accepted';
+            $activity['is_visible'] = '0';
+            Activity::createActivity($activity);
+        }
 
         $user_id = $ownerData->id;
+        // inserting view stats
+        if(Auth::id()) {
+            $insertData['viewed_by'] = Auth::id();
+            $insertData['resume_user_id'] = $user_id;
+            DB::table('resume_stats')->insert($insertData);
+        }
 
-        $data['profileData'] = User::where("id","=",$user_id)->where("profilePrivate", '0')->get()->first();
+        $data['profileData'] = User::where("id","=",$user_id)->get()->first();
 
         $data['contactInfo'] = Contact::where("user_id", $user_id)->where("private", '0')->get()->first();
         $data['contactCount'] = Contact::where("user_id","=",$user_id)->where("private", '0')->count();
@@ -1258,29 +1235,38 @@ class ResumeController extends Controller
             if($activity && $input['status'] == 'rejected') {
                 DB::table('notifications')
                 ->where('id', $input['req_id'])
-                ->update(['request_status' => $input['status']]);
+                ->update(array('request_status' => $input['status'], 'is_visible' => '0'));
+                $json['error'] = false;
+            } elseif($activity && $input['status'] == 'cancel') {
+                DB::table('notifications')
+                ->where('id', $input['req_id'])
+                ->update(['is_visible' => '0']);
 
                 $json['error'] = false;
             } else {
                 $resume = DB::table('resumes')->where('ownerEmail', $activity->email)->first();
                 if($resume) {
-                    $user = DB::table('users')->where('id', $activity->forUser)->first();
-                    $url = str_replace(" ", "-", $user->first_name."-".$user->last_name)."-".$resume->id."/".$this->changePasscode();
+                    $user = DB::table('users')->where('id', $activity->byUser)->first();
+                    $activity1['email'] = Auth::user()->email;
+                    $activity1['resume_id'] = $resume->id;
+                    $activity1['request_status'] = 'accepted';
+                    $url = str_replace(" ", "-", Auth::user()->first_name."-".Auth::user()->last_name)."-".$resume->id."/".$this->changePasscode();
                     DB::table('notifications')
                     ->where('id', $input['req_id'])
-                    ->update(array('request_status' => $input['status'], 'resume_id' => $resume->id));
-                    // updating resume status
+                    ->update(array('request_status' => $input['status'], 'resume_id' => $resume->id, 'is_visible' => '0'));
                     DB::table('resumes')->where('id', $resume->id)->update(array('request_status' => $input['status'], 'resume_url' => $url));
+                    Email::sendAcceptResumeResp($user->email,$resume->ownerEmail, Auth::user()->first_name);
                     $json['error'] = false;
                 } else {
                     $json ['errorMsg'] = "User resume is not created yet";
                 }
             }
-            if($json['errorMsg']  == "") {
+            if($json['errorMsg']  == "" && $input['status'] != 'cancel') {
                 $activity1['byUser'] = Auth::id();
                 $activity1['forUser'] = $activity->byUser;
                 $activity1['activity'] = $input['status'] == 'rejected' ? 'resume_rejected' : 'resume_accepted';
-                $activity1['email'] = $user->email;
+
+
                 $activity1['created_at'] = date('Y-m-d H:i:s');
                 Activity::createActivity($activity1);
             }
@@ -1315,14 +1301,28 @@ class ResumeController extends Controller
     function requestResumeSave(Request $request) {
         $json['error'] = true;
         $json['errorMsg'] = "";
+        $json['invite_user'] = '0';
         $input = $request->all();
         if($input['option'] == 'email') {
             $user = DB::table('users')->where('email', $input['email'])->first();
+            // matching if user is requesting self resume
             if($user) {
                 if($user->id == Auth::id()) {
                     $json['errorMsg'] = "You can not send request to yourself";
                     return response()->json($json);
                 }
+            // checking if request resume is already in pedning state
+
+            $pendingReq =  DB::table('notifications')->where('byUser', Auth::id())
+                                    ->where('email', $input['email'])
+                                    ->where('activity', 'resume_request')
+                                    ->where('request_status', '!=', 'accepted')
+                                    ->first();
+            // if request is already pending then end process here with flash message
+            if($pendingReq) {
+                $json['errorMsg'] = "Your request is accepted or pending to view.";
+                return response()->json($json);
+            }
                 $activity['byUser'] = Auth::id();
                 $activity['forUser'] = $user->id;
                 $activity['activity'] = 'resume_request';
@@ -1330,9 +1330,20 @@ class ResumeController extends Controller
                 $activity['created_at'] = date('Y-m-d H:i:s');
                 Activity::createActivity($activity);
                 $request->session()->flash('success', 'Request has been sent successfully!');
+                Email::sendResumeRequest($input['email'], Auth::user()->email, Auth::user()->first_name, $input['message']);
                 $json['error'] = false;
             } else {
-                $json['errorMsg'] = "Email id not found";
+
+                $activity['byUser'] = Auth::id();
+                //$activity['forUser'] = $user->id;
+                $activity['activity'] = 'resume_request';
+                $activity['email'] = $input['email'];
+                $activity['created_at'] = date('Y-m-d H:i:s');
+                Activity::createActivity($activity);
+                $request->session()->flash('success', 'Request has been sent successfully!');
+                $json['invite_user'] = '1';
+                //Email::sendResumeRequestInvitation($input['email'],Auth::user()->email, Auth::user()->first_name);
+                $json['error'] = false;
 
             }
         }
@@ -1388,7 +1399,7 @@ class ResumeController extends Controller
             $json['error_msg'] = "Please complete your resume first";
             return response()->json($json);
         }
-        $activity['byUser'] = Auth::id();
+
         $shareData['shareData']['is_secure'] = '0';
         $checkExistingResume = Resume::where("ownerEmail","=",$ownerEmail)->where("userEmail","=",$userEmail)->get()->count();
         if($checkExistingResume <= 0){
@@ -1416,7 +1427,7 @@ class ResumeController extends Controller
         $name = str_replace(" ", "-", Auth::user()->first_name."-".Auth::user()->last_name);
         $message = $input['message'];
 
-        $passCode = $this->changePasscode();
+        $passCode = $ownerData->resume_passcode;
         $url = $name."-".$data['resumeId']."/".$passCode;
         $message .=  "<br/>Click <a heref='".URL::to('wm').'/'.$url."'>here</a> to view resume or <br> copy paste url " . URL::to('wm')."/".$url;
         if($getUser){
@@ -1428,8 +1439,10 @@ class ResumeController extends Controller
             Email::sendInvite($userEmail,$ownerData->name,$input['subject'],$updateFlag, $message);
         }
         Resume::where("id","=", $resume->id)->update(['resume_url'=>$url]);
+        $activity['byUser'] = Auth::id();
         $activity['email'] = $userEmail;
         $activity['activity'] = "resume_forwarded";
+        $activity['request_status'] = "accepted";
         $activity['resume_id'] = $resume->id;
         $activity['created_at'] = date('Y-m-d H:i:s');
         // sent activity
