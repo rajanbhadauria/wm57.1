@@ -167,11 +167,6 @@
             });
             }
         });
-
-
-
-
-
        $(".with-gap").on('click', function(){
 
         if($("input[name='option']:checked").val() === 'email') {
@@ -183,6 +178,17 @@
             $("#phonenumber_options").show();
         }
        });
+
+       $( "#send-resume-email" ).autocomplete({
+        source: "{{url('user/search')}}",
+        minLength: 2,
+        select: function( event, ui ) {
+                $( "#send-resume-email" ).val(ui.item.id); //ui.item is your object from the array
+                return false;
+            }
+        });
     });
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @endsection

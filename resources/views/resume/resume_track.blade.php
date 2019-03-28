@@ -17,6 +17,7 @@
 					<div class="ak-full-center-box">
 						<div class="">
 							<ul class="resume-user__list">
+
                                 <?php foreach($activities as $activity) {
                                     $user1Obj = App\Helpers\Activity::getUserDetails($activity->byUser);
                                     $user2Obj = App\Helpers\Activity::getUserDetails($activity->forUser);
@@ -30,12 +31,12 @@
                                     ?>
                                     @if($activity->is_visible == '1')
 								<li class="container-card">
-									<div class="resume-user__list-img">
-										<img src="{{get_user_image($user1Obj->avatar)}}" alt="{{$user1}}" class="circle"/>
+									<div class="resume-user__list-img center-align">
+										<img src="{{get_user_image($user1Obj->avatar)}}" alt="{{$user1}}" class="circle small"/>
 									</div>
 									<div class="resume-user__list-content">
 										<div class="resume-user__list-content-in">
-                                        <p>{{$user1}}
+                                        <p><!--{{$user1}}-->
                                             <span>
                                                 <!--{{date('dS F Y', strtotime($activity->updated_at))}}-->
                                                {{Carbon\Carbon::parse($activity->created_at)->diffForHumans()}}
@@ -74,7 +75,8 @@
                                 @endif
                             <?php } ?>
 							</ul>
-						</div>
+                        </div>
+                        <div class="pagination">{{$activities}}</div>
 					</div>
 				</div>
 			</div>

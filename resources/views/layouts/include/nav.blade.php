@@ -13,33 +13,25 @@
                             </span> -->
                         </a>
                     </li>
-                    <!-- <li><a class="waves-effect" href="#"><i class="material-icons grey-text margin-right">assignment</i> WM5456R</a></li> -->
-                    <!-- <li><a class="waves-effect waves-light-grey" href="#"><i class="material-icons grey-text margin-right">assignment</i>
-                            Add credits</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="#"><i class="material-icons grey-text margin-right">assignment</i>
-                            Credits status (456/1000) </a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/home') }}"><i class="material-icons grey-text margin-right">home</i>
-                            Home</a></li> -->
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/update') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Update resume</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/view') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Edit resume (self view)</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{url('/resumesample')}}"><i
-                                class="material-icons grey-text margin-right">public</i> View resume (Public)</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/postsignup') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Post signup</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/send') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Send resume</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/requestresume') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Request resume</a></li>
+
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/socialmediaverification') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Social media verification</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/preloader') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Preloader</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/forwardresume') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Forward resume</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/invite') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Invite</a></li>
+
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/viewedbyme') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                            Resume Viewed By me </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/viewedbyother') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                        Resume Viewed By Others </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/received') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                        Resume Received By me </a></li>
+                        <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/sentresumes') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                            Resume Sent By me </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/requestedbyme') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                        Resume Requested By me </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/requestedbyotheres') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                        Resume Requested By Others </a></li>
+                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resume/haveaccess') }}"><i class="material-icons grey-text  margin-right">assignment</i>
+                        Users can access my Resume </a></li>
+
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/phoneverification') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Phone verification</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/jobseekingstatus') }}"><i class="material-icons grey-text  margin-right">assignment</i>
@@ -54,29 +46,22 @@
                             Success</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/failure') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Failure</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/settings') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Settings</a></li>
+
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/emailverification') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Email verification</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/deactivate') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Deactivate account</a></li>
+
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/resumebox') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Resume box</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/memberlist') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Memberslist</a></li>
+                            WorkMedian Members(5)</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/skillshiring') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Skills hiring</a></li>
                     <li><a class="waves-effect waves-light-grey" href="{{ url('/membersinvited') }}"><i class="material-icons grey-text  margin-right">assignment</i>
                             Members invited</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/accesscode') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Access code</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/resumetrack') }}"><i class="material-icons grey-text  margin-right">assignment</i>
-                            Track resume</a></li>
+
+
                     <li><a class="waves-effect waves-light-grey modal-trigger" href="#resume-actions"><i class="material-icons grey-text  margin-right">assignment</i>
                             Popup</a></li>
-                    <li><a class="waves-effect waves-light-grey" href="{{ url('/password/activation-link-sent') }}"><i
-                                class="material-icons grey-text  margin-right">assignment</i>
-                            Password activation link</a></li>
                 </ul>
                 <ul class="nav">
                 <li><a class="waves-effect waves-light-grey" href="{{url('/terms')}}">Terms &amp; conditions </a></li>

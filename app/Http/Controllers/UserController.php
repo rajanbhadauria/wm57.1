@@ -8,6 +8,11 @@ use Auth;
 use Hash;
 use URL;
 use Mail;
+use DB;
+use App\Model\Resume;
+
+use App\Helpers\Activity;
+use App\Helpers\Email;
 
 class UserController extends Controller
 {
@@ -162,8 +167,127 @@ class UserController extends Controller
         return redirect('login')->with('success',$message);
     }
 
+    // all users that all have in my contact list
     public function contactlist() {
         $data['users'] = User::getMyContacts(Auth::id());
         return view('user.contactlist', $data);
+    }
+    //listing all users that have my resume view access
+    public function resumeAccessedUsers() {
+        $data['users'] = Resume::getResumeAccessedUsersList(Auth::id());
+        return view('user.resume_accessed_users', $data);
+    }
+    // updating resume access
+    public function resumeAccessedUpdate(Request $request) {
+        $json['error'] = false;
+        $json['error_msg'] = "";
+
+        $inputs = $request->all();
+        $email = base64_decode($inputs['user']);
+        $update['is_visible'] = isset($inputs['is_visible']) ? '1' : '0';
+        DB::table('resumes')->where('ownerEmail', Auth::user()->email)
+                            ->where('userEmail', $email)
+                            ->update(['is_visible' => $update['is_visible']]);
+        return response()->json($json);
+    }
+
+    function accessRequests() {
+        $user_id = Auth::id();
+        $email = Auth::user()->email;
+        $data['activities'] = Activity::getResumeAccessRequest($user_id, $email);
+        return view('user.resume_access_request', $data);
+    }
+
+    function resumeReceivedRequests() {
+        $user_id = Auth::id();
+        $email = Auth::user()->email;
+        $data['activities'] = Activity::getResumeReceivedRequest($user_id, $email);
+        return view('user.resume_received_request', $data);
+    }
+
+    function invite() {
+        return view('user.invite');
+    }
+
+    function inviteSave(Request $request) {
+        $input = $request->all();
+        $json['error'] = 0;
+        $json['error_msg'] = "";
+        $email = $input['email'];
+        $message = $input['message'];
+        if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+            $json['error'] = 1;
+            $json['error_msg'] = "Please enter valid email id";
+            return response()->json($json);
+        }
+        // checking if invited email already registered or not
+        $user = User::where("email","=",$email)->get()->first();
+        if($user) {
+            $json['error'] = 1;
+            $json['error_msg'] = "Email is already registered";
+            return response()->json($json);
+        }
+
+
+        $inv_count = DB::table('user_invitations')
+                            ->where('invited_by', "!=", Auth::id())
+                            ->where('invited_email', $email)->count();
+        $users = $inv_count > 1 ? 'users' : 'user';
+        if($inv_count>0)
+            $input['subject'] = Auth::user()->name." invited you to join WorkMedian with ".$inv_count. " other ".$users;
+        else
+            $input['subject'] = Auth::user()->name." invited you to join WorkMedian";
+        $message = nl2br($message);
+        Email::sendInvite($email,Auth::user()->name,$input['subject'],0, $message);
+        $inv_user = DB::table('user_invitations')->where('invited_by', Auth::id())->where('invited_email', $email)->count();
+        if($inv_user == 0) {
+            $insertData['invited_by'] = Auth::id();
+            $insertData['invited_email'] = $email;
+            $invitation = DB::table('user_invitations')->insert($insertData);
+        }
+        $activity['byUser'] = Auth::id();
+        $activity['email'] = $email;
+        $activity['activity'] = "invitation_sent";
+        $activity['created_at'] = date('Y-m-d H:i:s');
+        $activity['request_status'] = 'accepted';
+        // sent activity
+        Activity::createActivity($activity);
+        $request->session()->flash('success', 'Request has been sent successfully!');
+        return response()->json($json);
+    }
+
+    // searching email for auto complete
+    function searchEmail() {
+        $term = Request()->input('term');
+        $emails = [];
+        if($term!="") {
+            $result = User::select('email', 'name')
+                        ->where(function($query) use ($term){
+                            $query->orWhere('email', 'like', '%'.$term.'%')
+                            ->orWhere('first_name', 'like', '%'.$term.'%')
+                            ->orWhere('last_name', 'like', '%'.$term.'%');
+                        })->where('email', '!=' , Auth::user()->email)
+                            ->groupBy('email')
+                            ->get();
+            if($result) {
+                foreach($result as $res) {
+                    $emails[]  =array("value" => $res->email, "id" => $res->email, "label" => "(".$res->name.") ".$res->email);
+                    }
+            }
+
+            $result = DB::table('notifications')->select('email')
+                            ->where('email', 'like', '%'.$term.'%')
+                            ->where('email', '!=' , Auth::user()->email)
+                            ->groupBy('email')
+                            ->get();
+            if($result) {
+                foreach($result as $res) {
+                    if(!array_search($res->email, array_column($emails, 'id'))) {
+                        $emails[] = array("value" => $res->email, "id" => $res->email, "label" => $res->email);
+                    }
+                   }
+            }
+        }
+        return response()->json($emails);
     }
 }

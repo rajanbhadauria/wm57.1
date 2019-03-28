@@ -1,0 +1,13 @@
+/* font converted using font-converter.net. thank you! */
+@font-face {
+  font-family: "Calibri";
+  src: url("./fonts/calibri.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/calibri.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/calibri.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/calibri.svg") format("svg"), /* Legacy iOS */
+    url("./fonts/calibri.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/calibri.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/calibri.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}

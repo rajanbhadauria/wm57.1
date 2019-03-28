@@ -20,7 +20,7 @@
 				  </a>
 				</li>
 				<li class="notification-blck">
-				  <a class="waves-effect" href="{{ url('/notifications') }}">
+				  <a class="waves-effect" href="{{ url('/resume/track') }}">
 					<i class="material-icons">notifications</i>
 					<i class="material-icons dot">brightness_1</i>
 				  </a>
@@ -43,29 +43,41 @@
 					<div class="col s6 m4">
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
-                            <h5 class="mptext">Resume</h5>
-							<p>{{(Auth::user()->resume_updated_at!='' && Auth::user()->resume_updated_at!='0000-00-00 00:00:00')  ? Carbon\Carbon::parse(Auth::user()->resume_updated_at)->diffForHumans(): "Resume not updated"}}</p>
+                            <h5 class="mptext">
+                            <a href="{{url('resume/view')}}" class="purple-text">My Resume</a></h5>
+							<p>{{(Auth::user()->resume_updated_at!='' && Auth::user()->resume_updated_at!='0000-00-00 00:00:00')  ? "Updated ".Carbon\Carbon::parse(Auth::user()->resume_updated_at)->diffForHumans(): "Resume not updated"}}</p>
 						  </div>
 						  <a href="{{URL::to('/update/options')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Update</a>
-						  <a href="{{URL::to('/resume/view')}}" class="waves-effect waves-light btn-black ak-btn-half-second">View</a>
+						  <a href="{{URL::to('/resume/send')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Send</a>
 					  </div>
 					</div>
 
 					<div class="col s6 m4">
-					  <div class="widget-block ak-wblock">
-						<div class="ak-wblockflx">
-						    <h5 class="mptext mpstext">Social share</h5>
-						    <p>Facebook<span class="ak-green-text"> (<i class="material-icons ak-grnchk">check</i>)</span> LinkedIn Google</p>
-						    <a href="industry.html" class="waves-effect waves-light btn-black ak-btn-half-first">Share requirements</a>
-						    <a href="invite.html" class="waves-effect waves-light btn-black ak-btn-half-second">Invite a connection</a>
-						</div>
-					  </div>
-					</div>
+                        <div class="widget-block ak-wblock">
+                            <div class="ak-wblockflx">
+                                <h5 class="mptext">My Resume access</h5>
+                            <p>{{$viewCount}}</p>
+                            <a href="{{url('resume-accessed-user')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Who viewed me ?</a>
+                            <a href="{{url('resume-access-requests')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Access request</a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col s6 m4">
+                            <div class="widget-block ak-wblock">
+                                <div class="ak-wblockflx">
+                                    <h5 class="mptext">Resumebox</h5>
+                                    <p>334</p>
+                                    <a href="{{url('resume-received')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Resume received</a>
+                                    <a href="{{url('requestresume')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Request for resume</a>
+                                </div>
+                            </div>
+                          </div>
 
 					 <div class="col s6 m4">
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
-							  <h5 class="mpitext">Members</h5>
+							  <h5 class="mpitext">My network</h5>
 							  <p>{{count($members)}}</p>
 							  <ul class="ak-user-face">
                                 <?php
@@ -74,33 +86,24 @@
                                 <li><img src="{{get_user_image($members[$i]->avatar)}}" /></li>
                                <?php } ?>
 							  </ul>
-							  <a href="{{URL::to('/contactlist')}}" class="waves-effect waves-light btn-black ak-btn-half-first">My network</a>
-							  <a href="{{URL::to('/memberlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Find WM members</a>
+							  <a href="{{URL::to('/user/invite')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Invite connection</a>
+							  <a href="{{URL::to('/contactlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">My contacts</a>
 						  </div>
 					  </div>
 					</div>
 
-					 <div class="col s6 m4">
-					  <div class="widget-block ak-wblock">
-						  <div class="ak-wblockflx">
-							  <h5 class="mptext">Resume access</h5>
-                          <p>{{$viewCount}}</p>
-							  <a href="http://wm.dainidev.com/update" class="waves-effect waves-light btn-black ak-btn-half-first">Who viewed me ?</a>
-							  <a href="http://wm.dainidev.com/update" class="waves-effect waves-light btn-black ak-btn-half-second">Access request</a>
-						</div>
-				      </div>
-					</div>
 
-					<div class="col s6 m4">
-					  <div class="widget-block ak-wblock">
-						  <div class="ak-wblockflx">
-							  <h5 class="mptext">Resumebox</h5>
-							  <p>334</p>
-							  <a href="resumebox.html" class="waves-effect waves-light btn-black ak-btn-half-first">Resume received</a>
-							  <a href="skill-form.html" class="waves-effect waves-light btn-black ak-btn-half-second">Looking for skills</a>
-				          </div>
-				      </div>
-					</div>
+
+                    <div class="col s6 m4">
+                            <div class="widget-block ak-wblock">
+                              <div class="ak-wblockflx">
+                                  <h5 class="mptext mpstext">Social share</h5>
+                                  <p>Facebook<span class="ak-green-text"> (<i class="material-icons ak-grnchk">check</i>)</span> LinkedIn Google</p>
+                                  <a href="industry.html" class="waves-effect waves-light btn-black ak-btn-half-first">Share requirements</a>
+                              <a href="{{url('user/invite')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Invite a connection</a>
+                              </div>
+                            </div>
+                          </div>
 
 					<div class="col s6 m4">
 					  <div class="widget-block ak-wblock">

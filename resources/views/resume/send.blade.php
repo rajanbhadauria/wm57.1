@@ -22,14 +22,18 @@
                                             <a class="text-primary" href="{{ url('/resume') }}">view</a> your resume before you send</div>
                                 <form class="m-0" method="post" action="{{url('/resume/send-save')}}" id="sendSaveForm">
                                         {{ csrf_field() }}
+                                        <input type="hidden" name="request" value="sendResume">
+                                        <input type="hidden" name="isResend" id="isResend" value="0">
                                         <div class="custom-from cf-hide mb25">
                                             <div class="form-control">
                                                     <input type="radio" class="with-gap" name="is_secure" id="is_secure1" value="0" checked>
-                                                    <label for="is_secure1">Copy link - Secure (User need passkey)</label>
+                                                    <label for="is_secure1">
+                                                        {{$url1}} (Passkey would be required)
+                                                    </label>
                                             </div>
                                             <div class="form-control">
                                                     <input type="radio" class="with-gap" name="is_secure" id="is_secure2" value="1">
-                                                    <label for="is_secure2">Copy link - Public (User direct access)</label>
+                                            <label for="is_secure2">{{$url2}} (Passkey is not required)</label>
                                             </div>
                                         </div>
                                               <div class="clearfix">&nbsp;</div>
@@ -95,35 +99,52 @@
         </div>
     </div>
 </section>
-<div id="modelBox" class="modal">
+<div id="modelBoxInvite" class="modal">
     <div class="modal-content">
-        <h4>Invite User</h4>
-        <p>User is not existing in our network. Do you want to invite him to join our network?</p>
+        <h4 class="green-text text-darken-4"> Resume sent !</h4>
+        <p>
+            We found that user is not on WorkMedian, would you like to invite <span class="blue-text text-darken-4 email-span"></span> ?
+        </p>
       </div>
       <div class="modal-footer">
-        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text waves-green btn-flat" onclick="refreshPage()">No</a>
-        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect waves-green btn-flat" onclick="invite()">Yes</a>
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text btn-flat" onclick="redirectToActivity()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect btn-flat" onclick="invite(1, 1)">Yes</a>
       </div>
 </div>
-<a data-target="modelBox" id="modelTigger" class="btn modal-trigger hide"></a>
+
+<div id="modelBoxResend" class="modal">
+    <div class="modal-content">
+        <h4>Re send ?</h4>
+        <p>You have already sent your resume to <span class="blue-text text-darken-4 email-span"></span> do you want to send again ?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text btn-flat" onclick="redirectToActivity()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect btn-flat" onclick="resend()">Yes</a>
+      </div>
+</div>
+
 <script>
-    function refreshPage() {
-        window.location.href = "{{url('resume/view')}}";
+    function resend() {
+        $("#isResend").val('1');
+        $("#sendSaveForm").submit();
+    }
+    function redirectToActivity() {
+        window.location.href = "{{url('resume/track')}}";
     }
     // inviting user to view his resume
-    function invite() {
+    function invite(invite = 0, resend = 0) {
         $.ajax({
                 type:"POST",
                	dataType: "JSON",
-                url:"{{url('resume/invite')}}",
-                data:$("#sendSaveForm").serialize(),
+                url: "{{url('resume/send-invitation')}}",
+                data:$("#sendSaveForm").serialize() + '&isInvite=' + invite+'&isResend='+resend,
                 beforeSend: function(){$("#loading").show();},
                 success: function(response){
                     $("#loading").hide();
                     if(response.error == 1){
                     	$.notify({ content:response.error_msg, timeout:3000});
                     } else {
-                        window.location.href = "{{url('resume/view')}}";
+                        window.location.href = "{{url('resume/track')}}";
                     }
 
                 },
@@ -132,6 +153,7 @@
                 }
             });
     }
+
     $(document).ready(function(){
     $( "#sendSaveForm" ).validate({
             ignore: [],
@@ -197,22 +219,27 @@
                	dataType: "JSON",
                 url:$("#sendSaveForm").attr("action"),
                 data:$("#sendSaveForm").serialize(),
-                beforeSend: function(){$("#loading").show();},
+                beforeSend: function(){$("#loading").show();$(".email-span").html("");},
                 success: function(response){
+                    var redirectFlag = 1;
                     $("#loading").hide();
                     if(response.error == 1){
                     	$.notify({ content:response.error_msg, timeout:3000});
                     } else {
-                    	$('#success').css({'visibility': 'visible'});
-                    if(response.invite_user == '1') {
-                       // $("#modelTigger").trigger('click');
-                       $('.modal').modal('open');
-                    } else {
-                        window.location.href = "{{url('resume/view')}}";
+                        if(response.invite_user == '1') {
+                            $(".email-span").html($("#send-resume-email").val());
+                            $('#modelBoxInvite').modal('open');
+                           redirectFlag = 0;
+                        }
+                        if(response.resend_invitation == '1') {
+                            $(".email-span").html($("#send-resume-email").val());
+                            $('#modelBoxResend').modal('open');
+                            redirectFlag = 0;
+                        }
+                        if(redirectFlag == 1) {
+                            window.location.href = "{{url('resume/track')}}";
+                        }
                     }
-
-                    }
-
                 },
                 error: function(response) {
                     $("#loading").hide();
@@ -234,6 +261,18 @@
        });
        // init model
        $('.modal').modal();
+
+    $( "#send-resume-email" ).autocomplete({
+      source: "{{url('user/search')}}",
+      minLength: 2,
+      select: function( event, ui ) {
+            $( "#send-resume-email" ).val(ui.item.id); //ui.item is your object from the array
+            return false;
+        }
+    });
+
     });
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @endsection

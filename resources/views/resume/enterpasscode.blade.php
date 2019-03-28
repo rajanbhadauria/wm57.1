@@ -28,7 +28,9 @@
                     <div class="inner-half-container">
                         <div class="wrapper resume-wrapper">
                             <div class="ak-otherus-resume-sec">
-
+                            <div class="center center-text">
+                                <i class="material-icons medium red-text text-lighten-2">lock</i>
+                            </div>
                             <span class="akhetxt">{{$user->first_name}} {{$user->last_name}} resume is private with controlled access</span><br />
                             <form class="m-0" method="post" action="{{url('/resume/verify-passcode')}}" id="passcodeSaveForm">
                                 {{ csrf_field() }}
@@ -37,33 +39,33 @@
                                 <h5>Enter 6 digits passkey <a href="javascript:void(0);" class="ak-reMsseClose ak-repkClose"></a></h5>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n1" id="n1" value="">
+                                        maxlength="1" name="n1" id="n1" value="" class="keycode">
                                 </div>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n2" id="n2" value="">
+                                        maxlength="1" name="n2" id="n2" value="" class="keycode">
                                 </div>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n3" id="n3" value="">
+                                        maxlength="1" name="n3" id="n3" value="" class="keycode">
                                 </div>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n4" id="n4" value="">
+                                        maxlength="1" name="n4" id="n4" value="" class="keycode">
                                 </div>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n5" id="n5" value="">
+                                        maxlength="1" name="n5" id="n5" value="" class="keycode">
                                 </div>
                                 <div class="num-col col s2">
                                     <input type="text" onkeypress="return isNumberKey(event)" pattern="[0-9]*"
-                                        maxlength="1" name="n6" id="n6" value="">
+                                        maxlength="1" name="n6" id="n6" value="" class="keycode">
                                 </div>
                             </div>
                             <div class="ak-otherus-resume-btnsec">
                                     <button type= "submit" class="akotrese-btnpk">Enter passkey</button>
                                     <!-- <span class="akotrese-btor">or</span> -->
-                                    <a href="javascript:void(0);" class="akotrese-btnrr">Request resume</a></div>
+                            <a href="{{Auth::id() ? 'javascript:requestResume()' : url('login')}}" class="akotrese-btnrr">Request resume</a></div>
                             </div>
                         </form>
                         </div>
@@ -75,6 +77,27 @@
 
 </section>
 <script>
+    function requestResume(invite = 1, resend = 1) {
+            $.ajax({
+                type:"POST",
+               	dataType: "JSON",
+                url:"{{url('requestresume')}}",
+                data:{email: "{{$user->email}}", "_token": "{{csrf_token()}}", option: "email", isResend: "1", message: ""},
+                beforeSend: function(){$("#loading").show();},
+                success: function(response){
+                    $("#loading").hide();
+                    if(response.error == 1){
+                    	$.notify({ content:response.errorMsg, timeout:3000});
+                    } else {
+                        window.location.href = "{{url('resume/track')}}";
+                    }
+
+                },
+                error: function(response) {
+                    $("#loading").hide();
+                }
+            });
+    }
         $(document).ready(function(){
 
         $( "#passcodeSaveForm" ).validate({
@@ -138,7 +161,7 @@
                 submitHandler: function(form) {
                     $.ajax({
                     type:"POST",
-                       dataType: "JSON",
+                    dataType: "JSON",
                     url:$("#passcodeSaveForm").attr("action"),
                     data:$("#passcodeSaveForm").serialize(),
                     beforeSend: function(){$("#loading").show();},
@@ -147,7 +170,6 @@
                         if(response.error == true){
                             $.notify({ content:response.errorMsg, timeout:3000});
                         } else {
-
                            window.location.href = "{{url('wm')}}/"+$("#url").val()+"/"+response.passcode;
                         }
 
@@ -185,6 +207,27 @@
                 $("#phonenumber_options").show();
             }
            });
+
+           $('body').on('keyup', 'input.keycode', function(event)
+            {
+            var key = event.keyCode || event.charCode;
+            var inputs = $('input.keycode');
+            if(($(this).val().length === this.size) && key != 32)
+            {
+                inputs.eq(inputs.index(this) + 1).focus();
+            }
+            if( key == 8 || key == 46 )
+            {
+                var indexNum = inputs.index(this);
+                if(indexNum != 0)
+                {
+                    inputs.eq(inputs.index(this)).val('').focus();
+                    inputs.eq(inputs.index(this)-1).focus();
+                }
+            }
+
+            });
         });
+
     </script>
 @endsection

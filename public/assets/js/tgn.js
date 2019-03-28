@@ -166,15 +166,6 @@ $(document).ready(function(){
 				return false;
 			}
 		}
-    });
-
-    $('[type=text].select3-multiple-input').bind("keypress",function(event) {
-		if(event.which){
-			var skillarr = $(this).val().split(" ");
-			if(skillarr.length>5 && event.which!=8){
-				return false;
-			}
-		}
 	});
 
 });

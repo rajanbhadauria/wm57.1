@@ -78,7 +78,7 @@
         margin: -75px 0 0 -75px;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
-        border-top: 16px solid #CFCFCF;
+        border-top: 16px solid #1a0dab;
         width: 120px;
         height: 120px;
         -webkit-animation: spin 2s linear infinite;
@@ -125,7 +125,7 @@
 
 <body id="app-layout">
 <div id="loading"></div>
-<div id="mask-div" style="display: none">
+
 <!-- <img src="{{my_asset('images/loader.gif')}}" alt="Loading ....."> -->
     @include("layouts.include.header")
     @include("layouts.include.nav")
@@ -144,9 +144,9 @@
     </script>
     </div>
     @endif
-
+    <div id="mask-div" style="display: none">
     @yield('content')
-</div>
+    </div>
       <script type="text/javascript" src="{{ my_asset('js/materialize.min.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/menu-backdrop.js') }}"></script>
       <script type="text/javascript" src="{{ my_asset('js/init.js') }}"></script>

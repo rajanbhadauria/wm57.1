@@ -20,6 +20,7 @@
                                 <div class="ak-comn-title">You can request / ask for updated floating resume quickly from your known connections. Select option to request via Phone Or Email</div>
                             <form autocomplete="off" class="m-0" action="{{url('requestresume')}}" method="post" name="sendRequestForm" id="sendRequestForm">
                                     {{ csrf_field() }}
+                                    <input type="hidden" name="isResend" id="isResend" value="0">
                                 <div class="custom-form cf-hide mb25">
                                         <ul class="request-resume-options resume-options">
                                             <li class="display-inline">
@@ -89,36 +90,55 @@
         </div>
     </div>
 </section>
-
-    <div id="modelBox" class="modal">
+<div id="modelBoxInvite" class="modal">
     <div class="modal-content">
         <h4>Invite User</h4>
-        <p>User is not existing in our network. Do you want to invite him to join our network?</p>
+        <p>
+                We found that user is not on WorkMedian, would you like to invite <span class="blue-text text-darken-4 email-span"></span> ?
+            </p>
       </div>
       <div class="modal-footer">
-        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text waves-green btn-flat" onclick="refreshPage()">No</a>
-        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect waves-green btn-flat" onclick="invite()">Yes</a>
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text btn-flat" onclick="redirectToActivity()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect btn-flat" onclick="invite(1, 1)">Yes</a>
       </div>
 </div>
-<a data-target="modelBox" id="modelTigger" class="btn modal-trigger hide"></a>
+
+<div id="modelBoxResend" class="modal">
+    <div class="modal-content">
+            <h4>Re send ?</h4>
+            <p>You have already request resume from <span class="blue-text text-darken-4 email-span"></span> do you want to request again ?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="modal-close green darken-1 waves-effect white-text btn-flat" onclick="redirectToActivity()">No</a>
+        <a href="javascript:void(0);" class="modal-close red darken-3 white-text waves-effect btn-flat" onclick="resend()">Yes</a>
+      </div>
+</div>
 <script>
-function refreshPage() {
-    window.location.reload();
+    function redirectToActivity() {
+        window.location.href = "{{url('resume/track')}}";
+    }
+    function resend() {
+        $("#isResend").val('1');
+        $("#sendRequestForm").submit();
     }
     // inviting user to view his resume
-    function invite() {
+    function invite(invite = 0, resend = 0) {
         $.ajax({
                 type:"POST",
                	dataType: "JSON",
-                url:"{{url('resume/invite')}}",
-                data:$("#sendRequestForm").serialize(),
+                url: "{{url('resume/send-invitation')}}",
+                data:$("#sendRequestForm").serialize() + '&isInvite=' + invite+'&isResend='+resend,
                 beforeSend: function(){$("#loading").show();},
                 success: function(response){
                     $("#loading").hide();
                     if(response.error == 1){
                     	$.notify({ content:response.error_msg, timeout:3000});
                     } else {
-                        window.location.reload();
+                        if(response.resend_request == '1') {
+                            $('#modelBoxResend').modal('open');
+                        } else {
+                            window.location.href = "{{url('resume/track')}}";
+                        }
                     }
 
                 },
@@ -214,18 +234,30 @@ $(document).ready(()=>{
             dataType: "JSON",
             url:$("#sendRequestForm").attr("action"),
             data:$("#sendRequestForm").serialize(),
-            beforeSend: function(){$("#loading").show();},
+            beforeSend: function(){$("#loading").show();$(".email-span").html("");},
             success: function(response){
+                $(".email-span").html($("#email").val());
                 $("#loading").hide();
                 if(response.error == true){
                     $.notify({ content:response.errorMsg, timeout:3000});
                 } else {
-                    if(response.invite_user == '1') {
-                       // $("#modelTigger").trigger('click');
-                       $('.modal').modal('open');
-                    } else {
-                        window.location.reload();
-                    }
+                        if(response.invite_user == '1') {
+                            $(".email-span").html($("#email").val());
+                            $('#modelBoxInvite').modal('open');
+                           redirectFlag = 0;
+                        } else {
+                            redirectFlag = 1;
+                        }
+                        if(response.resend_request == '1') {
+                            $(".email-span").html($("#email").val());
+                            $('#modelBoxResend').modal('open');
+                            redirectFlag = 0;
+                        } else {
+                            redirectFlag = 1;
+                        }
+                        if(redirectFlag == 1) {
+                            window.location.href = "{{url('resume/track')}}";
+                        }
                 }
 
             },
@@ -249,7 +281,16 @@ $(document).ready(()=>{
     });
     // init model
     $('.modal').modal();
+    $( "#email" ).autocomplete({
+      source: "{{url('user/search')}}",
+      minLength: 2,
+      select: function( event, ui ) {
+            $( "#email" ).val(ui.item.id); //ui.item is your object from the array
+            return false;
+        }
+    });
 });
-
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @endsection

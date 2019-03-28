@@ -34,6 +34,7 @@ Route::get('/logout', 'HomeController@logout')->name('logout')->middleware('auth
 Route::get('/activate-account', array('as' => 'activate-account', 'uses' => 'UserController@activateAccountPage'))->middleware('auth');
 Route::get('/activate/{user_id}/{token}', array('as' => 'activate', 'uses' => 'UserController@activate'))->middleware('auth');
 Route::get('/resend-activation', array('as' => 'resend-activation', 'uses' => 'UserController@resendActivation'))->middleware('auth');
+Route::get('/register/{code?}', 'Auth\RegisterController@showRegistrationForm');
 
 Route::group(['middleware' => ['auth','isactive']], function(){
     Route::get('/change-password', array('as' => 'change-password', 'uses' => 'UserController@changePassword'));
@@ -50,6 +51,10 @@ Route::group(['middleware' => ['auth','isactive']], function(){
 Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
     Route::get('/contactlist', ['as' => 'resume.request.resume', 'uses' => 'UserController@contactlist']);
+    Route::get('/resume-accessed-user', array('as' => 'user.accessed', 'uses' =>  'UserController@resumeAccessedUsers'));
+    Route::post('/resume-accessed-user', array('as' => 'user.accessed', 'uses' =>  'UserController@resumeAccessedUpdate'));
+    Route::get('/resume-access-requests', ['as' => 'resume.access-requests', 'uses' => 'UserController@accessRequests']);
+    Route::get('/resume-received', ['as' => 'resume.resume-received', 'uses' => 'UserController@resumeReceivedRequests']);
 });
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth','isactive']], function(){
@@ -60,6 +65,9 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth','isactive']], function
     Route::any('/remove-image', array('as' => 'user.remove-image', 'uses' => 'UserController@imageRemove'));
     Route::post('/deactivate', array('as' => 'user.deactivate', 'uses' => 'UserController@deactivate'));
     Route::get('/deactivateresp', array('as' => 'user.deactivateresp', 'uses' => 'UserController@deactivateresp'));
+    Route::get('/invite', array('as' => 'user.invite', 'uses' => 'UserController@invite'));
+    Route::post('/invite', array('as' => 'user.invite.save', 'uses' => 'UserController@inviteSave'));
+    Route::get('/search', array('as' => 'user.seach', 'uses' => 'UserController@searchEmail'));
 });
 
 Route::group(array('prefix' => 'update','middleware' => ['auth','isactive']), function(){
@@ -196,6 +204,8 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::post('/save', ['as' => 'resume.view', 'uses' => 'Resume\ResumeController@view']);
     Route::post('/save-share-data', ['as' => 'resume.save-share-data', 'uses' => 'Resume\ResumeController@saveShareData']);
 
+    Route::post('/send-invitation', ['as' => 'resume.send-invitaion', 'uses' => 'Resume\ResumeController@inviteResumeUser']);
+
     Route::get('/send', ['as' => 'resume.send', 'uses' => 'Resume\ResumeController@send']);
     Route::post('/send-save', ['as' => 'resume.send-save', 'uses' => 'Resume\ResumeController@sendSave']);
     Route::get('/get-share-data', ['as' => 'resume.get-share-data', 'uses' => 'Resume\ResumeController@getShareData']);
@@ -203,13 +213,22 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::get('/download-doc', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@downloadDoc']);
     Route::get('/print', ['as' => 'resume.download-doc', 'uses' => 'Resume\ResumeController@printPreview']);
     Route::get('/track', ['as' => 'resume.track', 'uses' => 'Resume\ResumeController@track']);
-    Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
     Route::post('/activity/update', ['as' => 'resume.activity.update', 'uses' => 'Resume\ResumeController@updateActivity']);
     Route::post('/activity/viewresume', ['as' => 'resume.activity.viewresume', 'uses' => 'Resume\ResumeController@viewResumeActivity']);
     Route::get('/forwardresume/{id}', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResume']);
     Route::post('/forwardresume', ['as' => 'resume.forwardresume', 'uses' => 'Resume\ResumeController@forwardResumeSave']);
-    Route::post('/invite', ['as' => 'resume.invite', 'uses' => 'Resume\ResumeController@inviteUser']);
-
+    Route::post('/checkemail', ['as' => 'resume.invite', 'uses' => 'Resume\ResumeController@isUserExists']);
+    Route::get('/viewedbyme', ['as' => 'resume.viewedbyme', 'uses' => 'Resume\ResumeController@viewedByMe']);
+    Route::get('/viewedbyother', ['as' => 'resume', 'uses' => 'Resume\ResumeController@viewedByOther']);
+    Route::get('/received', ['as' => 'resume', 'uses' => 'Resume\ResumeController@receivedResume']);
+    Route::get('/sentresumes', ['as' => 'resume', 'uses' => 'Resume\ResumeController@sentResumes']);
+    Route::get('/requestedbyme', ['as' => 'resume', 'uses' => 'Resume\ResumeController@requestedByMe']);
+    Route::get('/requestedbyotheres', ['as' => 'resume', 'uses' => 'Resume\ResumeController@requestedOthers']);
+    Route::post('/upload', ['as' => 'resume.upload', 'uses' => 'Resume\ResumeController@upload']);
+    Route::get('/my_download', ['as' => 'resume.my_download', 'uses' => 'Resume\ResumeController@downloadMyResume']);
+    Route::get('/my_delete_resume', ['as' => 'resume.my_delete_resume', 'uses' => 'Resume\ResumeController@deleteMyResume']);
+    Route::get('/haveaccess', ['as' => 'resume.my_delete_resume', 'uses' => 'Resume\ResumeController@haveAccess']);
+    Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
 });
 //resume view with passcode
 Route::get('wm/{id}/{passcode?}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resumeView']);

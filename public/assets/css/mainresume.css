@@ -104,8 +104,8 @@ h2 {
      padding:5px 10px;
     color: #263136;
     text-transform: uppercase;
-    border-top:1px solid #f9f5f5;
-    border-bottom:1px solid #f9f5f5;
+    border-top:1px solid #f9f9f9;
+    border-bottom:1px solid #f9f9f9;
     /* letter-spacing: 1px; */
 	font-weight:700!important;
 	line-height:normal;
@@ -115,7 +115,7 @@ h2 {
 	display: flex;
 	flex-direction: row;
 	clear: both;
-	padding:10px 0px 2px 0px;
+	padding:10px 0px 5px 0px;
 
 }
 
@@ -283,8 +283,8 @@ h2 {
 
 .list-table>li>ul>li {
 	list-style-type: none;
-	padding-bottom: 1px;
-	margin-bottom:5px;
+	/* padding-bottom: 1px; */
+	/* margin-bottom:5px; */
 }
 .list-table>li>ul>li:last-child {
 	margin-bottom:0px;
@@ -309,7 +309,7 @@ h2 {
 }
 
 .hr {
-	background: #eee;
+	background: #f9f9f9;
 	height: 1px;
 	margin: 5px 0;
 	display: block;
@@ -513,7 +513,7 @@ input#files {
 	cursor: pointer;
 }
 .hightlightFeture{
-	text-align:center;
+	/* text-align:center; */
 	position: relative;
 }
 .hightlightFeture h2,
@@ -560,7 +560,8 @@ input#files {
 }
 .resume-color-blue .user-profile .name,
 .resume-color-blue .block h2{
-	color:darkblue;
+	/* color:darkblue; */
+	font-family:georgia;
 }
 .resume-fontsize-medium .user-profile .name{
 	font-size:23px;

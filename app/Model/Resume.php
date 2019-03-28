@@ -17,8 +17,23 @@ class Resume extends Model
             return 0;
         }
     }
+    // listing users who viewed my resume
+    public static function getResumeAccessedUsersList($user_id) {
+        return DB::table('users')
+            ->join('resume_stats', 'resume_stats.viewed_by', '=', 'users.id')
+            ->where('resume_stats.resume_user_id', $user_id)
+            ->where('resume_stats.viewed_by', '!=' ,$user_id)
+            ->groupBy('users.id')
+            ->orderBy('users.name')->paginate(12);
+
+    }
+
     // record resume updated time
     public static function recordResumeUpdate($userId) {
         DB::table('users')->where('id', $userId)->update(['resume_updated_at'=>date('Y-m-d H:i:s')]);
+    }
+
+    public static function getResumeAccess($ownerEmail, $userEmail){
+        return self::where('ownerEmail', $ownerEmail)->where('userEmail', $userEmail)->first();
     }
 }

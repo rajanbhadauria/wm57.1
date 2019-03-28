@@ -34,19 +34,26 @@ class Activity {
 
     public static function getUserActivities($user_id, $email) {
 
-        $sql = "SELECT *,N.email as email
-                        FROM notifications as N
-                        JOIN activity_list AL ON N.activity = AL.identifier
-                        WHERE (is_visible = '1' AND 1=1) AND (N.byUser = $user_id AND AL.identifier != 'resume_received' AND AL.identifier != 'resume_viewed')
-                        OR N.forUser = $user_id OR N.email = '".$email."'
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        return  DB::table('notifications')
+            ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
+            ->select('notifications.*', 'activity_list.*', 'notifications.email as email')
+            ->where('is_visible', '1')
+            ->where('activity_list.identifier',  '!=', 'resume_received')
+            ->where('activity_list.identifier',  '!=', 'resume_viewed')
+            ->where(function($query) use ($data){
+                        $query->orWhere('notifications.forUser', '=', $data['user_id'])
+                              ->orWhere('notifications.email', '=', $data['email'])
+                              ->orWhere('notifications.byUser', $data['user_id']);
+                    }
+                )->orderBy('updated_at', 'desc')->paginate(5);
 
-                        ORDER BY created_at desc";
-        return DB::select($sql);
     }
 
     public static function getUserDetails($user_id) {
        $sql = "SELECT * FROM users
-        WHERE (id = $user_id OR email = '".$user_id."') AND 1 = 1";
+        WHERE (id = '".$user_id."' OR email = '".$user_id."') AND 1 = 1";
         $data = DB::select($sql);
         if(count($data)>0)
             return $data[0];
@@ -54,5 +61,29 @@ class Activity {
             return false;
     }
 
+    public static function getResumeAccessRequest($user_id, $email) {
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        return  DB::table('notifications')
+            ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
+            ->select('notifications.*', 'activity_list.*', 'notifications.email as email')
+            ->where('notifications.is_visible', '1')
+            ->where('notifications.request_status', 'pending')
+            ->where('activity_list.identifier',  '=', 'resume_request')
+            ->where('notifications.forUser', '=', $data['user_id'])
+            ->orderBy('updated_at', 'desc')->paginate(10);
+    }
 
+    public static function getResumeReceivedRequest($user_id, $email) {
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        return  DB::table('notifications')
+            ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
+            ->select('notifications.*', 'activity_list.*', 'notifications.email as email')
+            ->where('notifications.is_visible', '1')
+            ->where('notifications.request_status', 'accepted')
+            ->where('activity_list.identifier',  '=', 'resume_sent')
+            ->where('notifications.email', '=', $email)
+            ->orderBy('updated_at', 'desc')->paginate(10);
+    }
 }

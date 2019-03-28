@@ -260,7 +260,7 @@ $print_url = url("resume/print");
                                         @if($work->roleDesc)
 										<div class="exp-details">
 											<ul class='list'>
-                                            <li style="list-style-type: none !important"><?php echo nl2br(str_replace('•	', '<br/>', $work->roleDesc)); ?></li>
+                                            <li><?php echo str_replace("<br />", '</li><li>', nl2br(str_replace('•	', " ", $work->roleDesc))); ?></li>
 											</ul>
                                         </div>
                                         @endif

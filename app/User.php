@@ -69,19 +69,16 @@ class User extends Authenticatable
 
     //get users contact list users
     public static function getMyContacts($userId) {
-       $sql = "SELECT U.* FROM `user_relations` as UR
-                                    JOIN users as U ON U.id = UR.requested_by
-                                    JOIN users U2 ON U2.id = UR.requested_to
-                                    WHERE (UR.requested_by = ".$userId." OR UR.requested_to = ".$userId.")
-                                    AND U.id != ".$userId." GROUP BY U.id";
+        $sql = "SELECT U.* FROM users U WHERE
+                (U.id IN (SELECT requested_by FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId."))
+                OR U.id IN (SELECT requested_to FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId.")))
+                AND U.id != ".$userId." GROUP BY U.id";
+
         $result = DB::select($sql);
         if($result) {
             return $result;
         }
         return $result;
     }
-    // check if user exists by email
-    public function getuserByEmail($email) {
-        return this::where('email', $email)->first();
-    }
+
 }

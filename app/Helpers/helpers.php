@@ -1,5 +1,5 @@
 <?php
-
+use App\Model\Work;
 if (!function_exists('my_asset')) {
     function my_asset($path, $secure = null){
         return asset('/public/assets/' . trim($path, '/'), $secure);
@@ -78,6 +78,12 @@ if(!function_exists('time_ago')) {
             $string .= $val . ' ' . $lang[ $key ];
         }
         return $string;
+    }
+    function getWorkInfo($userId) {
+        return Work::where("user_id","=", $userId)->where("private", '0')
+                    ->orderBy('workStartDate', 'desc')
+                    ->orderBy('employementType', 'asc')
+                    ->first();
     }
 }
 

@@ -226,7 +226,7 @@ $print_url = url("resume/print");
                                         @endif
                                         @if($objectiveCount && $resumeAccess->objectiveData)
 										<div class="exp-details">
-											<p><?php echo nl2br($objectiveInfo->objective);?></p>
+											<p><?php echo str_replace("<br><br>", '<br>', nl2br($objectiveInfo->objective));?></p>
                                         </div>
                                         @endif
                                     </div>
@@ -264,7 +264,7 @@ $print_url = url("resume/print");
                                         @if($work->roleDesc)
 										<div class="exp-details">
 											<ul class='list'>
-                                            <li style="list-style-type: none !important"><?php echo nl2br(str_replace('•	', '<br/>', $work->roleDesc)); ?></li>
+                                            <li><?php echo str_replace("<br />", '</li><li>', nl2br(str_replace('•	', " ", $work->roleDesc))); ?></li>
 											</ul>
                                         </div>
                                         @endif
@@ -300,7 +300,7 @@ $print_url = url("resume/print");
                                         <div class="exp-details">
                                             <ul class="list">
                                                 <li>
-                                                    <?php echo nl2br($project->projectDesc); ?>
+                                                    <?php echo str_replace("<br><br>", '<br>', nl2br($project->projectDesc)); ?>
 
                                                 </li>
                                             </ul>

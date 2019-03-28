@@ -18,7 +18,8 @@
                     <div class="login-form" id="loginDiv">
                     <div class="logo-wrapper">
 						  <img src="{{ my_asset('images/demo-logo.svg') }}" alt="">
-						</div>
+                        </div>
+
                         <form class="form-horizontal no-card" autocomplete="off" role="form" method="POST" action="{{ url('/register') }}" name="signUpForm" id="signUpForm">
                             {{ csrf_field() }}
 
@@ -158,7 +159,9 @@
                 $(element).parents("span").removeClass(errorClass);
             }
         });
-
+        @if(Request()->route('code') && Request()->route('code')!="")
+            $("#email").val("{{base64_decode(Request()->route('code'))}}");
+        @endif
     });
 </script>
  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
