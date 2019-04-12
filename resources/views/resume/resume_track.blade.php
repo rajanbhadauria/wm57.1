@@ -17,7 +17,6 @@
 					<div class="ak-full-center-box">
 						<div class="">
 							<ul class="resume-user__list">
-
                                 <?php foreach($activities as $activity) {
                                     $user1Obj = App\Helpers\Activity::getUserDetails($activity->byUser);
                                     $user2Obj = App\Helpers\Activity::getUserDetails($activity->forUser);

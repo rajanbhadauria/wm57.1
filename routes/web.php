@@ -228,8 +228,12 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::get('/my_download', ['as' => 'resume.my_download', 'uses' => 'Resume\ResumeController@downloadMyResume']);
     Route::get('/my_delete_resume', ['as' => 'resume.my_delete_resume', 'uses' => 'Resume\ResumeController@deleteMyResume']);
     Route::get('/haveaccess', ['as' => 'resume.my_delete_resume', 'uses' => 'Resume\ResumeController@haveAccess']);
+    Route::get('/styles', ['as' => 'resume', 'uses' => 'Resume\ResumeController@styles']);
+    Route::post('/styles', ['as' => 'resume', 'uses' => 'Resume\ResumeController@stylesSave']);
+    Route::get('/email-test', ['as' => 'resume', 'uses' => 'Resume\ResumeController@testEmailView']);
     Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
 });
 //resume view with passcode
 Route::get('wm/{id}/{passcode?}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resumeView']);
 Route::post('resume/verify-passcode', ['as' => 'verify.passcode', 'uses' => 'Resume\ResumeController@verifyPasscode']);
+Route::get('rsdw/download', ['as' => 'public.download', 'uses' => 'Resume\ResumeController@pubicDownload']);

@@ -123,12 +123,14 @@ class ResumeController extends Controller
 
             $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
         }
+
+
         $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-        $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+        $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-        $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
+        $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['projectCount'] = Project::where("user_id","=", Auth::id())->where("private", '0')->count();
 
         $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->where("private", '0')->first();
@@ -137,10 +139,10 @@ class ResumeController extends Controller
         $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
         $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-        $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+        $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-        $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+        $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
 
         $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -148,7 +150,7 @@ class ResumeController extends Controller
 
 
 
-        $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+        $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
 
         $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -170,13 +172,13 @@ class ResumeController extends Controller
                                         ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                         ->where("TR.user_id", "=", Auth::id())
 
-                                        ->orderBy('TR.yyyyEnd', 'asc')
+                                        ->orderBy('TR.yyyyEnd', 'desc')
                                         ->get(['*', 'TR.id as id']);
         $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
 
         $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
         $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
-
+        $data['style'] = DB::table('resume_styles')->where("user_id","=", Auth::id())->first();
         return view('resume.resumeview',$data);
 
     }
@@ -438,6 +440,21 @@ class ResumeController extends Controller
         // checking if user is registered or not
         if($input['isResend'] == 0) {
             $result = User::where('email', $input['email'])->first();
+            if($result) {
+				$sql = "SELECT relation_id from user_relations WHERE
+							(requested_by = ".$result->id." AND  requested_to = ".Auth::id().")
+							OR (requested_by = ".Auth::id()." AND  requested_to = ".$result->id.")";
+
+				$row =  DB::select($sql);
+
+                if(!$row) {
+                    $data['requested_by'] = Auth::id();
+                    $data['requested_to'] = $result->id;
+                    DB::table('user_relations')->insert($data);
+                }
+
+            }
+
             // if registered then move
             if(!$result) {
                 $json['invite_user'] = "1";
@@ -458,6 +475,7 @@ class ResumeController extends Controller
         $user = DB::table('notifications')->where('byUser', Auth::id())
                     ->where('activity', 'resume_sent')
                     ->where('request_status', 'accepted')
+
                     ->where('email', $input['email'])->first();
         // if request is exists then ask user to resend request
         if($user && $input['isResend'] == "0") {
@@ -602,10 +620,10 @@ class ResumeController extends Controller
         }
         $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-        $data['educationInfo'] = Education::where("user_id","=", $user_id)->where("private", '0')->orderBy('educationDate', 'desc')->get();
+        $data['educationInfo'] = Education::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['projectInfo'] = Project::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['projectInfo'] = Project::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['projectCount'] = Project::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['skillInfo'] = Skill::where("user_id","=", $user_id)->get()->where("private", '0')->first();
@@ -614,10 +632,10 @@ class ResumeController extends Controller
         $data['softskillInfo'] = Softskills::where("user_id","=", $user_id)->where("private", '0')->first();
         $data['softskillCount'] = Softskills::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['certificationCount'] = Certification::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['trainingCount'] = Training::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['courseInfo'] = Course::where("user_id","=", $user_id)->where("private", '0')->get();
@@ -625,7 +643,7 @@ class ResumeController extends Controller
 
 
 
-        $data['awardInfo']  = Award::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['awardInfo']  = Award::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['awardCount'] = Award::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['patentInfo']  = Patent::where("user_id","=", $user_id)->where("private", '0')->get();
@@ -647,7 +665,7 @@ class ResumeController extends Controller
                                         ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                         ->where("TR.user_id", "=", $user_id)
 
-                                        ->orderBy('TR.yyyyEnd', 'asc')
+                                        ->orderBy('TR.yyyyEnd', 'desc')
                                         ->get(['*', 'TR.id as id']);
         $data['miscellaneousCount'] = Travel::where("user_id","=", $user_id)->count();
 
@@ -663,15 +681,25 @@ class ResumeController extends Controller
         $user_url = $id;
         $url = explode("-", $id);
         $id = end($url);
+        array_pop($url);
+        $name = implode("", $url );
+
+
         $data["resumeAccess"] = $resumeAccess = Resume::where('id','=',$id)->where('is_visible','=','1')->get()->first();
         if(!$data["resumeAccess"] || $id == '0') {
             return view('access_denied');
         }
+
         $ownerData = User::where("email","=",$resumeAccess['ownerEmail'])->get()->first();
+        $name2 = str_replace(" ", "", $ownerData->first_name.$ownerData->last_name);
+        if($name != $name2) {
+           return view('access_denied');
+        }
+
         if($ownerData->resume_passcode != $passcode) {
             return view('resume.enterpasscode', array('user' => $ownerData,  'id'=> $user_url));
         }
-        $ownerData = User::where("email","=",$resumeAccess['ownerEmail'])->get()->first();
+
         $notification = DB::table('notifications')
         ->where('resume_id', $id)
         ->where('resume_viewed', '0')
@@ -760,10 +788,10 @@ class ResumeController extends Controller
         }
         $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-        $data['educationInfo'] = Education::where("user_id","=", $user_id)->where("private", '0')->orderBy('educationDate', 'desc')->get();
+        $data['educationInfo'] = Education::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['projectInfo'] = Project::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['projectInfo'] = Project::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['projectCount'] = Project::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['skillInfo'] = Skill::where("user_id","=", $user_id)->get()->where("private", '0')->first();
@@ -772,10 +800,10 @@ class ResumeController extends Controller
         $data['softskillInfo'] = Softskills::where("user_id","=", $user_id)->where("private", '0')->first();
         $data['softskillCount'] = Softskills::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['certificationCount'] = Certification::where("user_id","=", $user_id)->where("private", '0')->count();
 
-        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['trainingCount'] = Training::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['courseInfo'] = Course::where("user_id","=", $user_id)->where("private", '0')->get();
@@ -783,7 +811,7 @@ class ResumeController extends Controller
 
 
 
-        $data['awardInfo']  = Award::where("user_id","=", $user_id)->where("private", '0')->get();
+        $data['awardInfo']  = Award::where("user_id","=", $user_id)->where("private", '0')->orderBy('yyyy', 'desc')->get();
         $data['awardCount'] = Award::where("user_id","=", $user_id)->where("private", '0')->count();
 
         $data['patentInfo']  = Patent::where("user_id","=", $user_id)->where("private", '0')->get();
@@ -805,12 +833,13 @@ class ResumeController extends Controller
                                         ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                         ->where("TR.user_id", "=", $user_id)
 
-                                        ->orderBy('TR.yyyyEnd', 'asc')
+                                        ->orderBy('TR.yyyyEnd', 'desc')
                                         ->get(['*', 'TR.id as id']);
         $data['miscellaneousCount'] = Travel::where("user_id","=", $user_id)->count();
 
         $data['interestInfo'] = Interests::where("user_id","=", $user_id)->first();
         $data['interestCount'] = Interests::where("user_id","=", $user_id)->count();
+        $data['style'] = DB::table('resume_styles')->where("user_id","=", $user_id)->first();
 
         return view('resume.resume',$data);
 
@@ -857,19 +886,19 @@ class ResumeController extends Controller
             $data['totalWorkDuration'] = $this->dateDiffrence($data['workStarting'],$data['workEnding']);
         }
 
-        $data['educationInfo'] = Education::where("user_id","=", $user_id)->orderBy('educationDate', 'desc')->get();
+        $data['educationInfo'] = Education::where("user_id","=", $user_id)->orderBy('yyyy', 'desc')->get();
         $data['educationCount'] = Education::where("user_id","=", $user_id)->count();
 
-        $data['projectInfo'] = Project::where("user_id","=", $user_id)->get();
+        $data['projectInfo'] = Project::where("user_id","=", $user_id)->orderBy('yyyy', 'desc')->get();
         $data['projectCount'] = Project::where("user_id","=", $user_id)->count();
 
         $data['skillInfo'] = Skill::where("user_id","=", $user_id)->get();
         $data['skillCount'] = Skill::where("user_id","=", $user_id)->count();
 
-        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->get();
+        $data['certificationInfo'] = Certification::where("user_id","=", $user_id)->orderBy('yyyy', 'desc')->get();
         $data['certificationCount'] = Certification::where("user_id","=", $user_id)->count();
 
-        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->get();
+        $data['trainingInfo'] = Training::where("user_id","=", $user_id)->orderBy('yyyy', 'desc')->get();
         $data['trainingCount'] = Training::where("user_id","=", $user_id)->count();
 
         $data['courseInfo'] = Course::where("user_id","=", $user_id)->get();
@@ -878,7 +907,7 @@ class ResumeController extends Controller
         $data['travelInfo']  = Travel::where("user_id","=", $user_id)->get();
         $data['travelCount'] = Travel::where("user_id","=", $user_id)->count();
 
-        $data['awardInfo']  = Award::where("user_id","=", $user_id)->get();
+        $data['awardInfo']  = Award::where("user_id","=", $user_id)->orderBy('yyyy', 'desc')->get();
         $data['awardCount'] = Award::where("user_id","=", $user_id)->count();
 
         $data['patentInfo']  = Patent::where("user_id","=", $user_id)->get();
@@ -894,8 +923,9 @@ class ResumeController extends Controller
 
     }
 
-        function download() {
+        function download(Request $req) {
             $data['print_hide'] = 0;
+            $input = $req->all();
 
             $ownerEmail = Auth::user()->email;
             $data["resumeAccess"] = $resumeAccess = Resume::where("ownerEmail","=",$ownerEmail)->get()->first();
@@ -959,7 +989,7 @@ class ResumeController extends Controller
             }
             $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -971,10 +1001,10 @@ class ResumeController extends Controller
             $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
             $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -982,7 +1012,7 @@ class ResumeController extends Controller
 
 
 
-            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1004,16 +1034,18 @@ class ResumeController extends Controller
                                             ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                             ->where("TR.user_id", "=", Auth::id())
 
-                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->orderBy('TR.yyyyEnd', 'desc')
                                             ->get(['*', 'TR.id as id']);
             $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
 
             $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
             $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
-            return view('resume.resume_pd', $data);
-            //$pdf = PDF::loadView('resume.resume_pd', $data);
-            //$file_name = str_replace(' ', '_', Auth::user()->first_name."_".Auth::user()->last_name)."_resume".date('m-d-Y');
-            //return $pdf->download($file_name.'.pdf');
+            $data['style'] = DB::table('resume_styles')->where("user_id","=", Auth::id())->first();
+            if(isset($input['d']) && $input['d'] == true)
+                return view('resume.pdf', $data);
+            $pdf = PDF::loadView('resume.pdf', $data);
+            $file_name = "WM_".str_replace(' ', '_', Auth::user()->first_name."_".Auth::user()->last_name)."_resume_".date('Y-m-d');
+            return $pdf->download($file_name.'.pdf');
         }
 
         function downloadDoc() {
@@ -1080,7 +1112,7 @@ class ResumeController extends Controller
             }
             $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1092,10 +1124,10 @@ class ResumeController extends Controller
             $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
             $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1103,7 +1135,7 @@ class ResumeController extends Controller
 
 
 
-            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1125,7 +1157,7 @@ class ResumeController extends Controller
                                             ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                             ->where("TR.user_id", "=", Auth::id())
 
-                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->orderBy('TR.yyyyEnd', 'desc')
                                             ->get(['*', 'TR.id as id']);
             $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
 
@@ -1201,10 +1233,10 @@ class ResumeController extends Controller
             }
             $data['education'] = array('1' => 'Post graduation', '2' => 'Graduation', '3' => 'Under graduation');
 
-            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('educationDate', 'desc')->get();
+            $data['educationInfo'] = Education::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['educationCount'] = Education::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['projectInfo'] = Project::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['projectCount'] = Project::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['skillInfo'] = Skill::where("user_id","=", Auth::id())->get()->where("private", '0')->first();
@@ -1213,10 +1245,10 @@ class ResumeController extends Controller
             $data['softskillInfo'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->first();
             $data['softskillCount'] = Softskills::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['certificationInfo'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['certificationCount'] = Certification::where("user_id","=", Auth::id())->where("private", '0')->count();
 
-            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['trainingInfo'] = Training::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['trainingCount'] = Training::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['courseInfo'] = Course::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1224,7 +1256,7 @@ class ResumeController extends Controller
 
 
 
-            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->get();
+            $data['awardInfo']  = Award::where("user_id","=", Auth::id())->where("private", '0')->orderBy('yyyy', 'desc')->get();
             $data['awardCount'] = Award::where("user_id","=", Auth::id())->where("private", '0')->count();
 
             $data['patentInfo']  = Patent::where("user_id","=", Auth::id())->where("private", '0')->get();
@@ -1246,20 +1278,24 @@ class ResumeController extends Controller
                                             ->join('work_categories as WC', 'WC.id', '=', 'TR.work_category')
                                             ->where("TR.user_id", "=", Auth::id())
 
-                                            ->orderBy('TR.yyyyEnd', 'asc')
+                                            ->orderBy('TR.yyyyEnd', 'desc')
                                             ->get(['*', 'TR.id as id']);
             $data['miscellaneousCount'] = Travel::where("user_id","=", Auth::id())->count();
 
             $data['interestInfo'] = Interests::where("user_id","=", Auth::id())->first();
             $data['interestCount'] = Interests::where("user_id","=", Auth::id())->count();
+            $data['style'] = DB::table('resume_styles')->where("user_id","=", Auth::id())->first();
 
             return view('resume.download', $data);
         }
 
         public function track() {
             DB::table('notifications')
-                ->orWhere('forUser', Auth::id())
-                ->orWhere('forUser', Auth::user()->email)
+                ->where('byUser','!=' ,Auth::id())
+                ->where(function($query){
+                    $query->orWhere('forUser', Auth::id())
+                          ->orWhere('forUser', Auth::user()->email);
+                })
                 ->update(['readStatus'=> '1']);
             $user_id = Auth::id();
             $email = Auth::user()->email;
@@ -1288,7 +1324,6 @@ class ResumeController extends Controller
                 $json['passcode'] = $passcode;
             }
             return response()->json($json);
-
         }
 
         // update activity
@@ -1318,8 +1353,8 @@ class ResumeController extends Controller
                     DB::table('notifications')
                     ->where('id', $input['req_id'])
                     ->update(array('request_status' => $input['status'], 'resume_id' => $resume->id, 'is_visible' => '0'));
-                    DB::table('resumes')->where('id', $resume->id)->update(array('request_status' => $input['status'], 'resume_url' => $url));
-                    Email::sendAcceptResumeResp($user->email,$resume->ownerEmail, Auth::user()->first_name);
+                    DB::table('resumes')->where('id', $resume->id)->update(array('request_status' => $input['status'], 'resume_url' => $url, 'userEmail'=>$user->email));
+                    Email::sendAcceptResumeResp($user->email, $resume->ownerEmail, Auth::user()->first_name);
                     $json['error'] = false;
                 } else {
                     $json ['errorMsg'] = "User resume is not created yet";
@@ -1329,8 +1364,6 @@ class ResumeController extends Controller
                 $activity1['byUser'] = Auth::id();
                 $activity1['forUser'] = $activity->byUser;
                 $activity1['activity'] = $input['status'] == 'rejected' ? 'resume_rejected' : 'resume_accepted';
-
-
                 $activity1['created_at'] = date('Y-m-d H:i:s');
                 Activity::createActivity($activity1);
             }
@@ -1356,7 +1389,16 @@ class ResumeController extends Controller
 
         }
     // request resume form
-    function requestResume() {
+    function requestResume(Request $request) {
+        $input = $request->all();
+
+        if(count($input)>0 && $input['request_id']) {
+            $data['email'] = base64_decode($input['request_id']);
+            $data['msg'] = "You do not have access to view profile. Please send request to access profile.";
+        } else {
+            $data['email'] = "";
+            $data['msg'] = "";
+        }
         $data['countryNameList'] = ["Afghanistan","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antarctica","Antigua and Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","British Indian Ocean Territory","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos Islands","Colombia","Comoros","Cook Islands","Costa Rica","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Ivory Coast","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","North Korea","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Pitcairn","Poland","Portugal","Puerto Rico","Qatar","Republic of the Congo","Reunion","Romania","Russia","Rwanda","Saint Barthelemy","Saint Helena","Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Pierre and Miquelon","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Sint Maarten","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard and Jan Mayen","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tokelau","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Turks and Caicos Islands","Tuvalu","U.S. Virgin Islands","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican","Venezuela","Vietnam","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"];
     	$data['countryCodeList'] = ["93","355","213","1-684","376","244","1-264","672","1-268","54","374","297","61","43","994","1-242","973","880","1-246","375","32","501","229","1-441","975","591","387","267","55","246","1-284","673","359","226","257","855","237","1","238","1-345","236","235","56","86","61","61","57","269","682","506","385","53","599","357","420","243","45","253","1-767","1-809, 1-829, 1-849","670","593","20","503","240","291","372","251","500","298","679","358","33","689","241","220","995","49","233","350","30","299","1-473","1-671","502","44-1481","224","245","592","509","504","852","36","354","91","62","98","964","353","44-1624","972","39","225","1-876","81","44-1534","962","7","254","686","383","965","996","856","371","961","266","231","218","423","370","352","853","389","261","265","60","960","223","356","692","222","230","262","52","691","373","377","976","382","1-664","212","258","95","264","674","977","31","599","687","64","505","227","234","683","850","1-670","47","968","92","680","970","507","675","595","51","63","64","48","351","1-787, 1-939","974","242","262","40","7","250","590","290","1-869","1-758","590","508","1-784","685","378","239","966","221","381","248","232","65","1-721","421","386","677","252","27","82","211","34","94","249","597","47","268","46","41","963","886","992","255","66","228","690","676","1-868","216","90","993","1-649","688","1-340","256","380","971","44","1","598","998","678","379","58","84","681","212","967","260","263"];
         return view('resume.request_resume', $data);
@@ -1405,6 +1447,20 @@ class ResumeController extends Controller
                     }
                 } else {
                     $activity['forUser'] = $result->id;
+					if($result) {
+						$sql = "SELECT relation_id from user_relations WHERE
+									(requested_by = ".$result->id." AND  requested_to = ".Auth::id().")
+									OR (requested_by = ".Auth::id()." AND  requested_to = ".$result->id.")";
+
+						$row =  DB::select($sql);
+
+						if(!$row) {
+							$data['requested_by'] = Auth::id();
+							$data['requested_to'] = $result->id;
+							DB::table('user_relations')->insert($data);
+						}
+
+					}
                 }
             }
 
@@ -1456,82 +1512,7 @@ class ResumeController extends Controller
         return response()->json($json);
 
     }
-    /*function requestResumeSave(Request $request) {
-        $json['error'] = true;
-        $json['errorMsg'] = "";
-        $json['invite_user'] = '0';
-        $json['resend_request'] = '0';
-        $input = $request->all();
-        if($input['option'] == 'email') {
-            $user = DB::table('users')->where('email', $input['email'])->first();
-            // matching if user is requesting self resume
-            if($user) {
-                if($user->id == Auth::id()) {
-                    $json['error_msg'] = "You can not send request to yourself";
-                    return response()->json($json);
-                }
-            // checking if request resume is already in pedning state
-            $pendingReq =  DB::table('notifications')->where('byUser', Auth::id())
-                                    ->where('email', $input['email'])
-                                    ->where('activity', 'resume_request')
-                                    ->where('request_status', '=', 'pending')
-                                    ->first();
-            // if request is already pending then end process here with flash message
-            if($pendingReq && $input['isResend'] == 0) {
-                $json['error'] = false;
-                $json['resend_request'] = '1';
-                return response()->json($json);
-            }
-                $activity['byUser'] = Auth::id();
-                $activity['forUser'] = $user->id;
-                $activity['activity'] = 'resume_request';
-                $activity['email'] = $user->email;
-                $activity['created_at'] = date('Y-m-d H:i:s');
-                Activity::createActivity($activity);
-                $request->session()->flash('success', 'Request has been sent successfully!');
-                Email::sendResumeRequest($input['email'], Auth::user()->email, Auth::user()->first_name, $input['message']);
-                $json['error'] = false;
-            } else {
-                $activity['byUser'] = Auth::id();
-                //$activity['forUser'] = $user->id;
-                $activity['activity'] = 'resume_request';
-                $activity['email'] = $input['email'];
-                $activity['created_at'] = date('Y-m-d H:i:s');
-                Activity::createActivity($activity);
-                $request->session()->flash('success', 'Request has been sent successfully!');
-                if($input['isInvite'] == 1) {
-                    $this->inviteUser($input['email'], $input['message']);
-                } else {
-                    Email::sendResumeRequest($input['email'], Auth::user()->email, Auth::user()->first_name, $input['message']);
-                }
-                $json['error'] = false;
-            }
-        }
-
-        if($input['option'] == 'wmid') {
-            $user = DB::table('users')->where('wmid', $input['wmid'])->first();
-            if($user) {
-                if($user->id == Auth::id()) {
-                    $json['errorMsg'] = "You can not send request to yourself";
-                    return response()->json($json);
-                }
-                $activity['byUser'] = Auth::id();
-                $activity['forUser'] = $user->id;
-                $activity['activty'] = 'resume_request';
-                $activity['email'] = $user->email;
-                Activity::createActivity($activity);
-                $request->session()->flash('success', 'Request has been sent successfully!');
-                $json['error'] = false;
-            } else {
-                $json['errorMsg'] = "WMID not found";
-
-            }
-
-        }
-        return response()->json($json);
-    } */
-
-    function forwardResume($resume_id) {
+        function forwardResume($resume_id) {
         $data['countryNameList'] = ["Afghanistan","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antarctica","Antigua and Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","British Indian Ocean Territory","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos Islands","Colombia","Comoros","Cook Islands","Costa Rica","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Ivory Coast","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","North Korea","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Pitcairn","Poland","Portugal","Puerto Rico","Qatar","Republic of the Congo","Reunion","Romania","Russia","Rwanda","Saint Barthelemy","Saint Helena","Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Pierre and Miquelon","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Sint Maarten","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard and Jan Mayen","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tokelau","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Turks and Caicos Islands","Tuvalu","U.S. Virgin Islands","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican","Venezuela","Vietnam","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"];
     	$data['countryCodeList'] = ["93","355","213","1-684","376","244","1-264","672","1-268","54","374","297","61","43","994","1-242","973","880","1-246","375","32","501","229","1-441","975","591","387","267","55","246","1-284","673","359","226","257","855","237","1","238","1-345","236","235","56","86","61","61","57","269","682","506","385","53","599","357","420","243","45","253","1-767","1-809, 1-829, 1-849","670","593","20","503","240","291","372","251","500","298","679","358","33","689","241","220","995","49","233","350","30","299","1-473","1-671","502","44-1481","224","245","592","509","504","852","36","354","91","62","98","964","353","44-1624","972","39","225","1-876","81","44-1534","962","7","254","686","383","965","996","856","371","961","266","231","218","423","370","352","853","389","261","265","60","960","223","356","692","222","230","262","52","691","373","377","976","382","1-664","212","258","95","264","674","977","31","599","687","64","505","227","234","683","850","1-670","47","968","92","680","970","507","675","595","51","63","64","48","351","1-787, 1-939","974","242","262","40","7","250","590","290","1-869","1-758","590","508","1-784","685","378","239","966","221","381","248","232","65","1-721","421","386","677","252","27","82","211","34","94","249","597","47","268","46","41","963","886","992","255","66","228","690","676","1-868","216","90","993","1-649","688","1-340","256","380","971","44","1","598","998","678","379","58","84","681","212","967","260","263"];
         $data['resumeAccess'] = Resume::where("id",$resume_id)->first();
@@ -1615,10 +1596,13 @@ class ResumeController extends Controller
     // resumes list that I viewed
     function viewedByMe() {
        $data['page_title'] = "Resume that I viewed";
-       $data['resumeViewed'] = DB::table('resume_stats')
-            ->join('users', 'resume_stats.resume_user_id', '=', 'users.id')
-            ->where('resume_stats.viewed_by', Auth::id())
-            ->orderBy('last_viewed_at', 'desc')
+       $data['resumeViewed'] = DB::table('resumes')
+            ->join('users', 'users.email', '=', 'resumes.userEmail')
+            ->join('notifications', 'users.email', '=', 'notifications.email')
+            ->where('notifications.email', Auth::user()->email)
+            ->where('notifications.request_status', 'accepted')
+            ->where('notifications.resume_viewed', '1')
+            ->orderBy('notifications.updated_at', 'desc')
             ->groupBy('users.id')
             ->paginate(10);
         return view('resume.resume_view_stats', $data);
@@ -1626,32 +1610,32 @@ class ResumeController extends Controller
     // my resume viewed by other
     function viewedByOther() {
         $data['page_title'] = "My resume that viewed by others";
-        $data['resumeViewed'] = DB::table('resume_stats')
-             ->join('users', 'resume_stats.viewed_by', '=', 'users.id')
-             ->where('resume_stats.resume_user_id', Auth::id())
-             ->orderBy('last_viewed_at', 'desc')
+        $data['resumeViewed'] = DB::table('resumes')
+             ->join('notifications', 'resumes.id', '=', 'notifications.resume_id')
+             ->join('users', 'notifications.email', '=', 'users.email')
+             ->where('resumes.resume_viewed', '1')
+             ->where('resumes.ownerEmail', Auth::user()->email)
+             ->orderBy('notifications.updated_at', 'desc')
              ->groupBy('users.id')
              ->paginate(10);
-         return view('resume.resume_view_stats', $data);
+         return view('resume.resume_others_view_stats', $data);
      }
      // resume that I received in my box
      function receivedResume() {
         $data['page_title'] = "Resume that I received";
-        $data['resumeReceived']=  DB::table('notifications')->where(function($query){
-                                    $query->orWhere('activity', 'resume_forwarded')
-                                        ->orWhere('activity', 'resume_sent');
-                                })->where(function($query){
-                                    $query->orWhere('forUser', Auth::id())
-                                        ->orWhere('toUser', Auth::id())
-                                        ->orWhere('email', Auth::user()->email);
-                                })->orderBy('updated_at', 'desc')->groupBy('id')
-                                ->paginate(10);
-        return view('resume.received_by_name', $data);
+        $data['resumeReceived'] =  DB::table('notifications')
+                                        ->where('email', Auth::user()->email)
+                                        ->where(function($query){
+                                            $query->orWhere('activity', 'resume_forwarded')
+                                                    ->orWhere('activity', 'resume_sent');
+                                        })->orderBy('updated_at', 'desc')->groupBy('id')
+                                        ->paginate(10);
+        return view('resume.resume_received', $data);
 
      }
      // resume that I forwared or sent
      function sentResumes() {
-        $data['page_title'] = "Resume that I sent";
+        $data['page_title'] = "Resume that I sent 1";
         $data['resumeReceived']=  DB::table('notifications')->where(function($query){
                                     $query->orWhere('activity', 'resume_forwarded')
                                         ->orWhere('activity', 'resume_sent');
@@ -1685,14 +1669,17 @@ class ResumeController extends Controller
                                 ->paginate(10);
         return view('resume.received_by_name', $data);
      }
-     // user that can access my resume 
+     // user that can access my resume
      function haveAccess() {
          $data['page_title'] = "Users who can access my resume";
-         $data['users'] = DB::table('resumes')->where('ownerEmail', Auth::user()->email)
-                                              ->where('userEmail', '!=', null)
-                                              ->orderBy('updated_at')
-                                              ->paginate(10);
-         return view('resume.user_can_access', $data); 
+         $data['users'] = DB::table('resumes')->select("*", "resumes.is_visible", "resumes.*", "notifications.updated_at")
+         ->Join('notifications', 'notifications.resume_id', '=', 'resumes.id')
+                                    ->where('resumes.ownerEmail', Auth::user()->email)
+                                    ->where('resumes.userEmail', '!=', null)
+                                    ->orderBy('notifications.updated_at', 'desc')
+                                    ->groupBy('resumes.id')
+                                    ->paginate(10);
+         return view('resume.user_can_access', $data);
      }
 
     //end statistics of resume
@@ -1713,7 +1700,7 @@ class ResumeController extends Controller
         } else {
             return response()->json(['error'=>"1", 'error_msg'=>'Only pdf and doc file is allowed']);
         }
-        
+
     }
     //download file
     function downloadMyResume(Request $request) {
@@ -1726,7 +1713,7 @@ class ResumeController extends Controller
         }
 
     }
-    // delete file 
+    // delete file
     function deleteMyResume(Request $request) {
         if(Auth::user()->resume_file != "") {
             $pathToFile = storage_path('app/resume/'.Auth::user()->resume_file);
@@ -1734,12 +1721,72 @@ class ResumeController extends Controller
             DB::table('users')->where('id', Auth::id())->update(['resume_file' => ""]);
             $request->session()->flash('success', 'Resume has been deleted successfully!');
             return redirect('update/options');
-            
+
         }  else {
              $request->session()->flash('error', 'You do not have any file to delete');
              return redirect('update/options');
         }
-
     }
     // end upload resume file
+     // function public download resume
+     function pubicDownload(Request $request) {
+        $input = $request->all();
+        $token = $input['_token'];
+        if($token == "") {
+            $request->session()->flash('error', 'You do not have any access to this file');
+            return redirect('home');
+        }
+        $query =  explode("&",base64_decode($token));
+        if(is_numeric($query[0]) && filter_var($query[1], FILTER_VALIDATE_EMAIL)) {
+          $result =  DB::table('resumes')->where('id', $query[0])->where('userEmail', $query[1])
+                                ->where('is_visible', '1')->first();
+            if($result) {
+                $user = DB::table('users')->where('email', $result->ownerEmail)->first();
+                $pathToFile = storage_path('app/resume/'.$user->resume_file);
+                return response()->download($pathToFile);
+            }else {
+                $request->session()->flash('error', 'You do not have any access to this file');
+                return redirect('home');
+            }
+
+        } else {
+            $request->session()->flash('error', 'You do not have any access to this file');
+            return redirect('home');
+        }
+
+    }
+    function styles() {
+        $data['style']  = DB::table('resume_styles')->where('user_id', Auth::id())->first();
+        return view('resume.styles', $data);
+    }
+    //saving resume style
+    function stylesSave(Request $req) {
+        $inputs = $req->all();
+        $json['error'] = "0";
+        $json['error_msg'] = "";
+        $row = DB::table('resume_styles')->where('user_id', Auth::id())->count();
+        $data['font_family'] = $inputs['font_family'];
+        $data['font_heading_color'] = $inputs['font_heading_color'];
+        //$data['font_text_color'] = $inputs['font_text_color'];
+
+        if($row > 0) {
+            DB::table('resume_styles')
+            ->where('user_id', Auth::id())
+            ->update($data);
+        } else {
+            $data['user_id'] = Auth::id();
+            DB::table('resume_styles')
+            ->insert($data);
+        }
+        $req->session()->flash('success', 'Style saved successfully');
+        return response()->json($json);
+        //return redirect('/resume/styles');
+    }
+
+    function testEmailView() {
+        $data['subject'] = "Subject";
+        $data['content'] = "Content";
+        $data['from'] = 'from@from.com';
+        return view('email.notification.request_resume', $data);
+    }
 }

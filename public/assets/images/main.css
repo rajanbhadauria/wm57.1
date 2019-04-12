@@ -160,13 +160,8 @@
 }
 
 .modal-content {
-    text-align: center;
-    font-size: 19px;
-    color: #666;
-    padding: 20px;
+	text-align: center;
 }
-
-.modal-content h4{ font-size: 25px !important; color: #000 !important;}
 
 .modal {
 	/*transform: translateY(-51.09%) !important; */
@@ -223,7 +218,7 @@ p.modal-text {
 
 .modal .modal-footer {
 	height: auto;
-	padding: 0px 15px 6px 0px;
+	padding: 0 15px 25px;
 }
 
 .modal-footer .btn-group {

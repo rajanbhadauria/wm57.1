@@ -18,7 +18,21 @@
 						<div class="">
 							<ul class="resume-user__list">
 
-                                <?php foreach($resumeViewed as $views) { ?>
+                                <?php foreach($resumeViewed as $views) {
+                                    $user = App\Helpers\Activity::getUserDetails($views->forUser);
+                                    if(!$user) {
+                                        $user = App\Helpers\Activity::getUserDetails($views->toUser);
+                                    }
+                                    if(!$user) {
+                                        $user = App\Helpers\Activity::getUserDetails($views->email);
+                                    }
+                                    if(!$user) {
+                                        $name = $received->email;
+                                    }
+                                    if($user) {
+                                        $name = $user->name;
+                                    }
+                                    ?>
 								<li class="container-card">
 									<div class="resume-user__list-img center-align">
 										<img src="{{get_user_image($views->avatar)}}" alt="{{$views->name}}" class="circle small"/>
@@ -28,9 +42,22 @@
                                         <p>
                                             {{$views->name}}
                                             <span>
-                                               {{Carbon\Carbon::parse($views->last_viewed_at)->diffForHumans()}}
+                                               {{Carbon\Carbon::parse($views->updated_at)->diffForHumans()}}
                                             </span></p>
-										</div>
+                                            @if($views->activity == "resume_forwarded")
+                                                <span>{{$name}} forwarded resume to you</span>
+                                            @endif
+                                            @if($views->activity == "resume_request")
+                                                <span> I requested resume to {{$name}}</span>
+                                            @endif
+                                            @if($views->activity == "resume_sent")
+                                                <span>{{$name}} sent resume to you</span>
+                                            @endif
+                                            <div class="right hide">
+                                                    <i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$views->resume_id}})" class="waves-button-input" value="View"></i>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                 </li>
@@ -44,5 +71,51 @@
 			</div>
 		</div>
     </section>
+    <script>
+            function updateRequest(status, req_id) {
+                $.ajax({
+                        type:"POST",
+                           dataType: "JSON",
+                        url:"{{url('updateresumerequest')}}",
+                        data:{status: status, req_id: req_id, _token: "{{ csrf_token()}}"},
+                        beforeSend: function(){$("#loading").show();},
+                        success: function(response){
+                            $("#loading").hide();
+                            if(response.error == 1){
+                                $.notify({ content:response.error_msg, timeout:3000});
+                            } else {
+                                $('#success').css({'visibility': 'visible'});
+                               window.location.reload();
+                            }
 
+                        },
+                        error: function(response) {
+                            $("#loading").hide();
+                        }
+                    });
+            }
+
+            function viewResume(req_id) {
+                $.ajax({
+                        type:"POST",
+                           dataType: "JSON",
+                        url:"{{url('resume/activity/viewresume')}}",
+                        data:{req_id: req_id, _token: "{{ csrf_token()}}"},
+                        beforeSend: function(){$("#loading").show();},
+                        success: function(response){
+                            $("#loading").hide();
+                            if(response.error == 1){
+                                $.notify({ content:response.errorMsg, timeout:3000});
+                            } else {
+                                $('#success').css({'visibility': 'visible'});
+                               window.location.href = "{{url('wm')}}/"+response.url;
+                            }
+
+                        },
+                        error: function(response) {
+                            $("#loading").hide();
+                        }
+                    });
+            }
+            </script>
     @endsection

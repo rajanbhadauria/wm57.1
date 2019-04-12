@@ -210,7 +210,7 @@ ul {
     padding: 0;
     color:#000;
     font-size: 21px;
-    line-height: 30px;
+    line-height: 29px;
     float: left;
 }
 
@@ -368,7 +368,7 @@ ul.auth-list {
     margin: 0;
     padding: 0;
     list-style: none;
-    float: right;
+    /*float: right;    */
 }
 
 ul.auth-list li {
@@ -376,10 +376,15 @@ ul.auth-list li {
     margin: 0;
     padding: 0;
     display: inline-block;
+    font-size: 15px;
+    line-height: 29px;
+    float: right;
 }
 
 ul.auth-list li a {
     padding: 0px;
+    float: right;
+    margin-left: 7px;
 }
 
 ul.auth-list a:hover {
@@ -863,7 +868,7 @@ a.btn-black-round:hover {
     margin: auto;
     /*background: #999;*/
     vertical-align: middle;
-    padding: 15px 0;
+    padding: 20px 0 15px 0;
 }
 
 .container-card {
@@ -1356,6 +1361,7 @@ footer {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+	border-radius:0;
 }
 
 select {
@@ -1365,6 +1371,7 @@ select {
     background-image: url("../images/down-arrow.png");
     background-position: calc(100% - 9px) 50%;
     background-repeat: no-repeat;
+	border-radius:0;
 }
 
 .input-field select.browser-default {

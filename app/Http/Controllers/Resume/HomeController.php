@@ -29,7 +29,7 @@ class HomeController extends Controller
     public function index()
     {
         $data['activityCount'] = Activity::countUserActivity(Auth::id(), Auth::user()->email);
-        $data['resumeReceived'] = Activity::countResumeReceivedRequest(Auth::id(), Auth::user()->email);
+        $data['resumeReceived'] = count(Activity::getResumeReceivedRequest(Auth::id(), Auth::user()->email));
         $data['members'] = User::getMyContacts(Auth::id());
         $data['viewCount'] = Resume::getResumeCount(Auth::id());
         return view('home', $data);

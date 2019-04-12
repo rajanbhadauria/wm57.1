@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<?php use App\Model\Resume; ?>
     <!-- Inner page code -->
 	<section class="title-bar">
 	  <div class="container">
@@ -73,22 +74,21 @@
 			<div class="ak-full-center-box" id="loginDiv">
 			<div class="">
 			  <div class="widget-container">
-
 				<ul class="collection-thumb ak-colcThumMem">
                     <?php if(count($users)>0) {
                         foreach($users as $user) {
+                            $access = Resume::getResumeAccess($user->email, Auth::user()->email);
+                            if($access)
+                                $url = 'wm/'.str_replace(" ", "-", $user->first_name)."-".str_replace(" ", "-", $user->last_name)."-".$access->id;
+                            else
+                                $url = 'requestresume?request_id='.base64_encode($user->email);
                         ?>
 					<li class="collection-item collection-item-hover-active">
-                        <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
-						<div class="title">{{$user->first_name}} {{$user->last_name}}</div>
-						<div class="deg">HR Manager</div>
-						<div class="company">Wipro</div>
-						<div class="date">Himachal Pradesh &#183; India</div>
-						<div class="collection-item-btn">
-							<div class="dropdown">
-							  <a><i class="material-icons">more_vert</i></a>
-							</div>
-						</div>
+                       <a href="{{url($url)}}"><img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
+                            <div class="title">{{$user->first_name}} {{$user->last_name}}</div>
+                            <div class="deg">{{$user->primaryEmail}}</div>
+                            <div class="company">{{$user->primaryPhone}}</div>
+                        </a>
                     </li>
                 <?php } }?>
 				</ul>

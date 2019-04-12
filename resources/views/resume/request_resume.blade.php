@@ -16,6 +16,11 @@
                 <div class="ak-custom-center-box-big">
                     <div class="p-0" id="loginDiv">
                         <div class="row m-0 form-wrapper">
+                            @if($msg)
+                            <div class="help-text blue-text center">
+                                {{$msg}}
+                            </div>
+                            @endif
                             <div class="">
                                 <div class="ak-comn-title">You can request / ask for updated floating resume quickly from your known connections. Select option to request via Phone Or Email</div>
                             <form autocomplete="off" class="m-0" action="{{url('requestresume')}}" method="post" name="sendRequestForm" id="sendRequestForm">
@@ -40,7 +45,7 @@
 
                                     <div>
                                         <div id="email-option-content" class="request-resume-tab input-field custom-form">
-                                            <input id="email" name="email" type="text" class=" " value=""  required>
+                                            <input id="email" name="email" type="text" class=" " value="{{$email}}"  required>
                                             <label for="email">Email <span>*</span> </label>
                                         </div>
                                         <div id="phonenumber-option-content" class="request-resume-tab input-field custom-form resume-tab">

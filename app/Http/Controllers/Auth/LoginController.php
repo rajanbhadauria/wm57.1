@@ -154,12 +154,16 @@ class LoginController extends Controller
         }
         if($user->account_status == 'deactive') {
            $upuser->account_status = 'active';
-            $upuser->save();
+           $upuser->last_active = "'".date("Y-m-d H:i:s")."'";
+           $upuser->save();
             return redirect('/home')->with('success','Your account activated successfully');
         }
         if($user->status == '0') {
              return redirect('/activate-account');
         }
+        $upuser->account_status = 'active';
+        $upuser->last_active = date("Y-m-d H:i:s");
+        $upuser->save();
         $this->updateresumeViewOnUpdate($user->email);
         return redirect('/home');
     }

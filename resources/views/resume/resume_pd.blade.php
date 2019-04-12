@@ -1,13 +1,112 @@
 <!--<!DOCTYPE html>-->
+<?php
+if(isset($sectionid)) {
+    $sectionid = $sectionid;
+} else {
+    $sectionid = '';
+}
+
+function showWorkDetails($value){
+    if($value!= ""){
+        return $value." - ";
+    } else {
+        return "";
+    }
+}
+function showWithReadMore($value){
+    if($value !=""){
+        if(strlen($value) > 50){
+            echo substr($value,0,50); ?><span class="rm"><span>...</span>Read more</span><span class="rc"><?php echo substr($value,50,-1); ?> </span> <span class="rl">Read less</span> <?php
+        } else {
+            echo substr($value,0,50);
+        }
+    }
+}
+
+function getMonthName($month) {
+    switch ($month) {
+        case '01':
+            return 'Jan';
+            break;
+
+        case '02':
+            return 'Feb';
+            break;
+        case '03':
+            return 'March';
+            break;
+        case '04':
+            return 'April';
+            break;
+        case '05':
+            return 'May';
+            break;
+        case '06':
+            return 'Jun';
+            break;
+        case '07':
+            return 'July';
+            break;
+            case '08':
+            return 'Aug';
+            break;
+        case '09':
+            return 'Spt';
+            break;
+        case '10':
+            return 'Oct';
+            break;
+            case '11':
+            return 'Nov';
+            break;
+        case '12':
+            return 'Dec';
+            break;
+       default:
+            # code...
+            break;
+    }
+}
+
+function showLanguages($language){
+    if($language->read && $language->write && $language->speak){
+        echo "Read, Write, Speak";
+    } elseif($language->read && $language->write && !$language->speak) {
+        echo "Read, Write";
+    } elseif($language->read && !$language->write && $language->speak) {
+         echo "Read, Speak";
+    } elseif($language->read && !$language->write && !$language->speak) {
+         echo "Read";
+    } elseif(!$language->read && $language->write && $language->speak) {
+         echo "Write, Speak";
+    } elseif(!$language->read && $language->write && !$language->speak) {
+         echo "Write";
+    } elseif(!$language->read && !$language->write && $language->speak) {
+         echo "Speak";
+    } elseif(!$language->read && !$language->write && !$language->speak) {
+         echo "";
+    }
+}
+function getSkillFromJson($skill) {
+    $skill_list = json_decode($skill);
+    $skill_array = [];
+    if(count($skill_list)>0) {
+         foreach($skill_list as $skills) {
+            $skill_array[] = $skills->text;
+         }
+    }
+    return implode(" | ", $skill_array);
+}
+$print_url = url("resume/print");
+?>
 <html lang="en"><head>
     <meta http-equiv="content-type" content="text/html; charset=windows-1252">
       <title>WorkMedian Resume PDF</title>
-      <link href="{{my_asset('css/css.css')}}" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
       <link href="{{my_asset('css/resume-pdf.css')}}" rel="stylesheet" media="all">
     </head>
 
     <body>
-
         <section class="section wrappit ak-resume-sample resume-color-blue resume-fontsize-medium resume-fontfamily-roboto">
             <div class="container">
                 <div class="center-wrapper" id="heightSet">
@@ -18,501 +117,437 @@
                                     <div class="inner-wrapper resume-inner-wrapper">
                                         <div class="user-profile">
                                             <div class="col1 details">
-                                                <h3 class="name">Hemath Kumar</h3>
+                                                @if($basicInfoCount >0)
+                                                <h3 class="name">{{$basicInfo->first_name }} {{$basicInfo->middle_name}} {{$basicInfo->last_name}}</h3>
+                                                @else
+                                                <h3 class="name">{{$profileData->first_name }} {{$profileData->last_name}}</h3>
+                                                @endif
+                                                @if(isset($workInfo[0]))
                                                 <div class="display-flex align-items-center sm-display-block">
-                                                    <strong>Senior Vice President</strong>
+                                                    <strong>{{$workInfo[0]->designation }}</strong>
                                                     <span class="dot-separator"></span>
-                                                    <em class="highlight1">Business Excellence</em>
+                                                    <em class="highlight1">{{$workInfo[0]->department }}</em>
                                                 </div>
                                                 <div class="display-flex align-items-center sm-display-block">
-                                                    <strong>Cognizant</strong>
+                                                    <strong>{{$workInfo[0]->company}}</strong>
                                                     <span class="dot-separator"></span>
-                                                    <em class="highlight1">Noida<span class="dot-separator"></span>India</em>
-                                                </div>
-                                                <span class="hr"></span>
-                                                <div class="display-flex align-items-center sm-display-block">
-                                                    <strong>MBA</strong>
-                                                    <span class="dot-separator"></span>
-                                                    <em class="highlight1">Marketing<span class="dot-separator"></span>2003</em>
-                                                </div>
-                                                <div class="display-flex align-items-center sm-display-block">
-                                                    <strong>Chicago Booth School</strong>
-                                                    <span class="dot-separator"></span>
-                                                    <em class="highlight1">New York<span class="dot-separator"></span>US</em>
+                                                    <em class="highlight1">{{$workInfo[0]->city}}<span class="dot-separator"></span>{{$workInfo[0]->country}}</em>
                                                 </div>
                                                 <span class="hr"></span>
-                                                <ul class="user-contact-info sm-content-center">
-                                                    <li class="phone">
-                                                        <a href="tel:+1 6565576788">+1 6565576788</a>|
-                                                    </li>
-                                                    <li class="email">
-                                                        <a href="mailto:Hkumar@gmail.com">Hkumar@gmail.com</a>|
-                                                    </li>
-                                                    <li class="web">
-                                                        <a href="http://www.hkumar.com/">www.Hkumar.com</a>
-                                                    </li>
-                                                </ul>
+                                                @endif
+                                                @if($educationCount>0)
+                                                <div class="display-flex align-items-center sm-display-block">
+                                                    <strong>{{$educationInfo[0]->educationName}}</strong>
+                                                    <span class="dot-separator"></span>
+                                                    <em class="highlight1">{{$educationInfo[0]->branch}}<span class="dot-separator"></span>{{$educationInfo[0]->yyyy}}</em>
+                                                </div>
+                                                <div class="display-flex align-items-center sm-display-block">
+                                                    <strong>{{$educationInfo[0]->school}}</strong>
+                                                    <span class="dot-separator"></span>
+                                                    <em class="highlight1">{{$educationInfo[0]->city}}<span class="dot-separator"></span>{{$educationInfo[0]->country}}</em>
+                                                </div>
+                                                <span class="hr"></span>
+                                                @endif
+
+                                                <?php if($contactCount>0){ ?>
+                                                <div class="display-flex align-items-center sm-display-block">
+                                                    <span class="phone">+{{$contactInfo->primaryPhoneCode}}-{{$contactInfo->primaryPhone}}</span>
+                                                    <span class="email"> | <?php echo $contactInfo->altEmail!="" ? $contactInfo->altEmail: $profileData->email; ?></span>
+                                                    <?php if($contactInfo->url) { ?>
+                                                    <span class="web">
+                                                            <img src="{{my_asset('images/web.svg')}}" />
+                                                            <a href="{{$contactInfo->url}}">{{$contactInfo->url}}</a>
+                                                    </span>
+                                                <?php } ?>
+
+                                                </div>
+
+                                            <?php } ?>
                                             </div>
                                             <div class="col2 profile-pic">
                                                 <div class="pic">
                                                     @if(isset($profileData->profilePrivate) && $resumeAccess->profileData)
-                                                    <img src="{{get_user_image(Auth::user()->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : Auth::user()->first_name." ".Auth::user()->last_name}}' />
+                                                    <img src="{{get_user_image($profileData->avatar)}}" title='{{$basicInfoCount>0 ? $basicInfo->first_name . " " . $basicInfo->last_name : ""}}' />
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="block hightlightFeture">
-                                            <h2>UI / UX Designer &amp; Developer</h2>
+                                            @if($coverNoteCount>0)
+                                            <h2>{{$coverNote->resume_title}}</h2>
+                                            @endif
+                                            @if($skillCount > 0  && $resumeAccess->skillData)
                                             <div class="exp-details hightlightFSkils">
-                                                <p>Brand Design | UX Design | UI Design | HTML/CSS | jQuery | AngularJS | ReactJS | Wordpress</p>
+                                                <p>{{getSkillFromJson($skillInfo->skill)}}</p>
                                             </div>
+                                            @endif
+                                            @if($objectiveCount && $resumeAccess->objectiveData)
                                             <div class="exp-details">
-                                                <p>To work on Business excellence, Process Excellence and Process Improvements
-                                                    opportunities using approach which is more
-                                                    practical to business and fast in yielding results</p>
+                                                <p><?php echo nl2br($objectiveInfo->objective);?></p>
                                             </div>
+                                            @endif
                                         </div>
+                                        <?php if($workCount > 0 && $resumeAccess->workData) {?>
                                         <div class="block">
                                             <h2>Work experience
                                                 <span class="dot-separator" style="position:relative;top:-1px;"></span>
                                                 <span class="highlight1">8 years 7 months</span>
                                             </h2>
-
+                                            <?php foreach($workInfo as $work) {?>
                                             <div class="ak-exp-details-editable">
                                             <div class="exp-details">
                                                 <div class="col1">
-                                                    <strong>2018</strong>
+                                                    <strong>{{$work->yyyyStart}}</strong>
                                                 </div>
                                                 <div class="col2">
-                                                    <strong>Senior Vice President<span class="dot-separator"></span><span class="highlight1">Sales
-                                                            and solutions</span>
+                                                    <strong>{{$work->designation}}<span class="dot-separator"></span><span class="highlight1">{{$work->department}}</span>
                                                     </strong>
                                                     <p>
-                                                        <strong>Cognizant</strong>
+                                                        <strong>{{$work->company}}</strong>
                                                         <span class="dot-separator"></span>
-                                                        <span class="highlight1">Noida
-                                                            <span class="dot-separator"></span>India</span>
+                                                        <span class="highlight1">{{$work->city}}</span>
+                                                        <span class="dot-separator"></span>{{$work->country}}</span>
                                                     </p>
-                                                    <p>Mar 2016 – Present
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">2 years 2 months</span>
+                                                    <p>{{getMonthName($work->mmStart)}} {{$work->yyyyStart}} – {{($work->yyyyEnd) ? getMonthName($work->mmEnd)." ".$work->yyyyEnd: "Present"}}
+                                                        @if(isset($work->duration))<span class="highlight1">{{$work->duration}}</span>@endif
                                                     </p>
+
                                                 </div>
                                             </div>
 
+                                            @if($work->roleDesc)
                                             <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-                                                        Belts ) associated with different verticals
-                                                        of the Organization</li>
-                                                    <li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
+                                                <ul class='list'>
+                                                <li><?php echo str_replace("<br />", '</li><li>', nl2br(str_replace('•	', " ", $work->roleDesc))); ?></li>
                                                 </ul>
                                             </div>
+                                            @endif
                                             </div>
+                                        <?php }?>
 
-                                            <div class="ak-exp-details-editable">
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2017</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>Assistant Vice President
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Operational performance improvement </span>
-                                                    </strong>
-                                                    <p>HSBC
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Noida
-                                                            <span class="dot-separator"></span>India</span>
-                                                    </p>
-                                                    <p>Mar 2018 – Present
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">2 years 2 months</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-                                                        Belts ) associated with different verticals
-                                                        of the Organization</li>
-                                                    <li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-                                                </ul>
-                                            </div>
-                                            </div>
-
-                                            <div class="ak-exp-details-editable">
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2016</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>Assistant Vice President .
-                                                        <span class="highlight1">Operational performance improvement </span>
-                                                    </strong>
-                                                    <p>HSBC
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Noida
-                                                            <span class="dot-separator"></span>India</span>
-                                                    </p>
-                                                    <p>Mar 2018 – Present
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">2 years 2 months</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-                                                        Belts ) associated with different verticals
-                                                        of the Organization</li>
-                                                    <li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-                                                </ul>
-                                            </div>
-                                            </div>
-
-                                            <div class="ak-exp-details-editable">
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>-</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>Assistant Vice President .
-                                                        <span class="highlight1">Operational performance improvement </span>
-                                                    </strong>
-                                                    <p>HSBC
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Noida
-                                                            <span class="dot-separator"></span>India</span>
-                                                    </p>
-                                                    <p>Mar 2018 – Present
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">2 years 2 months</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            </div>
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Leading Team of Process Excellence experts ( Black Belts / Master Black
-                                                        Belts ) associated with different verticals
-                                                        of the Organization</li>
-                                                    <li>Driving Six Sigma, Lean, ITIL, ISO, Transition</li>
-                                                </ul>
-                                            </div>
                                         </div>
-                                        <div class="block">
-                                            <h2>Work
-                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>Projects
-                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>Achievements
-                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>highlights
-                                            </h2>
+                                    <?php } ?>
+                                    @if($projectCount>0  && $resumeAccess->projectData)
+                                    <div class="block">
+                                        <h2>Key assignments and projects
+                                        </h2>
+
+                                        @foreach($projectInfo as $project)
+                                        <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
                                                 <div class="col1">
-                                                    <strong>2018</strong>
+                                                    <strong>{{$project->yyyy}}</strong>
                                                 </div>
                                                 <div class="col2">
-                                                    <strong>HSBC
-                                                        <span class="dot-separator"></span>Project
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Lean Modem dispatch reduction</span>
+                                                    <strong>
+                                                        <span class="highlight1">{{$project->project}}</span>
+                                                        <span class="dot-separator"></span>{{$project->school}}
+
+                                                        @if($project->url)
+                                                        <span class="dot-separator"></span><a href="{{$project->url}}">{{$project->url}}</a>
+                                                        @endif
                                                     </strong>
                                                 </div>
                                             </div>
-
+                                            @if($project->projectDesc != '')
                                             <div class="exp-details">
                                                 <ul class="list">
                                                     <li>
-                                                        <p>Work on improving FCR from 56% to 88% with a stability leading to
-                                                            34Mn
-                                                            savings.
-                                                            <a href="http://wm.dainidev.com/">http://wm.dainidev.com/</a>
-                                                        </p>
+                                                        <?php echo str_replace("<br><br>", '<br>', nl2br($project->projectDesc)); ?>
+
                                                     </li>
                                                 </ul>
                                             </div>
-
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2017</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>Wipro
-                                                        <span class="dot-separator"></span>Publication
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Six Sigma CSAT improvement</span>
-                                                    </strong>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc congue
-                                                            efficitur ipsum, ut condimentum dui. Quisque vel
-                                                            libero faucibus, sollicitudin quam ut, commodo ligula. Etiam
-                                                            sagittis
-                                                            scelerisque erat, nec suscipit ligula cursus
-                                                            ac. Vestibulum et nunc fringilla, euismod dolor et, pulvinar velit.
-                                                            Integer finibus elit leo, in venenatis purus sodales
-                                                            id. Fusce a risus non diam tristique scelerisque ac et nunc. Donec
-                                                            ut
-                                                            libero nulla. Donec rhoncus felis ac elit tincidunt
-                                                            lobortis nec id arcu.</p>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2017</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>HSBC
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Lean Modem dispatch reduction</span>
-                                                    </strong>
-                                                    <p>Work on improving FCR from 56% to 88% with a stability leading to 34Mn
-                                                        savings.
-                                                        <a href="http://wm.dainidev.com/">http://wm.dainidev.com/</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>-</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>HSBC
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Lean Modem dispatch reduction</span>
-                                                    </strong>
-                                                    <p>This tool helps on identifying the method of automation the entire
-                                                        process</p>
-                                                </div>
-                                            </div>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2015</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>Cognizant
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Six sigma vendor rejects reduction</span>
-                                                    </strong>
-                                                    <p>This tool helps on identifying the method of automation the entire
-                                                        process</p>
-                                                </div>
-                                            </div>
+                                            @endif
                                         </div>
+
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    @if($miscellaneousCount>0  && $resumeAccess->travelData)
                                         <div class="block">
-                                            <h2>Extracurricular activities</h2>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2013</strong>
+                                            <h2>Publications
+                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>Research
+                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>Patent
+                                                <span class="dot-separator" style="position:relative;top:-1px;"></span>etc
+
+                                            @foreach($miscellaneousInfo as $miscellaneous)
+                                            <div class="ak-exp-details-editable ak-editcol">
+                                                <div class="exp-details">
+                                                    <div class="col1">
+                                                        <strong>{{$miscellaneous->yyyyEnd}}</strong>
+                                                    </div>
+                                                    <div class="col2">
+                                                        <strong>
+                                                            <span class="highlight1">{{$miscellaneous->project}}</span>
+                                                            <span class="dot-separator"></span>
+                                                            {{$miscellaneous->company}}
+                                                            <span class="dot-separator"></span>{{$miscellaneous->title}}
+
+
+                                                        </strong>
+                                                    </div>
                                                 </div>
-                                                <div class="col2">
-                                                    <strong>Amity university
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">President organizer</span>
-                                                    </strong>
+                                                <div class="exp-details">
+                                                    <ul class="list">
+                                                        <li>
+                                                            <p>{{$miscellaneous->projectDesc}}
+                                                                @if($miscellaneous->url)
+                                                            <a href="{{$miscellaneous->url}}">{{$miscellaneous->url}}</a>
+                                                                    @endif
+                                                            </p>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
 
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Set up to manage students listing down requirements and interests</li>
-                                                </ul>
-                                            </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+                                        @if($softskillCount>0  && $resumeAccess->softskillData)
                                         <div class="block">
-                                            <h2>Soft skills</h2>
+                                        <h2>Soft skills</h2>
                                             <div class="exp-details">
-                                                <p>Conflict management, Influencing ability, Change management, Effective
-                                                    presentation
+
+                                                <p>
+                                                        <?php
+                                                            $softSkill = json_decode($softskillInfo->soft_skill);
+                                                            $skillsArray = []; $i = 0;
+                                                            foreach($softSkill as $skills) {
+                                                                 $skillsArray[$i] =  $skills->text;
+                                                                 $i++;
+                                                             }
+                                                             echo implode(", ", $skillsArray);
+                                                        ?>
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if($interestCount>0 && $resumeAccess->interestData)
                                         <div class="block">
-                                            <h2>Interests</h2>
+                                        <h2>Interests</h2>
                                             <div class="exp-details">
-                                                <p>Sky diving, Entrepreneurship funnel, Social events, Driving </p>
+                                                <p>
+                                                        <?php
+                                                        $interest = json_decode($interestInfo->interest);
+                                                        $interestArray = []; $i = 0;
+                                                        foreach($interest as $ints) {
+                                                             $interestArray[$i] =  $ints->text;
+                                                             $i++;
+                                                         }
+                                                         echo implode(", ", $interestArray);
+                                                    ?>
+                                                </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if($awardCount > 0 && $resumeAccess->awardData)
                                         <div class="block">
                                             <h2>Awards</h2>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2013</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>CEO award of quarter
+                                            @foreach($awardInfo as $award)
+                                            <div class="ak-exp-details-editable ak-editcol">
+                                                <div class="exp-details">
+                                                    <div class="col1">
+                                                    <strong>{{$award->yyyy}}</strong>
+                                                    </div>
+                                                    <div class="col2">
+                                                        <strong>{{$award->award}}
                                                         <span class="dot-separator"></span>
-                                                        <span class="highlight1">Cognizant</span>
-                                                    </strong>
+                                                        <span class="highlight1">{{$award->school}}</span>
+                                                        </strong>
+
+                                                    </div>
+
                                                 </div>
                                             </div>
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Set up to manage students listing down requirements and interests</li>
-                                                </ul>
-                                            </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+                                        @if($trainingCount>0 && $resumeAccess->trainingData)
                                         <div class="block">
                                             <h2>Trained on</h2>
+                                            @foreach($trainingInfo as $traning)
+                                            <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
                                                 <div class="col1">
-                                                    <strong>2013</strong>
+                                                    <strong>{{$traning->yyyy}}</strong>
                                                 </div>
                                                 <div class="col2">
-                                                    <strong>Design thinking
+                                                    <strong>{{$traning->training}}
                                                         <span class="dot-separator"></span>
-                                                        <span class="highlight1">Accenture</span>
+                                                        <span class="highlight1">{{$traning->school}}</span>
                                                     </strong>
                                                 </div>
                                             </div>
-
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Set up to manage students listing down requirements and interests</li>
-                                                </ul>
                                             </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+                                        @if($certificationCount>0 && $resumeAccess->certificationData)
                                         <div class="block">
                                             <h2>Certifications</h2>
+                                            @foreach ($certificationInfo as $certification)
+                                            <div class="ak-exp-details-editable ak-editcol">
+                                                <div class="exp-details">
+                                                    <div class="col1">
+                                                    <strong>{{$certification->yyyy}}</strong>
+                                                    </div>
+                                                    <div class="col2">
+                                                        <strong>{{$certification->certification}}
+                                                            <span class="dot-separator"></span>
+                                                            <span class="highlight1">{{$certification->school}} {{$certification->city}} {{$certification->country}}</span>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        @endif
+                                        @if($educationCount>0 && $resumeAccess->educationData)
+                                        <div class="block">
+                                            <h2>Education</h2>
+                                            @foreach($educationInfo as $education)
+                                            <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
                                                 <div class="col1">
-                                                    <strong>2013</strong>
+                                                <strong>{{$education->yyyy}}</strong>
                                                 </div>
                                                 <div class="col2">
-                                                    <strong>Six Sigma Black Belt
+                                                    <strong>{{$education->educationName}}
+                                                        <span class="dot-separator"></span>{{$education->branch}}
                                                         <span class="dot-separator"></span>
-                                                        <span class="highlight1">Indian statistical institute</span>
+                                                        <span class="highlight1">{{$education->school}}
+                                                        <span class="dot-separator"></span>{{str_replace('%', '',$education->gradeValue)}}{{$education->grade == 'percentage' ? '%' : ($education->grade == ' GPA' ? 'GPA' : ' Grade') }}</span>
                                                     </strong>
                                                 </div>
                                             </div>
 
-                                            <div class="exp-details">
-                                                <ul class="list">
-                                                    <li>Set up to manage students listing down requirements and interests</li>
-                                                </ul>
-                                            </div>
                                         </div>
-                                        <div class="block">
-                                            <h2>Education</h2>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2013</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>MBA
-                                                        <span class="dot-separator"></span>Marketing
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">London school of Business
-                                                            <span class="dot-separator"></span>67%</span>
-                                                    </strong>
-                                                </div>
-                                            </div>
-                                            <div class="exp-details">
-                                                <div class="col1">
-                                                    <strong>2010</strong>
-                                                </div>
-                                                <div class="col2">
-                                                    <strong>BE
-                                                        <span class="dot-separator"></span>Electrical and electronics
-                                                        <span class="dot-separator"></span>
-                                                        <span class="highlight1">Thapar University
-                                                            <span class="dot-separator"></span>7.86 GPA</span>
-                                                    </strong>
-                                                </div>
-                                            </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+                                        @if($courseCount > 0 && $resumeAccess->courseData)
                                         <div class="block">
                                             <h2>Subjects, Courses</h2>
+                                            @foreach($courseInfo as $course)
+                                            <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
-                                                <p>Antenna
-                                                    <span class="highlight1">(A+ grade)</span> , Modular design
-                                                    <span class="highlight1">(92%)</span>, Analog</p>
-                                            </div>
-                                        </div>
-                                        <div class="block">
-                                            <h2>Language</h2>
-                                            <div class="exp-details">
-                                                <p>Hindi
-                                                    <span class="highlight1">(Speak. Read. Write)</span>, English
-                                                    <span class="highlight1">(Speak. Read)</span>, German
-                                                    <span class="highlight1">(Speak)</span>
+                                                <p>{{$course->course}}
+                                                    <span class="highlight1">({{str_replace('%', '',$course->gradeValue)}}{{$course->grade == 'percentage' ? '%' : ($course->grade == ' GPA' ? 'GPA' : ' grade') }})</span>
                                                 </p>
                                             </div>
+
+                                            </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+                                        @if($languageCount>0 && $resumeAccess->languageData)
                                         <div class="block">
-                                            <h2>Additional information / Contact details</h2>
+                                            <h2>Language</h2>
+                                            <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
-                                                <ul class="list-table">
-                                                    <li class="col1">
-                                                        <ul>
-                                                            <li>Date of birth</li>
-                                                            <li>Marital status</li>
-                                                            <li>Contact number</li>
-                                                            <li>Alternat number</li>
-                                                            <li>Email</li>
-                                                            <li>Valid passport</li>
-                                                            <li>Current location</li>
-                                                            <li>References</li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="col2">
-                                                        <ul>
-                                                            <li>
-                                                                <span class="highlight1">10-Jan-71 (47 years)</span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="highlight1">Married</span>
-                                                            </li>
-                                                            <li>
-                                                                <a href="tel:+98 989987789">+98 989987789</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="tel:+98 989987789">+98 989987789</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="emailto:gsdhh@gmail.com">gsdhh@gmail.com</a>
-                                                            </li>
-                                                            <li>
-                                                                <span class="highlight1">Yes</span>
-                                                            </li>
-                                                            <li>
-                                                                <span class="highlight1">Bhopal, India</span>
-                                                            </li>
-                                                            <li>
-                                                                <a href="tel:+98 989987789">+98 989987789</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
+                                                @foreach($languageInfo as $language1)
+                                                <p>
+                                                    {{$language1->language}}
+                                                    <span class="highlight1">({{showLanguages($language1)}})</span>
+                                                </p>
+                                                @endforeach
+                                            </div>
                                             </div>
                                         </div>
+                                        @endif
+
+                                        @if($referenceCount > 0 && $resumeAccess->referenceData)
                                         <div class="block">
-                                            <h2>Cover Note</h2>
+                                            <h2>References</h2>
+                                            @foreach($referenceInfo as $reference1)
+                                            <div class="ak-exp-details-editable ak-editcol">
                                             <div class="exp-details">
-                                                <p>Donec posuere luctus lectus, sit amet scelerisque risus accumsan nec.
-                                                    Quisque
-                                                    urna
-                                                    erat, semper quis eros nec, tempor
-                                                    scelerisque nulla. Maecenas gravida tellus dapibus eros imperdiet eleifend.
-                                                    Ut
-                                                    malesuada dolor ac augue dignissim bibendum.
-                                                    Suspendisse iaculis arcu quis feugiat rhoncus. Vestibulum iaculis erat vel
-                                                    eros
-                                                    placerat, tempus accumsan dui efficitur.
-                                                    Nunc eleifend vehicula nisi vel mollis.</p>
+                                                    <div class="col2">
+                                                    <strong><span>{{$reference1->reference}}</span>
+                                                        <span class="dot-separator"></span>
+                                                        <span class="highlight1">{{$reference1->email}}</span>
+                                                        <span class="dot-separator"></span>
+                                                        <span class="highlight1">{{$reference1->school}}</span>
+                                                        @if($reference1->phone !='')
+                                                        <span class="dot-separator"></span>
+                                                        <span class="highlight1">+{{$reference1->phoneCode}}{{$reference1->phone}}</span>
+                                                        @endif
+                                                    </strong>
+                                                    </div>
+
                                             </div>
+
+                                            </div>
+                                            @endforeach
                                         </div>
+                                        @endif
+
+                                        <div class="block">
+                                                @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                    <h2>Additional information / Contact details</h2>
+                                                @endif
+                                                <div class="exp-details">
+                                                        <ul class="list-table">
+                                                            <li class="col1">
+                                                                <ul>
+                                                                    <li> @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                                             @if($basicInfo && $basicInfo->dob != '//')Date of birth @endif
+                                                                         @endif
+                                                                    </li>
+                                                                    <li> @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                                            @if($basicInfo->marital_status)Marital status @endif
+                                                                          @endif
+                                                                    </li>
+                                                                    <li> @if($contactCount && $resumeAccess->contactData)Contact number @endif</li>
+                                                                    <li> @if($contactCount && $resumeAccess->contactData && $contactInfo->altPhone!='')Alternat number @endif</li>
+                                                                    <li> @if($contactCount && $resumeAccess->contactData)Email @endif</li>
+                                                                    <li> @if($contactCount && $resumeAccess->contactData && $contactInfo->altEmail!='')Alternat Email @endif</li>
+                                                                    <li> @if(($currentAddressCount > 0 || $permanentAddressCount>0) && $resumeAccess->currentAddressData)Current location @endif</li>
+                                                                </ul>
+                                                            </li>
+                                                            <li class="col2">
+                                                                <ul>
+                                                                    <li>
+                                                                        @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                                        @if($basicInfo && $basicInfo->dob != '//')<span class="highlight1">{{$basicInfo->dob}}</span>@endif
+                                                                        @endif
+                                                                    </li>
+                                                                    <li>
+                                                                        @if($basicInfoCount >0  && $resumeAccess->basicInfoData)
+                                                                        @if($basicInfo->marital_status)<span class="highlight1">{{$basicInfo->marital_status}}</span>@endif
+                                                                        @endif
+                                                                    </li>
+
+                                                                    <li>
+                                                                        @if($contactCount)<a href="tel:+{{$contactInfo->primaryPhoneCode }} {{$contactInfo->primaryPhone}}">+{{$contactInfo->primaryPhoneCode}} {{$contactInfo->primaryPhone}}</a>@endif
+                                                                    </li>
+                                                                    <li>
+                                                                        @if($contactCount && $contactInfo->altPhone!='')<a href="tel:+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}}">+{{$contactInfo->altPhoneCode }} {{$contactInfo->altPhone}} ({{$contactInfo->altRelation}})</a>@endif
+                                                                    </li>
+                                                                    <li>
+                                                                        @if($contactCount)<a href="emailto: {{Auth::user()->email}}">{{Auth::user()->email}}</a>@endif
+                                                                    </li>
+                                                                    <li>
+                                                                            @if($contactCount && $contactInfo->altEmail!='')<a href="emailto:{{$contactInfo->altEmail}} {{$contactInfo->altPhone}}">{{$contactInfo->altEmail }}</a>@endif
+                                                                        </li>
+                                                                    <li>
+                                                                        <span class="highlight1">
+                                                                            @if($currentAddressCount)
+                                                                                {{$currentAddressInfo->city}}, {{$currentAddressInfo->country}}
+                                                                            @endif
+                                                                            @if($currentAddressCount == 0 && $permanentAddressCount>0)
+                                                                            {{$permanentAddressInfo->city}}, {{$permanentAddressInfo->country}}
+                                                                        @endif
+                                                                        </span>
+                                                                    </li>
+
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -521,7 +556,4 @@
                 </div>
             </div>
         </section>
-        <!-- //Inner page code -->
-
-
     </body></html>

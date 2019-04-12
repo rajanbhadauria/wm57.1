@@ -47,13 +47,30 @@ class User extends Authenticatable
     }
 
     // get all members except loged in user
-    public function getMembersList($userId) {
-        return User::where('status', '1')
-                    ->where('role', '3')
-                    ->where('id', '!=', $userId)
-                    ->where('account_status', 'active')
-                    ->inRandomOrder()
-                    ->get();
+    public function getMembersList($userId, $query = '', $sortBy = "name") {
+        $result =  User::leftjoin('work', 'work.user_id' ,'=','users.id')
+                    ->leftjoin('skills', 'skills.user_id','=','users.id')
+                    ->where('status', '1')
+                    ->where('users.role', '3')
+                    ->where('users.id', '!=', $userId)
+                    ->where('users.account_status', 'active');
+                    if($query != '') {
+                        $result->where(function($sql) use($query){
+                            $sql->orWhere('users.name', 'like', '%'.$query.'%')
+                                ->orWhere('work.company', 'like', '%'.$query.'%')
+                                ->orWhere('skills.skill', 'like', '%:"'.$query.'"%');
+                        });
+                    }
+                    if($sortBy == "name") {
+                        $result->orderBy('users.name');
+                    }
+                    if($sortBy == "company") {
+                        $result->orderBy('users.company');
+                    }
+                    if($sortBy == "last_active") {
+                        $result->orderBy('users.last_active', 'desc');
+                    }
+                    return $result->get();
     }
     // create contact list afteruser gets signup
     public static function contactListInit($email, $userId) {
@@ -69,7 +86,7 @@ class User extends Authenticatable
 
     //get users contact list users
     public static function getMyContacts($userId) {
-        $sql = "SELECT U.* FROM users U WHERE
+         $sql = "SELECT U.*, C.* FROM users U JOIN contacts C ON C.user_id = U.id WHERE
                 (U.id IN (SELECT requested_by FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId."))
                 OR U.id IN (SELECT requested_to FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId.")))
                 AND U.id != ".$userId." GROUP BY U.id";
@@ -80,5 +97,7 @@ class User extends Authenticatable
         }
         return $result;
     }
+
+
 
 }

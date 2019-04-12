@@ -1,19 +1,4 @@
-body {
-	background: #fff;
-	font-size: 13px;
-	line-height: normal;
-	color: rgba(0, 0, 0, .9);
-}
-
-h1,
-h2,
-h3 {
-	margin: 0;
-	padding: 0;
-}
-
 a {
-	color: #4553d4;
 	text-decoration: none;
 }
 
@@ -70,7 +55,7 @@ b, strong {
 }
 
 .display-flex {
-	display: flex;
+	display: block;
 }
 
 .align-items-center {
@@ -81,7 +66,6 @@ b, strong {
 .dot-separator:before {
 	content: '\2022';
 	margin: 0;
-	color: rgba(0, 0, 0, .6);
 }
 
 .dot-separator {
@@ -97,27 +81,8 @@ h1.top-skills {
 	padding-top: 10px;
 }
 
-.headline,
-h2 {
-	/*background: #f0f0f8; */
-    font-size: 17px;
-     padding:5px 10px;
-    color: #263136;
-    text-transform: uppercase;
-    border-top:1px solid #f9f5f5;
-    border-bottom:1px solid #f9f5f5;
-    /* letter-spacing: 1px; */
-	font-weight:700!important;
-	line-height:normal;
-}
 
-.user-profile {
-	display: flex;
-	flex-direction: row;
-	clear: both;
-	padding:10px 0px 2px 0px;
 
-}
 
 .user-profile .col1 {
 	flex-basis: 100%;
@@ -127,20 +92,6 @@ h2 {
 	flex-basis: 20%;
 }
 
-.user-profile .name {
-	font-size: 23px;
-	color: #263136;
-	font-weight: 400;
-	text-transform: uppercase;
-	margin-bottom:10px;
-	font-weight:700!important;
-	padding-left:10px;
-	padding-right:10px;
-}
-.user-profile .align-items-center{
-	padding-left:10px;
-	padding-right:10px;
-}
 
 .user-profile .profile-pic {
 	text-align: right;
@@ -148,7 +99,7 @@ h2 {
 
 .user-profile .profile-pic .pic {
 	background: #fff;
-	border-radius: 50%;
+	border-radius: 36px;
 	width: 75px;
 	height: 75px;
 	float: right;
@@ -163,7 +114,7 @@ h2 {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	display: flex;
+	display: block;
 	flex-wrap: wrap;
 	align-items: center;
 	padding-left:10px!important;
@@ -175,6 +126,7 @@ h2 {
 	height: 24px;
 	line-height: 24px;
 	vertical-align: middle;
+	float:left;
 }
 
 .user-contact-info li img {
@@ -247,7 +199,6 @@ h2 {
 	list-style-type: disc !important;
 	width: 90%;
 	margin: 0 0 0 auto;
-	color:#666;
 }
 
 .block .list2 {
@@ -259,7 +210,7 @@ h2 {
 }
 
 .list-table {
-	display: table;
+	display: block;
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -267,7 +218,7 @@ h2 {
 }
 
 .list-table>li {
-	display: table-cell;
+	display:inline-block!important;
 	width: 50%;
 }
 
@@ -316,7 +267,6 @@ h2 {
 }
 
 .highlight1 {
-	color: rgba(0, 0, 0, .6);
 	font-weight: 400;
 	font-weight: normal;
 	font-style: normal;
@@ -376,12 +326,9 @@ i.material-icons.resume-control-icons {
 
 .resume-control-col .resume-control-optns {
 	display: inline-block;
-	color: #000000;
 }
 
-.resume-control-col .resume-control-optns:hover {
-	color: #007aff;
-}
+
 
 .resume-control-col .resume-control-optns p {
 	display: inline-block;
@@ -468,17 +415,9 @@ form.captcha-form,
 	font-size: 35px;
 }
 
-.atchmnt-rsume .icon-attch .material-icons,
-.atchmnt-rsume,
-.atchmnt-rsume label {
-	color: #000000;
-}
 
-.atchmnt-rsume:hover .icon-attch .material-icons,
-.atchmnt-rsume:hover,
-.atchmnt-rsume:hover label {
-	color: #007aff;
-}
+
+
 
 .file-name {
 	display: inline-block;
@@ -529,90 +468,33 @@ input#files {
     right: 10px;
     top: 4px;
 }
-.hightlightFeture .exp-details{	
+.hightlightFeture .exp-details{
 	padding-top:0px;
 	padding-bottom: 17px;
 }
-.hightlightFSkils p{
-	font-size:15px;
-	font-weight:bold;
-}
-/* Resume Variation */
-.resume-fontfamily-arial{
-	font-family: Arial, Helvetica, sans-serif;
-}
-.resume-fontfamily-timesroman{
-	font-family: "Times New Roman", Times, serif;
-}
-.resume-fontfamily-calibri{
-	font-family: Calibri;
-}
-.resume-fontfamily-roboto{
-	font-family: 'Roboto', sans-serif;
-}
-.resume-color-normal .user-profile .name,
-.resume-color-normal .block h2{
-	color:#263136;
-}
-.resume-color-violet .user-profile .name,
-.resume-color-violet .block h2{
-	color:violet;
-}
-.resume-color-blue .user-profile .name,
-.resume-color-blue .block h2{
-	color:darkblue;
-}
-.resume-fontsize-medium .user-profile .name{
-	font-size:23px;
-}
-.resume-fontsize-medium h2 .highlight1, 
-.resume-fontsize-medium .block h2{
-	font-size:17px;
-}
-.resume-fontsize-medium .user-profile strong, 
-.resume-fontsize-medium .highlight1, 
-.resume-fontsize-medium .user-contact-info li a, 
-.resume-fontsize-medium .dot-separator, 
-.resume-fontsize-medium .exp-details .col1 strong, 
-.resume-fontsize-medium .exp-details .col2 strong, 
-.resume-fontsize-medium .exp-details .col2 p, 
-.resume-fontsize-medium .exp-details p,
-.resume-fontsize-medium .list-table>li>ul{
-	font-size:13px;
-}
-.resume-fontsize-medium .hightlightFSkils p{
-	font-size:15px;
-}
-.resume-fontsize-medium .block .list{
-	font-size:11px;
-}
-.resume-fontsize-large .user-profile .name{
-	font-size:27px;
-}
-.resume-fontsize-large h2 .highlight1,
-.resume-fontsize-large .block h2{
-	font-size:21px;
-}
-.resume-fontsize-large .user-profile strong, 
-.resume-fontsize-large .highlight1, 
-.resume-fontsize-large .user-contact-info li a, 
-.resume-fontsize-large .dot-separator, 
-.resume-fontsize-large .exp-details .col1 strong, 
-.resume-fontsize-large .exp-details .col2 strong, 
-.resume-fontsize-large .exp-details .col2 p, 
-.resume-fontsize-large .exp-details p,
-.resume-fontsize-large .list-table>li>ul{
-	font-size:15px;
-}
-.resume-fontsize-large .hightlightFSkils p{
-	font-size:17px;
-}
-.resume-fontsize-large .block .list{
-	font-size:11px;
-}
-/* //Resume Variation */
 
-/* Resume control block Ends */
+.dot-separator {
+    position: relative;
+    top: 2px;
+}
+
+span.phone, span.email, span.web  {
+	margin-right: 10px;
+	height: 24px;
+	line-height: 24px;
+	vertical-align: middle;
+}
+
+span.phone img, span.email img, span.web img {
+	width: 15px;
+	margin-top: -2px;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+.mt-10 { margin-top: 10px;}
+.t1 { top: 1px !important;}
+.t3 { top :3px !important;}
+.t4 { top: 4px !important;}
 
 
 @media only screen and (min-width:768px) {

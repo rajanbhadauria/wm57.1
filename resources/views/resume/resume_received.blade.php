@@ -17,7 +17,6 @@
 					<div class="ak-full-center-box">
 						<div class="">
 							<ul class="resume-user__list">
-
                                 <?php foreach($resumeReceived as $received) {
                                     $user = App\Helpers\Activity::getUserDetails($received->forUser);
                                     if(!$user) {
@@ -49,33 +48,22 @@
                                                {{Carbon\Carbon::parse($received->updated_at)->diffForHumans()}}
                                             </span>
                                         </p>
-										</div>
+
+                                    @if($received->activity == 'resume_forwarded' && ($received->toUser==Auth::id() || $received->email== Auth::user()->email))
+                                        <span> {{$name}} forwarded resume of {{$received->email}}</span>
+                                            <div class="right">
+												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$received->id}})" class="waves-button-input" value="View"></i>
+                                            </div>
+                                    @endif
+                                    @if($received->activity == 'resume_sent' && ($received->email==Auth::user()->email))
+                                    <span> {{$name}} sent resume to you</span>
+                                    <div class="right">
+                                            <i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$received->id}})" class="waves-button-input" value="View"></i>
                                     </div>
-                                    @if($received->activity == 'resume_request' && $received->request_status == 'pending' && $received->forUser==Auth::id())
-                                            <div class="resume-user__list-action">
-												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="updateRequest('accepted', {{$received->id}})" class="waves-button-input" value="Accept"></i>
-												<i class="waves-effect waves-light btn-black input-btn waves-input-wrapper" style=""><input type="submit" onclick="updateRequest('rejected', {{$received->id}})" class="waves-button-input" value="Decline"></i>
-                                            </div>
-                                            @endif
-                                            @if($received->activity == 'resume_request' && $received->request_status == 'pending' && $received->byUser==Auth::id())
-                                            <div class="resume-user__list-action">
-												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="updateRequest('cancel', {{$received->id}})" class="waves-button-input" value="Cancel"></i>
-                                            </div>
-                                            @endif
-                                            @if($received->activity == 'resume_accepted' && $received->request_status == 'accepted' && $received->forUser==Auth::id())
-                                            <div class="resume-user__list-action">
-												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$received->id}})" class="waves-button-input" value="View"></i>
-                                            </div>
-                                            @endif
-                                            @if($received->activity == 'resume_forwarded' && ($received->toUser==Auth::id() || $received->email== Auth::user()->email))
-                                            <div class="resume-user__list-action">
-												<i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper" style=""><input type="submit" onclick="viewResume({{$received->id}})" class="waves-button-input" value="View"></i>
-                                            </div>
-                                            @endif
-                                            @if($received->activity == 'resume_sent' && ($received->email==Auth::user()->email))
-                                            <div class="resume-user__list-action">
-received                                            </div>
-                                            @endif
+
+                                    @endif
+                                </div>
+                            </div>
                                 </li>
 
                             <?php } ?>

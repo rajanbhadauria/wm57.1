@@ -21,6 +21,7 @@ class Resume extends Model
     public static function getResumeAccessedUsersList($user_id) {
         return DB::table('users')
             ->join('resume_stats', 'resume_stats.viewed_by', '=', 'users.id')
+            ->leftJoin('contacts', 'contacts.user_id', '=', 'users.id')
             ->where('resume_stats.resume_user_id', $user_id)
             ->where('resume_stats.viewed_by', '!=' ,$user_id)
             ->groupBy('users.id')
@@ -36,4 +37,6 @@ class Resume extends Model
     public static function getResumeAccess($ownerEmail, $userEmail){
         return self::where('ownerEmail', $ownerEmail)->where('userEmail', $userEmail)->first();
     }
+
+
 }

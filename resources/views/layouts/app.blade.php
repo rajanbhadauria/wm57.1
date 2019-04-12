@@ -78,7 +78,7 @@
         margin: -75px 0 0 -75px;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
-        border-top: 16px solid #1a0dab;
+        border-top: 16px solid #4553d4;
         width: 120px;
         height: 120px;
         -webkit-animation: spin 2s linear infinite;
@@ -124,7 +124,7 @@
 
 
 <body id="app-layout">
-<div id="loading"></div>
+<div id="loading" class="blue-text darken-text-3"></div>
 
 <!-- <img src="{{my_asset('images/loader.gif')}}" alt="Loading ....."> -->
     @include("layouts.include.header")

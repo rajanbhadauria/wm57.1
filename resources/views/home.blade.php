@@ -67,7 +67,7 @@
                             <div class="widget-block ak-wblock">
                                 <div class="ak-wblockflx">
                                     <h5 class="mptext">Resumebox</h5>
-                                    <p>334</p>
+                                <p>{{$resumeReceived}}</p>
                                     <a href="{{url('resume-received')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Resume received</a>
                                     <a href="{{url('requestresume')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Request for resume</a>
                                 </div>

@@ -42,10 +42,10 @@
                                  <form autocomplete="off" action="{{url('update-resume-access')}}" method="post">
                                         {{ csrf_field() }}
                                  <input type="hidden" name="user" value="{{base64_encode($user->email)}}">
-                                    @if($resume->is_visible == "1")
+                                    @if($resume  && $resume->is_visible == "1")
                                     <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)" checked>
                                     @else
-                                    <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)">
+                                    <input type="checkbox" value="0" name="is_visible" onchange="updateAccess(this)">
                                     @endif
                                     <span class="lever"></span>
                                 </form>

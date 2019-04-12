@@ -29,9 +29,9 @@
                         <div class="wrapper resume-wrapper">
                             <div class="ak-otherus-resume-sec">
                             <div class="center center-text">
-                                <i class="material-icons medium red-text text-lighten-2">lock</i>
+                                <i class="material-icons medium grey-text text-lighten-2">lock</i>
                             </div>
-                            <span class="akhetxt">{{$user->first_name}} {{$user->last_name}} resume is private with controlled access</span><br />
+                            <div class="row akhetxt">{{$user->first_name}} {{$user->last_name}} resume is private with controlled access</div><br /><br>
                             <form class="m-0" method="post" action="{{url('/resume/verify-passcode')}}" id="passcodeSaveForm">
                                 {{ csrf_field() }}
                             <input type="hidden" id="url" name="url"  value="{{$id}}">
@@ -62,11 +62,21 @@
                                         maxlength="1" name="n6" id="n6" value="" class="keycode">
                                 </div>
                             </div>
-                            <div class="ak-otherus-resume-btnsec">
-                                    <button type= "submit" class="akotrese-btnpk">Enter passkey</button>
-                                    <!-- <span class="akotrese-btor">or</span> -->
-                            <a href="{{Auth::id() ? 'javascript:requestResume()' : url('login')}}" class="akotrese-btnrr">Request resume</a></div>
+                            <div class="ak-otherus-resume-btnsec" style="width:55%;">
+
+                                    <div class="row">
+                                            <div class="col m6 s12">
+                                                    <i class="waves-effect waves-light btn-blue input-btn waves-input-wrapper">
+                                                            <input type= "submit" class="waves-button-input" value="Enter passkey">
+                                                    </i>
+                                                </div>
+                                                <div class="col m6 s12">
+                                                    <a href="{{Auth::id() ? 'javascript:requestResume()' : url('login')}}" class="waves-effect waves-light btn-black p-5">Request resume</a>
+                                                </div>
+
+                                    </div>
                             </div>
+
                         </form>
                         </div>
                     </div>

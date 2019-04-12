@@ -16,58 +16,73 @@
 				<div class="center-container ak-full-container">
 					<div class="ak-full-center-box">
 						<div class="">
-							<ul class="collection-thumb ak-colcThumMem">
 
+							<ul class="resume-user__list">
                                 <?php foreach($users as $user) {
+                                    $fwdUserName = "";
                                     $result = App\Helpers\Activity::getUserDetails($user->userEmail);
+                                    if($user->activity == 'resume_forwarded') {
+                                        $fwdUser = App\Helpers\Activity::getUserDetails($user->byUser);
+                                        $fwdUserName = $fwdUser->name;
+                                    }
                                      if($result) {
                                          $name = $result->name;
                                      } else {
                                          $name = $user->userEmail;
                                      }
                                     ?>
-
-								<li class="collection-item collection-item-hover-active">
-									<div class="row">
-									<div class="title">
-										{{$name}}
-									</div>
-                                    <div class="date">{{Carbon\Carbon::parse($user->updated_at)->diffForHumans()}}</div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="container">
-                                        
-                                   
-                                            <div class="collection-item-btn right">
-                                            <div class="switch">
-                                                <label>
-                                                <form autocomplete="off" action="{{url('update-resume-access')}}" method="post">
-                                                        {{ csrf_field() }}
-                                                <input type="hidden" name="user" value="{{base64_encode($user->userEmail)}}">
-                                                    @if($user->is_visible == "1")
-                                                    <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)" checked>
-                                                    @else
-                                                    <input type="checkbox" value="0" name="is_visible" onchange="updateAccess(this)">
-                                                    @endif
-                                                    <span class="lever"></span>
-                                                </form>
-
-                                                </label>
-                                            </div>
+                                    <li class="container-card">
+                                        <div class="resume-user__list-img center-align">
+                                            @if($result)
+                                            <img src="{{get_user_image($result->avatar)}}" alt="{{$result->name}}" class="circle small"/>
+                                            @else
+                                            <img src="{{get_user_image("")}}" alt="{{$name}}" class="circle small"/>
+                                            @endif
                                         </div>
-                                    </div>
-                                 </div>
-                         
-                                </li>
+                                        <div class="resume-user__list-content">
+                                            <div class="resume-user__list-content-in">
+                                            <p>{{$name}}
+                                                <span>
+                                                   {{Carbon\Carbon::parse($user->updated_at)->diffForHumans()}}
+                                                </span>
+                                                <div class="switch right col s2">
+                                                        <label>
+                                                            <form autocomplete="off" action="{{url('update-resume-access')}}" method="post">
+                                                                {{ csrf_field() }}
+                                                                <input type="hidden" name="user" value="{{base64_encode($user->userEmail)}}">
+                                                                @if($user->is_visible == "1")
+                                                                <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)" checked>
+                                                                @else
+                                                                <input type="checkbox" value="0" name="is_visible" onchange="updateAccess(this)">
+                                                                @endif
+                                                                <span class="lever"></span>
+                                                            </form>
+                                                        </label>
+                                                    </div>
+                                            </p>
+                                            @if($user->activity == 'resume_sent')
+                                                <span class="resume-user__list-subtext">sent by you</span>
+                                            @endif
+                                            @if($user->activity == 'resume_request')
+                                                <span class="resume-user__list-subtext">can access with your acceptance</span>
+                                            @endif
+                                            @if($user->activity == 'resume_forwarded')
+                                        <span class="resume-user__list-subtext">forwarded by {{$fwdUserName}}</span>
+                                            @endif
 
-                            <?php } ?>
+
+                                        </div>
+                                        </div>
+                                    </li>
+
+                          <?php } ?>
 							</ul>
                         </div>
                         <div class="pagination">{{$users}}</div>
 					</div>
 				</div>
 			</div>
-		</div>
+        </div>
     </section>
      <script>
         function updateAccess(obj) {

@@ -31,6 +31,7 @@
     </div>
   </div>
 </div>
+<div class="valign-wrapper">
 <div id="confirmChangeBox" class="modal">
     <div class="modal-content">
         <h5 class="center">Change passkey?</h5>
@@ -41,6 +42,7 @@
         <a href="javascript:void(0)" class="green darken-1 waves-effect white-text btn-flat modal-close">No</a>
         <a href="javascript:void(0)" onclick="changePasskey()" class="modal-close red darken-3 white-text waves-effect btn-flat">Yes</a>
     </div>
+</div>
 </div>
 <script>
     function changePasskey() {

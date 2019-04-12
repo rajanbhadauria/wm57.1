@@ -98,4 +98,7 @@
   'open sans' => array(
     'normal' => $fontDir . '/ba3ddd16d67db9a4b4c434eab239dbef',
   ),
+  'calibri' => array(
+    'normal' => $fontDir . '/4a4f902982ebbeebce72eb0003ee3b4c',
+  ),
 ) ?>

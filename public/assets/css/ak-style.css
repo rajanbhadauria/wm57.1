@@ -142,7 +142,7 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 .terms-section h3{
 	font-size:17px;
 	font-weight: 600;
-    font-family: 'Nunito', sans-serif!important;
+    /* font-family: 'Nunito', sans-serif!important; */
 	margin-bottom:10px;
 }
 .terms-section p{
@@ -232,7 +232,7 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
     background-color: cornflowerblue!important;
 }
 .menu-popup h4{
-	font-family: 'Nunito', sans-serif!important;
+	/* font-family: 'Nunito', sans-serif!important; */
     font-weight: 700!important;
 	color:#fff;
 }
@@ -537,7 +537,7 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 	margin-bottom:35px;
 	font-weight:600;
 	color:#5e757f;
-	font-family: 'Nunito', sans-serif!important;
+	/* font-family: 'Nunito', sans-serif!important; */
 }
 .ak-uploadText{
 	padding:20px 0 0 0;
@@ -797,8 +797,11 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 	width:100%;
 }
 .ak-resume-sample .resume-wrapper{
-	margin-bottom:0px;
-	max-width:100%;
+	/* margin-bottom:0px; */
+    max-width:100%;
+    /*font-family: georgia;*/
+    line-height: normal;
+    /* color: #666; */
 }
 .ak-resume-sample .center-container{
 	width:100%;
@@ -945,11 +948,11 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 .ak-otherus-resume-sec{
 	width:100%;
 	display:inline-block;
-	padding:20px 10px 30px 10px;
+	padding:20px;
 	text-align:center;
 	font-size:15px;
-	font-weight: 600;
-	font-family: 'Nunito', sans-serif!important;
+	/* font-weight: 600; */
+	/* font-family: 'Nunito', sans-serif!important; */
 	color: #000;
 }
 .ak-otherus-resume-btnsec{
@@ -965,8 +968,8 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
     display: inline-block;
     background: cornflowerblue;
     color: #fff;
-    padding: 5px 10px 5px 10px;
-    border-radius:5px;
+    padding: 10px;
+    border-radius:0px;
 	font-weight: normal;
     font-size: 15px;
 	margin:0 5px;
@@ -1013,15 +1016,15 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 }
 .ak-otherus-resume-PaKey{
 	background-color:#f8f8f8;
-    border-color: #d6e9c6;
+    /* border-color: #d6e9c6; */
 	padding: 15px;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
 }
 .ak-otherus-resume-PaKey h5{
-	font-size:15px;
-	font-weight: 600;
-	font-family: 'Nunito', sans-serif!important;
-	color: #5e757f;
+	font-size:19px;
+	/* font-weight: 800; */
+	/* font-family: 'Nunito', sans-serif!important; */
+	color: #666;
 }
 .ak-otherus-resume-PaKey .num-col.col.s2{
 	max-width:70px;
@@ -1030,7 +1033,7 @@ a.btn-black:active, .btn-black input[type="submit"]:active {
 	border: 0;
     background: transparent;
     border-radius: 0;
-    border-bottom:2px solid #000;
+    border:2px solid #666;
 	max-width:50px;
 	display:inline-block;
 }
@@ -1405,3 +1408,4 @@ input[type=range]+.thumb{
 }
 
 .el-notification-group h2 { padding: 0 !important;}
+.modal{top:25% !important;

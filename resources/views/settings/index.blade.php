@@ -38,6 +38,9 @@
                   <li>
                     <a class="waves-effect waves-light-grey" href="{{ url('/jobseekingstatus') }}">Job seeking status <i class="material-icons">chevron_right</i></a>
                   </li>
+                  <li>
+                    <a class="waves-effect waves-light-grey" href="{{ url('resume/styles') }}">Resume Style <i class="material-icons">chevron_right</i></a>
+                  </li>
                   <li class="switch-item">
                     <span>Make resume public</span>
                     <div class="switch">

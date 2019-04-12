@@ -47,7 +47,13 @@ class Activity {
                               ->orWhere('notifications.email', '=', $data['email'])
                               ->orWhere('notifications.byUser', $data['user_id']);
                     }
-                )->orderBy('updated_at', 'desc')->paginate(5);
+                )
+                ->orderBy('updated_at', 'desc')
+                ->groupBY('notifications.activity')
+                ->groupBY('notifications.email')
+                //->having('notifications.identifier', 'resume_sent')
+
+                ->paginate(5);
 
     }
 
@@ -74,16 +80,40 @@ class Activity {
             ->orderBy('updated_at', 'desc')->paginate(10);
     }
 
+    public static function countResumeReceivedRequest($user_id, $email) {
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        $result =   DB::table('notifications')
+            ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
+            ->groupBY('notifications.activity')
+            ->groupBY('notifications.email')
+            ->select(DB::raw('count(*) as total'))
+            ->where('notifications.is_visible', '1')
+            ->where('notifications.request_status', 'accepted')
+            ->where('activity_list.identifier',  '=', 'resume_sent')
+            ->where('notifications.email', '=', $email)
+            ->first();
+        if($result) {
+            return $result->total;
+        } else {
+            return 0;
+        }
+
+    }
+
     public static function getResumeReceivedRequest($user_id, $email) {
         $data['email'] = $email;
         $data['user_id'] = $user_id;
-        return  DB::table('notifications')
+        return  DB::table('notifications')->select('notifications.id')
             ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
             ->select('notifications.*', 'activity_list.*', 'notifications.email as email')
             ->where('notifications.is_visible', '1')
             ->where('notifications.request_status', 'accepted')
             ->where('activity_list.identifier',  '=', 'resume_sent')
             ->where('notifications.email', '=', $email)
+            ->groupBY('notifications.activity')
+            ->groupBY('notifications.email')
             ->orderBy('updated_at', 'desc')->paginate(10);
     }
+
 }

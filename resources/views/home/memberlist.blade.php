@@ -37,25 +37,25 @@
 		<div class="row mb0">
 		  <div class="col s12 pr">
 			<div class="search-input-container">
-				<form>
+				<form action="" method="GET" id="formFilter">
 					<div class="input-field-search">
 						<div class="input-field-search-inputcontainer">
 							<div class="input-field-search-input">
-								<input placeholder="Search user" type="text" required="" class="">
+                            <input placeholder="Search user" name="q" type="text" value="{{@$_GET['q']}}" required="" class="">
+                            <input type="hidden" name="sort" id="sort">
 							</div>
 							<div class="input-field-search-icon ak-cont-serbtn">
 								<button type="submit" class=""><i class="material-icons">search</i></button>
-								<a href="javascript:void(0);" class="ak-resume-moreFetu ak-cont-serFilter"><i class="material-icons">filter_list</i></a>
+								<a href="javascript:void(0);" class="ak-resume-moreFetu sortList ak-cont-serFilter">
+                                    <i class="material-icons">filter_list</i></a>
 							</div>
-							<div class="ak-resume-moreFetuList ak-cont-serMF">
+							<div class="ak-resume-moreFetuList ak-cont-serMF" id="sortByList">
 								<ul>
-									<li class="activemfl"><a href="javascript:void(0);">All</a></li>
-									<li><a href="javascript:void(0);">New joined</a></li>
-									<li><a href="javascript:void(0);">Facebook contact</a></li>
-									<li><a href="javascript:void(0);">Google contact</a></li>
-									<li><a href="javascript:void(0);">Linked contact</a></li>
-									<li><a href="javascript:void(0);">WM contact</a></li>
-									<li><a href="javascript:void(0);">Invite</a></li>
+									<li class="activemfl"><a href="javascript:Sort('')" class="sortList">All</a></li>
+									<li><a href="javascript:Sort('name')" class="sortList">By Name</a></li>
+									<li><a href="javascript:Sort('company');" class="sortList">By Company</a></li>
+									<li><a href="javascript:Sort('last_active');" class="sortList">Last active</a></li>
+
 								</ul>
 							</div>
 						</div>
@@ -77,13 +77,14 @@
 				<ul class="collection-thumb ak-colcThumMem">
                     <?php if(count($users)>0) {
                         foreach($users as $user) {
+
                         ?>
 					<li class="collection-item collection-item-hover-active">
                         <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
 						<div class="title">{{$user->first_name}} {{$user->last_name}}</div>
-						<div class="deg">HR Manager</div>
-						<div class="company">Wipro</div>
-						<div class="date">Himachal Pradesh &#183; India</div>
+                        <div class="deg">@if($user->company) {{$user->company}} @endif</div>
+						<div class="company">@if($user->role) {{$user->role}} @endif</div>
+                        <div class="date">@if($user->city) {{$user->city}} &#183; @endif @if($user->country) {{$user->country}} @endif</div>
 						<div class="collection-item-btn">
 							<div class="dropdown">
 							  <a><i class="material-icons">more_vert</i></a>
@@ -99,5 +100,16 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".sortList").click(function(){
+                $("#sortByList").toggle();
+            });
+        });
+        function Sort(key) {
+            $("#sort").val(key);
+            $("#formFilter").submit();
+        }
+    </script>
 	@endsection
