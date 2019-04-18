@@ -115,5 +115,52 @@ class Activity {
             ->groupBY('notifications.email')
             ->orderBy('updated_at', 'desc')->paginate(10);
     }
+    // function to get users who have acccess to my resume
+
+    public static function  getResumeAccessedUser( $user_id, $email) {
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        return  DB::table('notifications')->select('notifications.id')
+                    ->join('users', 'notifications.email', '=', 'users.email')
+                    ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
+                    ->select('notifications.*', 'activity_list.*', 'notifications.email as email', 'users.name', 'users.first_name', 'users.last_name', 'users.id as id', 'users.avatar')
+                    ->where(function($query) {
+                        $query->orWhere('activity_list.identifier',  '=', 'resume_forwarded')
+                            ->orWhere('activity_list.identifier',  '=', 'resume_sent');
+                        })
+                    ->where(function($query) use($user_id) {
+                        $query->orWhere('notifications.byUser',  '=', $user_id)
+                                ->orWhere('notifications.forUser',  '=', $user_id);
+                        })
+                    //->groupBY('notifications.activity')
+                    ->groupBY('notifications.email')
+                    ->orderBy('updated_at', 'desc')->paginate(10);
+
+    }
+
+    public static function  getResumeAccessedUserCount( $user_id, $email) {
+        $data['email'] = $email;
+        $data['user_id'] = $user_id;
+        $res =  DB::table('notifications')->select(DB::raw('count(notifications.id) as total'), 'notifications.updated_at')
+                    ->where(function($query) {
+                        $query->orWhere('notifications.activity',  '=', 'resume_forwarded')
+                            ->orWhere('notifications.activity',  '=', 'resume_sent');
+                        })
+                    ->where(function($query) use($user_id) {
+                        $query->orWhere('notifications.byUser',  '=', $user_id)
+                                ->orWhere('notifications.forUser',  '=', $user_id);
+                        })
+                    ->groupBY('notifications.email')
+                   // ->groupBY('notifications.activity')
+                    ->get();
+        if($res) {
+            return count($res);
+        } else {
+            return 0;
+        }
+
+
+
+    }
 
 }

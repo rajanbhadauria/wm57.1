@@ -31,7 +31,8 @@ class HomeController extends Controller
         $data['activityCount'] = Activity::countUserActivity(Auth::id(), Auth::user()->email);
         $data['resumeReceived'] = Activity::countResumeReceivedRequest(Auth::id(), Auth::user()->email);
         $data['members'] = User::getMyContacts(Auth::id());
-        $data['viewCount'] = Resume::getResumeCount(Auth::id());
+        //$data['viewCount'] = Resume::getResumeCount(Auth::id());
+        $data['viewCount'] = Activity::getResumeAccessedUserCount(Auth::id(), Auth::user()->email);
         return view('home', $data);
     }
 

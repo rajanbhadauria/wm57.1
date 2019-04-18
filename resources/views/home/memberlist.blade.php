@@ -80,16 +80,13 @@
 
                         ?>
 					<li class="collection-item collection-item-hover-active">
-                        <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
-						<div class="title">{{$user->first_name}} {{$user->last_name}}</div>
-                        <div class="deg">@if($user->company) {{$user->company}} @endif</div>
-						<div class="company">@if($user->role) {{$user->role}} @endif</div>
-                        <div class="date">@if($user->city) {{$user->city}} &#183; @endif @if($user->country) {{$user->country}} @endif</div>
-						<div class="collection-item-btn">
-							<div class="dropdown">
-							  <a><i class="material-icons">more_vert</i></a>
-							</div>
-						</div>
+                        <a href="javascript:void(0);" onclick="viewResume('{{$user->email}}', '{{Auth::user()->email}}');">
+                            <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
+                            <div class="title">{{$user->first_name}} {{$user->last_name}}</div>
+                            <div class="deg">@if($user->company) {{$user->company}} @endif</div>
+                            <div class="company">@if($user->role) {{$user->role}} @endif</div>
+                            <div class="date">@if($user->city) {{$user->city}} &#183; @endif @if($user->country) {{$user->country}} @endif</div>
+                        </a>
                     </li>
                 <?php } }?>
 				</ul>
@@ -110,6 +107,22 @@
         function Sort(key) {
             $("#sort").val(key);
             $("#formFilter").submit();
+        }
+    function viewResume(owner_email, user_email) {
+            $.ajax({
+                    type:"POST",
+                    url:'{{url("get-resume")}}',
+                    data:{'owner_email':owner_email, 'user_email':user_email, '_token':'{{csrf_token()}}' },
+                    success: function(response){
+                        if(response.success) {
+                            window.location.href = response.url;
+                        }
+                        else {
+                            $.notify({ content:response.errorMsg, timeout:3000});
+                        }
+                    }
+
+                });
         }
     </script>
 	@endsection

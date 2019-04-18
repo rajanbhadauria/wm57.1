@@ -26,29 +26,36 @@
                     <?php if(count($users)>0) {
                         foreach($users as $user) {
                             $work = getWorkInfo($user->id);
-                           // $resume = app\Model\Resume::getResumeAccess(Auth::user()->email, $user->email);
-                           $user1Obj = App\Helpers\Activity::getUserDetails($user->byUser);
-                                    $user2Obj = App\Helpers\Activity::getUserDetails($user->forUser);
-                                    $user3Obj = App\Helpers\Activity::getUserDetails($user->toUser);
-
-                                    $user1 = ($user1Obj) ? $user1Obj->first_name." ".$user1Obj->last_name : $user->email;
-                                    $user2 = ($user2Obj) ? $user2Obj->first_name." ".$user2Obj->last_name : $user->email;
-                                    $user3 = ($user3Obj) ? $user3Obj->first_name." ".$user3Obj->last_name : $user->email;
-
-                                    $activity_message = str_replace(["{%user1%}", "{%user2%}", "{%user3%}"], [$user1, $user2, $user3], $user->activity_text);
+                            $resume = app\Model\Resume::getResumeAccess(Auth::user()->email, $user->email);
                      ?>
 					<li class="collection-item collection-item-hover-active">
-                        <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle ak-collection-img"/>
-                        <div class="ak-collection-content">
+                        <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
 						<div class="title">{{$user->first_name}} {{$user->last_name}}</div>
                         @if($work)
                         <div class="deg">{{$work->designation}}</div>
 						<div class="company">{{$work->company}}</div>
                         <div class="date">{{$work->city}} &#183; {{$work->country}}</div>
                         @endif
-                        <div class="deg">{{$activity_message}}</div>
 
-                    </div>
+                        <div class="date ak-cont-time">
+                            <div class="collection-item-btn right">
+                                <div class="switch">
+                                    <label>
+                                     <form autocomplete="off" action="{{url('update-resume-access')}}" method="post">
+                                            {{ csrf_field() }}
+                                     <input type="hidden" name="user" value="{{base64_encode($user->email)}}">
+                                        @if($user  && $user->is_visible == "1")
+                                        <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)" checked>
+                                        @else
+                                        <input type="checkbox" value="0" name="is_visible" onchange="updateAccess(this)">
+                                        @endif
+                                        <span class="lever"></span>
+                                    </form>
+
+                                    </label>
+                                  </div>
+                            </div>
+                        </div>
 
                     </li>
                 <?php } ?>

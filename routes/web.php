@@ -47,10 +47,12 @@ Route::group(['middleware' => ['auth','isactive']], function(){
     Route::get('/requestresume', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResume']);
     Route::post('/requestresume', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResumeSave']);
     Route::post('/updateresumerequest', ['as' => 'resume.request.resume', 'uses' => 'Resume\ResumeController@requestResumeUpdate']);
+    Route::post('/get-resume', ['as' => 'user.get.resume', 'uses' => 'UserController@getResumeUrl']);
 });
 Route::group(['middleware' => ['auth', 'isactive']], function(){
     Route::get('/memberlist', array('as' => 'memberlist', 'uses' => 'HomeController@memberlist'));
     Route::get('/contactlist', ['as' => 'resume.request.resume', 'uses' => 'UserController@contactlist']);
+    Route::get('/resume-viewed-user', array('as' => 'user.viewed', 'uses' =>  'UserController@resumeViwedUsers'));
     Route::get('/resume-accessed-user', array('as' => 'user.accessed', 'uses' =>  'UserController@resumeAccessedUsers'));
     Route::post('/resume-accessed-user', array('as' => 'user.accessed', 'uses' =>  'UserController@resumeAccessedUpdate'));
     Route::get('/resume-access-requests', ['as' => 'resume.access-requests', 'uses' => 'UserController@accessRequests']);

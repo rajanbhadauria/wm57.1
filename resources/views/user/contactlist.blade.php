@@ -1,6 +1,23 @@
 @extends('layouts.app')
 @section('content')
-<?php use App\Model\Resume; ?>
+<script>
+   function viewResume(owner_email, user_email) {
+            $.ajax({
+                    type:"POST",
+                    url:'{{url("get-resume")}}',
+                    data:{'owner_email':owner_email, 'user_email':user_email, '_token':'{{csrf_token()}}' },
+                    success: function(response){
+                        if(response.success) {
+                            window.location.href = response.url;
+                        }
+                        else {
+                            $.notify({ content:response.errorMsg, timeout:3000});
+                        }
+                    }
+
+                });
+        }
+    </script>
     <!-- Inner page code -->
 	<section class="title-bar">
 	  <div class="container">
@@ -74,20 +91,19 @@
 			<div class="ak-full-center-box" id="loginDiv">
 			<div class="">
 			  <div class="widget-container">
-				<ul class="collection-thumb ak-colcThumMem">
+				<ul class="collection-thumb ak-collection-thumb">
                     <?php if(count($users)>0) {
                         foreach($users as $user) {
-                            $access = Resume::getResumeAccess($user->email, Auth::user()->email);
-                            if($access)
-                                $url = 'wm/'.str_replace(" ", "-", $user->first_name)."-".str_replace(" ", "-", $user->last_name)."-".$access->id;
-                            else
-                                $url = 'requestresume?request_id='.base64_encode($user->email);
-                        ?>
+                    ?>
 					<li class="collection-item collection-item-hover-active">
-                       <a href="{{url($url)}}"><img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle"/>
-                            <div class="title">{{$user->first_name}} {{$user->last_name}}</div>
+                        <a href="javascript:void(0);" onclick="viewResume('{{$user->email}}', '{{Auth::user()->email}}');">
+                        <img src="{{get_user_image($user->avatar)}}" alt="{{$user->name}}"  class="circle ak-collection-img"/>
+                        <div class="ak-collection-content">
+                            <div class="title ak-cont-name">{{$user->first_name}} {{$user->last_name}}</div>
                             <div class="deg">{{$user->primaryEmail}}</div>
-                            <div class="company">{{$user->primaryPhone}}</div>
+                            <div class="company ak-cont-phone">{{$user->primaryPhone}}</div>
+                            <div class="date ak-cont-time">{{date('M d, Y', strtotime($user->created_at))}}</div>
+                        </div>
                         </a>
                     </li>
                 <?php } }?>
@@ -99,5 +115,6 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
+    </div>
+
 	@endsection

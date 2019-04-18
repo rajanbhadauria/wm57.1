@@ -55,9 +55,10 @@
 					<div class="col s6 m4">
                         <div class="widget-block ak-wblock">
                             <div class="ak-wblockflx">
-                                <h5 class="mptext">My Resume access</h5>
+                                <h5 class="mptext">
+                                        <a href="{{url('resume-accessed-user')}}" class="purple-text">My Resume access</a></h5>
                             <p>{{$viewCount}}</p>
-                            <a href="{{url('resume-accessed-user')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Who viewed me ?</a>
+                            <a href="{{url('resume-viewed-user')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Who viewed me ?</a>
                             <a href="{{url('resume-access-requests')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Access request</a>
                           </div>
                         </div>
@@ -77,7 +78,9 @@
 					 <div class="col s6 m4">
 					  <div class="widget-block ak-wblock">
 						  <div class="ak-wblockflx">
-							  <h5 class="mpitext">My network</h5>
+							  <h5 class="mpitext">
+                                  <a href="{{URL::to('/contactlist')}}" class="purple-text">My network</a>
+                            </h5>
 							  <p>{{count($members)}}</p>
 							  <ul class="ak-user-face">
                                 <?php
@@ -87,7 +90,7 @@
                                <?php } ?>
 							  </ul>
 							  <a href="{{URL::to('/user/invite')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Invite connection</a>
-							  <a href="{{URL::to('/contactlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">My contacts</a>
+							  <a href="{{URL::to('/memberlist')}}" class="waves-effect waves-light btn-black ak-btn-half-second">WM network </a>
 						  </div>
 					  </div>
 					</div>

@@ -70,6 +70,7 @@ class User extends Authenticatable
                     if($sortBy == "last_active") {
                         $result->orderBy('users.last_active', 'desc');
                     }
+                    $result->groupBy('users.id');
                     return $result->get();
     }
     // create contact list afteruser gets signup
@@ -86,16 +87,28 @@ class User extends Authenticatable
 
     //get users contact list users
     public static function getMyContacts($userId) {
-         $sql = "SELECT U.*, C.* FROM users U JOIN contacts C ON C.user_id = U.id WHERE
-                (U.id IN (SELECT requested_by FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId."))
-                OR U.id IN (SELECT requested_to FROM user_relations  WHERE (requested_by = ".$userId." OR requested_to  = ".$userId.")))
-                AND U.id != ".$userId." GROUP BY U.id";
-
-        $result = DB::select($sql);
-        if($result) {
-            return $result;
-        }
-        return $result;
+        $query = User::leftjoin('contacts', 'contacts.user_id', '=', 'users.id')
+                    ->select('*', 'users.created_at as created_at')
+                    ->where(function ($mainQuery) use($userId) {
+                        $mainQuery->orwhereIn('users.id', function($query) use ($userId){
+                            $query->select('requested_by')
+                                  ->from('user_relations')
+                                  ->where(function ($query) use ($userId){
+                                    $query->orWhere('requested_by', $userId)
+                                         ->orWhere('requested_to', $userId);
+                                  });
+                        })
+                        ->orwhereIn('users.id', function($query) use ($userId){
+                            $query->select('requested_to')
+                                  ->from('user_relations')
+                                  ->where(function ($query) use ($userId){
+                                    $query->orWhere('requested_by', $userId)
+                                         ->orWhere('requested_to', $userId);
+                                  });
+                        });
+                    })
+                    ->where('users.id', '!=', $userId);
+        return $query->get();
     }
 
 

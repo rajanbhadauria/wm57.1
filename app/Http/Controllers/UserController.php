@@ -174,8 +174,13 @@ class UserController extends Controller
     }
     //listing all users that have my resume view access
     public function resumeAccessedUsers() {
-        $data['users'] = Resume::getResumeAccessedUsersList(Auth::id());
+        $data['users'] = Activity::getResumeAccessedUser(Auth::id(), Auth::user()->email);//Resume::getResumeAccessedUsersList(Auth::id());
         return view('user.resume_accessed_users', $data);
+    }
+    //listing all users that have my resume view access
+    public function resumeViwedUsers() {
+        $data['users'] = Resume::getResumeAccessedUsersList(Auth::id());
+        return view('user.resume_viewed_users', $data);
     }
     // updating resume access
     public function resumeAccessedUpdate(Request $request) {
@@ -289,5 +294,31 @@ class UserController extends Controller
             }
         }
         return response()->json($emails);
+    }
+
+    function getResumeUrl(Request $req) {
+        $inputs = $req->all();
+        $json['success'] = false;
+        $json['errorMsg'] = "";
+        if($inputs) {
+
+            $user = DB::table('users')->where('email', $req->owner_email)->first();
+            if($user) {
+                $json['success'] = true;
+                $access = Resume::getResumeAccess($req->owner_email, $req->user_email);
+                if($access) {
+                    $json['url'] = url('wm/'.str_replace(" ", "-", $user->first_name)."-".str_replace(" ", "-", $user->last_name)."-".$access->id);
+                }
+                else {
+                    $json['url'] = url('requestresume?request_id='.base64_encode($user->email));
+                }
+            } else {
+                $json['errorMsg'] = "Invaild data supplied";
+            }
+        } else {
+            $json['errorMsg'] = "Invaild data supplied";
+        }
+        return response()->json($json);
+
     }
 }
