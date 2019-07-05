@@ -139,7 +139,7 @@ $(window).on('load', function () {
 });
 
 $(window).on('resize', function () {
-  textAreaAdaptiveHeight();
+ // textAreaAdaptiveHeight();
 
   equalheight('.widget-container .col .widget-block');
 });

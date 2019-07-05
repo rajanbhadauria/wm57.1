@@ -233,6 +233,8 @@ Route::group(array('prefix' => 'resume','middleware' => ['auth','isactive']), fu
     Route::get('/styles', ['as' => 'resume', 'uses' => 'Resume\ResumeController@styles']);
     Route::post('/styles', ['as' => 'resume', 'uses' => 'Resume\ResumeController@stylesSave']);
     Route::get('/email-test', ['as' => 'resume', 'uses' => 'Resume\ResumeController@testEmailView']);
+    Route::get('/resume-box', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resumeBox']);
+    Route::post('/save-fav', ['as' => 'resume', 'uses' => 'Resume\ResumeController@saveFav']);
     Route::get('/{id}', ['as' => 'resume', 'uses' => 'Resume\ResumeController@resume']);
 });
 //resume view with passcode

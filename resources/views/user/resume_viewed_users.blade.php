@@ -16,7 +16,7 @@
 
 	<div class="section wrappit secondary-bg">
 	  <div class="container">
-		<div class="center-wrapper" id="heightSet">
+		<div class="center-wrapper1" id="heightSet">
 		  <div class="center-container ak-full-container">
 			<div class="ak-full-center-box" id="loginDiv">
 			<div class="">
@@ -36,23 +36,7 @@
 						<div class="company">{{$work->company}}</div>
                         <div class="date">{{$work->city}} &#183; {{$work->country}}</div>
                         @endif
-						<div class="collection-item-btn right">
-							<div class="switch">
-                                <label>
-                                 <form autocomplete="off" action="{{url('update-resume-access')}}" method="post">
-                                        {{ csrf_field() }}
-                                 <input type="hidden" name="user" value="{{base64_encode($user->email)}}">
-                                    @if($resume  && $resume->is_visible == "1")
-                                    <input type="checkbox" value="1" name="is_visible" onchange="updateAccess(this)" checked>
-                                    @else
-                                    <input type="checkbox" value="0" name="is_visible" onchange="updateAccess(this)">
-                                    @endif
-                                    <span class="lever"></span>
-                                </form>
-
-                                </label>
-                              </div>
-                        </div>
+                        <div class="date">{{Carbon\Carbon::parse($user->last_viewed_at)->diffForHumans()}}</div>
                     </li>
                 <?php } ?>
 

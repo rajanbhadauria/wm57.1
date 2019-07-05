@@ -49,11 +49,13 @@ class Activity {
                     }
                 )
                 ->orderBy('updated_at', 'desc')
-                ->groupBY('notifications.activity')
+                ->groupBY('notifications.byUser')
                 ->groupBY('notifications.email')
+                ->groupBY('notifications.activity')
+
                 //->having('notifications.identifier', 'resume_sent')
 
-                ->paginate(5);
+                ->paginate(10);
 
     }
 
@@ -83,22 +85,16 @@ class Activity {
     public static function countResumeReceivedRequest($user_id, $email) {
         $data['email'] = $email;
         $data['user_id'] = $user_id;
-        $result =   DB::table('notifications')
-            ->join('activity_list', 'notifications.activity', '=', 'activity_list.identifier')
-            ->groupBY('notifications.activity')
-            ->groupBY('notifications.email')
-            ->select(DB::raw('count(*) as total'))
-            ->where('notifications.is_visible', '1')
-            ->where('notifications.request_status', 'accepted')
-            ->where('activity_list.identifier',  '=', 'resume_sent')
-            ->where('notifications.email', '=', $email)
-            ->first();
-        if($result) {
-            return $result->total;
-        } else {
-            return 0;
-        }
-
+        $resume = DB::table('resumes')
+        ->select(DB::raw('COUNT(users.id) as usersCount'), 'users.*', 'skills.*', 'resumes.id', 'resumes.updated_at as created_at')
+        ->join('users', 'resumes.ownerEmail', '=', 'users.email')
+        ->leftjoin('skills', 'skills.user_id', 'users.id')
+        ->leftjoin('resume_titles', 'resume_titles.user_id', 'users.id')
+        ->orderBy('resumes.updated_at' ,'desc')
+        ->groupBy('ownerEmail')
+        ->where('userEmail', $email);
+        $result = $resume->get();
+        return count($result);
     }
 
     public static function getResumeReceivedRequest($user_id, $email) {
@@ -111,8 +107,9 @@ class Activity {
             ->where('notifications.request_status', 'accepted')
             ->where('activity_list.identifier',  '=', 'resume_sent')
             ->where('notifications.email', '=', $email)
-            ->groupBY('notifications.activity')
+            ->groupBY('notifications.byUser')
             ->groupBY('notifications.email')
+            ->groupBY('notifications.activity')
             ->orderBy('updated_at', 'desc')->paginate(10);
     }
     // function to get users who have acccess to my resume

@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://dev.workmedian.com'),
+    'url' => env('APP_URL', 'http://localhost/wm57'),
 
     'asset_url' => env('ASSET_URL', null),
 

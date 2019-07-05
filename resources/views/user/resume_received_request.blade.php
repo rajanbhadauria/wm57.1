@@ -12,10 +12,11 @@
 	</section>
 	<section class="section wrappit">
 		<div class="container">
-			<div class="center-wrapper" id="heightSet">
+			<div class="center-wrapper1" id="heightSet">
 				<div class="center-container ak-full-container">
 					<div class="ak-full-center-box">
 						<div class="">
+
 							<ul class="resume-user__list">
 
                                 <?php foreach($activities as $activity) {

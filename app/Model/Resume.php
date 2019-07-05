@@ -17,6 +17,63 @@ class Resume extends Model
             return 0;
         }
     }
+    //
+    // checking if user is created resume or not
+    public static function createAccessResume($ownerEmail, $userEmail) {
+        $resume = self::where("ownerEmail","=",$ownerEmail)->whereNull("userEmail")->count();
+        $user = DB::table('users')->where('email', $ownerEmail)->first();
+        if($user) {
+            $url = str_replace(" ", "-", $user->first_name."-".$user->last_name);
+        } else {
+            $url = "";
+        }
+        if($resume == 0) {
+            $resume = new Resume();
+            $resume->ownerEmail = $ownerEmail;
+            $resume->userEmail = null;
+            $resume->currentAddressData = '1'; $resume->awardData = '1'; $resume->certificationData = '1';
+            $resume->permanentAddressData = '1'; $resume->contactData = '1'; $resume->courseData = '1';
+            $resume->educationData = '1'; $resume->languageData = '1'; $resume->objectiveData = '1';
+            $resume->patentData = '1'; $resume->profileData = '1'; $resume->projectData = '1';
+            $resume->referenceData = '1'; $resume->skillData = '1'; $resume->trainingData = '1';
+            $resume->travelData = '1'; $resume->workData = '1'; $resume->status = '1';
+            $resume->resumetitleData = '1'; $resume->basicInfoData = '1'; $resume->softskillData = '1';
+            $resume->interestData = '1'; $resume->is_visible = '1'; $resume->is_secure = '1';
+            $resume->save();
+
+            $resume = new Resume();
+            $resume->ownerEmail = $ownerEmail;
+            $resume->userEmail = $userEmail;
+            $resume->currentAddressData = '1'; $resume->awardData = '1'; $resume->certificationData = '1';
+            $resume->permanentAddressData = '1'; $resume->contactData = '1'; $resume->courseData = '1';
+            $resume->educationData = '1'; $resume->languageData = '1'; $resume->objectiveData = '1';
+            $resume->patentData = '1'; $resume->profileData = '1'; $resume->projectData = '1';
+            $resume->referenceData = '1'; $resume->skillData = '1'; $resume->trainingData = '1';
+            $resume->travelData = '1'; $resume->workData = '1'; $resume->status = '1';
+            $resume->resumetitleData = '1'; $resume->basicInfoData = '1'; $resume->softskillData = '1';
+            $resume->interestData = '1'; $resume->is_visible = '1'; $resume->is_secure = '1';
+            $resume->save();
+                DB::table('resumes')->where('id', $resume->id)
+                                   ->update(['resume_url' => $url."-".$resume->id]);
+            return $resume;
+        } else {
+            $resume = new Resume();
+            $resume->ownerEmail = $ownerEmail;
+            $resume->userEmail = $userEmail;
+            $resume->currentAddressData = '1'; $resume->awardData = '1'; $resume->certificationData = '1';
+            $resume->permanentAddressData = '1'; $resume->contactData = '1'; $resume->courseData = '1';
+            $resume->educationData = '1'; $resume->languageData = '1'; $resume->objectiveData = '1';
+            $resume->patentData = '1'; $resume->profileData = '1'; $resume->projectData = '1';
+            $resume->referenceData = '1'; $resume->skillData = '1'; $resume->trainingData = '1';
+            $resume->travelData = '1'; $resume->workData = '1'; $resume->status = '1';
+            $resume->resumetitleData = '1'; $resume->basicInfoData = '1'; $resume->softskillData = '1';
+            $resume->interestData = '1'; $resume->is_visible = '1'; $resume->is_secure = '1';
+            $resume->save();
+            DB::table('resumes')->where('id', $resume->id)
+                                   ->update(['resume_url' => $url."-".$resume->id]);
+            return $resume;
+        }
+    }
     // listing users who viewed my resume
     public static function getResumeAccessedUsersList($user_id) {
         return DB::table('users')
@@ -35,7 +92,11 @@ class Resume extends Model
     }
 
     public static function getResumeAccess($ownerEmail, $userEmail){
-        return self::where('ownerEmail', $ownerEmail)->where('userEmail', $userEmail)->first();
+        $res =  self::where('ownerEmail', $ownerEmail)->where('userEmail', $userEmail)->first();
+        if(!$res) {
+           return self::createAccessResume($ownerEmail, $userEmail);
+        }
+        return $res;
     }
 
 

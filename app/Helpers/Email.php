@@ -2,6 +2,8 @@
 namespace App\Helpers;
 
 use Mail;
+use Notification;
+use App\Notifications\ResumeRequest;
 
 class Email
 {
@@ -17,10 +19,10 @@ class Email
 		$data['updateFlag'] = $updateFlag;
         $data['content'] = $shareMsg;
         $data['to'] = $to;
-
-		Mail::send("email.notification.share", $data, function ($message) use ($data) {
-            $message->to($data['to'])->subject($data['subject']);
-        });
+        Notification::route('mail', $to)->notify(new ResumeRequest($data));
+		// Mail::send("email.notification.share", $data, function ($message) use ($data) {
+        //     $message->to($data['to'])->subject($data['subject']);
+        // });
     }
 
     // sending resume with invitation to not register user
@@ -41,10 +43,13 @@ class Email
         $data['from_name'] = $from_name;
         $data['content'] = $shareMsg;
         $data['to'] = $to;
+        $data['subject'] = $data['from_name']." wants to access your resume";
 
-		Mail::send("email.notification.request_resume", $data, function ($message) use ($data) {
-            $message->to($data['to'])->subject($data['from_name']." wants to access your resume");
-        });
+		// Mail::send("email.notification.request_resume", $data, function ($message) use ($data) {
+        //     $message->to($data['to'])->subject($data['from_name']." wants to access your resume");
+        // });
+
+        Notification::route('mail', $to)->notify(new ResumeRequest($data));
     }
 
      // sending resume access request accept to registered user
@@ -55,9 +60,11 @@ class Email
         $data['to'] = $to;
         $data['subject'] = $data['content'];
 
-		Mail::send("email.notification.common_resume", $data, function ($message) use ($data) {
-            $message->to($data['to'])->subject($data['content']);
-        });
+		//Mail::send("email.notification.common_resume", $data, function ($message) use ($data) {
+        //    $message->to($data['to'])->subject($data['content']);
+       // });
+
+       Notification::route('mail', $to)->notify(new ResumeRequest($data));
     }
 
     // sending resume access request accept to registered user

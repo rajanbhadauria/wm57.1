@@ -696,7 +696,7 @@ class ResumeController extends Controller
            return view('access_denied');
         }
 
-        if($ownerData->resume_passcode != $passcode) {
+        if($ownerData->resume_passcode != $passcode || $ownerData->resume_passcode == "") {
             return view('resume.enterpasscode', array('user' => $ownerData,  'id'=> $user_url));
         }
 
@@ -1781,6 +1781,42 @@ class ResumeController extends Controller
         $req->session()->flash('success', 'Style saved successfully');
         return response()->json($json);
         //return redirect('/resume/styles');
+    }
+
+    // listig all resumes that user have in his box
+    function resumeBox() {
+        $user_id = Auth::id();
+        $email = Auth::user()->email;
+        $resume = DB::table('resumes')
+        ->select('users.*', 'skills.*', 'resumes.id', 'resumes.coverLetter', 'resumes.is_fav', 'resumes.updated_at as created_at', 'users.id as user_id')
+        ->join('users', 'resumes.ownerEmail', '=', 'users.email')
+        ->leftjoin('skills', 'skills.user_id', 'users.id')
+        ->leftjoin('resume_titles', 'resume_titles.user_id', 'users.id')
+        ->orderBy('resumes.is_fav' ,'desc')
+        ->orderBy('resumes.updated_at' ,'desc')
+        ->groupBy('ownerEmail')
+        ->where('userEmail', $email);
+        $data['resumeReceived'] = $resume->count();
+        $data['resumes'] = $resume->get();
+        return view('resume.resume_box', $data);
+    }
+    //updating favourite
+    function saveFav(Request $req) {
+        $inputs = $req->all();
+        $json['success'] = false;
+        $json['msg'] = "";
+        if(is_numeric($inputs['resumeid'])) {
+            $json['success'] = true;
+            $sql = "UPDATE resumes
+                        SET is_fav = CASE
+                        WHEN is_fav = '1' THEN '0'
+                        ELSE '1'
+                        END where id = ".$inputs['resumeid'];
+            DB::statement($sql);
+        } else {
+            $json['erroMsg'] = "Invalid data supplied.";
+        }
+        return response()->json($json);
     }
 
     function testEmailView() {

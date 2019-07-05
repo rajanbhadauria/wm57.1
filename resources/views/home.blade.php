@@ -67,7 +67,8 @@
                       <div class="col s6 m4">
                             <div class="widget-block ak-wblock">
                                 <div class="ak-wblockflx">
-                                    <h5 class="mptext">Resumebox</h5>
+                                    <h5 class="mptext">
+                                    <a href="{{url('resume/resume-box')}}" class="purple-text">Resumebox</a></h5>
                                 <p>{{$resumeReceived}}</p>
                                     <a href="{{url('resume-received')}}" class="waves-effect waves-light btn-black ak-btn-half-first">Resume received</a>
                                     <a href="{{url('requestresume')}}" class="waves-effect waves-light btn-black ak-btn-half-second">Request for resume</a>
